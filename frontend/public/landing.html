@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clip - Level Up Your Financial Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: #0a2540;
+            background: #f8fafc;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00d4aa;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 170, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #0a2540 0%, #00d4aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero .description {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 3rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Features */
+        .features {
+            padding: 80px 0;
+            background: white;
+        }
+        
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #0a2540;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .feature-card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #f1f5f9;
+            transition: transform 0.2s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #0a2540;
+        }
+        
+        .feature-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+        
+        /* Target Audience */
+        .target {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #0a2540 0%, #1e293b 100%);
+            color: white;
+            text-align: center;
+        }
+        
+        .target h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .target-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .target-item h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #00d4aa;
+        }
+        
+        /* CTA Section */
+        .final-cta {
+            padding: 80px 0;
+            background: white;
+            text-align: center;
+        }
+        
+        .final-cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #0a2540;
+        }
+        
+        .final-cta p {
+            font-size: 1.2rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-large {
+            font-size: 1.2rem;
+            padding: 16px 32px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Clip</div>
+                <a href="#signup" class="cta-button">Start Optimizing</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Level Up Your Financial Game</h1>
+            <p class="subtitle">Financial performance optimization for high achievers</p>
+            <p class="description">
+                Stop living paycheck-to-paycheck despite your success. Clip turns daily spending into a performance game 
+                that builds real financial momentum. No budgeting lectures - just smart optimization.
+            </p>
+            <a href="#signup" class="cta-button cta-large">Start Your Financial Level-Up 🚀</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Built for Financial Athletes</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Daily Spending Power</h3>
+                    <p>See exactly how much financial power you have each day. No complex budgets - just clear, actionable numbers that help you make smart spending decisions.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>Performance Tracking</h3>
+                    <p>Gamify your savings with visual performance metrics. Watch your financial momentum build as you level up your money game day by day.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Scenario Modeling</h3>
+                    <p>Test "what if" scenarios before making big financial moves. See exactly how that vacation or purchase affects your cash flow timeline.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3>Momentum Building</h3>
+                    <p>Turn saving into a streak game. Visual progress tracking that makes building financial discipline feel like leveling up in your favorite app.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Smart Optimization</h3>
+                    <p>Get intelligent insights about your spending patterns without judgmental budget categories. Focus on optimization, not restriction.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Effortless Design</h3>
+                    <p>Clean, professional interface that matches your lifestyle. No toy-like budgeting apps - this feels like a tool built for professionals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="target">
+        <div class="container">
+            <h2>Perfect for High Earners Who Want More</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; opacity: 0.9;">
+                Making $150K+ but still feeling financially behind? You're not alone. Traditional budgeting apps treat you like you're broke. 
+                Clip treats you like the high performer you are.
+            </p>
+            
+            <div class="target-grid">
+                <div class="target-item">
+                    <h4>Tech Professionals</h4>
+                    <p>Software engineers, product managers, designers who want to optimize their financial performance</p>
+                </div>
+                
+                <div class="target-item">
+                    <h4>Finance & Consulting</h4>
+                    <p>Analysts, consultants, bankers who think in metrics and want data-driven financial tools</p>
+                </div>
+                
+                <div class="target-item">
+                    <h4>Young Professionals</h4>
+                    <p>High earners in expensive cities who need sophisticated cash flow management</p>
+                </div>
+                
+                <div class="target-item">
+                    <h4>Performance-Oriented</h4>
+                    <p>Anyone who optimizes everything else in their life and wants to level up their money game</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="final-cta">
+        <div class="container">
+            <h2>Ready to Stop Living Paycheck-to-Paycheck?</h2>
+            <p>Join high performers who've leveled up their financial game with Clip</p>
+            <a href="#signup" class="cta-button cta-large">Start Optimizing Today</a>
+            <p style="margin-top: 1rem; color: #94a3b8; font-size: 0.9rem;">
+                Set up takes 2 minutes • No credit card required • Start seeing results immediately
+            </p>
+        </div>
+    </section>
+
+    <script>
+        // Simple scroll-to-signup functionality
+        document.querySelectorAll('a[href="#signup"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // In real implementation, this would either scroll to a signup form
+                // or redirect to the app signup page
+                window.location.href = '/signup';
+            });
+        });
+    </script>
+</body>
+</html>
