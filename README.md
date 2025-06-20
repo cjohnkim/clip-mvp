@@ -1,4 +1,4 @@
-# Clip - Financial Training Platform
+# Money Clip - Financial Training Platform
 
 > Train like a financial athlete. Turn daily spending into performance wins.
 
