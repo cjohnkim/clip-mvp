@@ -46,6 +46,25 @@
             color: #00d4aa;
         }
         
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .login-link {
+            color: #0a2540;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: background-color 0.2s ease;
+        }
+        
+        .login-link:hover {
+            background-color: #f1f5f9;
+        }
+        
         .cta-button {
             background: linear-gradient(135deg, #00d4aa 0%, #00b894 100%);
             color: white;
@@ -216,6 +235,24 @@
             .feature-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .nav-links {
+                gap: 0.5rem;
+            }
+            
+            .login-link {
+                padding: 6px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .header-content {
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -223,21 +260,24 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">Clip</div>
-                <a href="#signup" class="cta-button">Start Optimizing</a>
+                <div class="logo">💪 Money Clip</div>
+                <div class="nav-links">
+                    <a href="https://app.moneyclip.money/auth" class="login-link">Sign In</a>
+                    <a href="#signup" class="cta-button">Join Waitlist</a>
+                </div>
             </div>
         </div>
     </header>
 
     <section class="hero">
         <div class="container">
-            <h1>Level Up Your Financial Game</h1>
-            <p class="subtitle">Financial performance optimization for high achievers</p>
+            <h1>Transform Into a Financial Athlete</h1>
+            <p class="subtitle">Performance-driven financial training for achievers</p>
             <p class="description">
-                Stop living paycheck-to-paycheck despite your success. Clip turns daily spending into a performance game 
-                that builds real financial momentum. No budgeting lectures - just smart optimization.
+                Turn your money habits into athletic performance. Get scored daily, build streaks, unlock achievements, 
+                and level up your financial fitness. No lectures - just results that feel like winning.
             </p>
-            <a href="#signup" class="cta-button cta-large">Start Your Financial Level-Up 🚀</a>
+            <a href="#signup" class="cta-button cta-large">Join the Training Camp 🏆</a>
         </div>
     </section>
 
@@ -318,23 +358,22 @@
 
     <section class="final-cta">
         <div class="container">
-            <h2>Ready to Stop Living Paycheck-to-Paycheck?</h2>
-            <p>Join high performers who've leveled up their financial game with Clip</p>
-            <a href="#signup" class="cta-button cta-large">Start Optimizing Today</a>
+            <h2>Ready to Become a Financial Athlete?</h2>
+            <p>Join the waitlist and transform your money habits into winning performance</p>
+            <a href="#signup" class="cta-button cta-large">Join the Waitlist</a>
             <p style="margin-top: 1rem; color: #94a3b8; font-size: 0.9rem;">
-                Set up takes 2 minutes • No credit card required • Start seeing results immediately
+                Early access • Email notification when ready • Start your training journey
             </p>
         </div>
     </section>
 
     <script>
-        // Simple scroll-to-signup functionality
+        // Redirect to waitlist signup
         document.querySelectorAll('a[href="#signup"]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                // In real implementation, this would either scroll to a signup form
-                // or redirect to the app signup page
-                window.location.href = '/signup';
+                // Redirect to the waitlist signup page
+                window.location.href = 'https://app.moneyclip.money/auth?mode=waitlist';
             });
         });
     </script>
