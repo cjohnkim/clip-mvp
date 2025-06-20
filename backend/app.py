@@ -59,12 +59,14 @@ def api_info():
     """API information endpoint"""
     return jsonify({
         'name': 'Money Clip MVP API',
-        'version': '1.0.0',
-        'description': 'Forward-looking personal finance API',
+        'version': '2.0.0',
+        'description': 'Financial Athletics Platform API',
         'endpoints': {
             'auth': '/api/auth (login, signup, logout)',
             'planning': '/api/planning (expenses, income)',
-            'calculation': '/api/calculation (daily-clip, scenarios)'
+            'calculation': '/api/calculation (daily-clip, scenarios)',
+            'athletic': '/api/athletic (performance, achievements, streaks)',
+            'waitlist': '/api/waitlist (join, approve, signup with token)'
         }
     })
 
