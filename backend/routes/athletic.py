@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from datetime import datetime, date
-from ..services.athletic_service import get_athletic_service
-from ..database import get_db
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from services.athletic_service import get_athletic_service
+from models import db
 
 athletic_bp = Blueprint('athletic', __name__, url_prefix='/api/athletic')
 
@@ -30,8 +33,8 @@ def record_performance():
             return jsonify({'error': 'Target and spent amounts must be non-negative'}), 400
         
         # Record performance
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         result = athletic_service.record_daily_performance(
             user_id, target, spent, expenses_count, categories
         )
@@ -59,8 +62,8 @@ def get_performance_summary():
         if days < 1 or days > 365:
             return jsonify({'error': 'Days parameter must be between 1 and 365'}), 400
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         summary = athletic_service.get_user_performance_summary(user_id, days)
         
         return jsonify({
@@ -78,8 +81,8 @@ def get_streak_data():
     try:
         user_id = get_jwt_identity()
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         streak_data = athletic_service._get_user_streak_data(user_id)
         
         return jsonify({
@@ -97,8 +100,8 @@ def get_achievements():
     try:
         user_id = get_jwt_identity()
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         achievements = athletic_service.get_user_achievements(user_id)
         
         return jsonify({
@@ -117,11 +120,11 @@ def share_achievement():
         user_id = get_jwt_identity()
         achievement_id = request.view_args['achievement_id']
         
-        db = next(get_db())
+        session = db.session
         
         # Find user's achievement
-        from ..models.athletic import UserAchievement
-        user_achievement = db.query(UserAchievement).filter(
+        from models import UserAchievement
+        user_achievement = session.query(UserAchievement).filter(
             UserAchievement.user_id == user_id,
             UserAchievement.achievement_id == achievement_id
         ).first()
@@ -132,7 +135,7 @@ def share_achievement():
         # Mark as shared
         user_achievement.is_shared = True
         user_achievement.shared_at = datetime.utcnow()
-        db.commit()
+        session.commit()
         
         return jsonify({
             'success': True,
@@ -149,8 +152,8 @@ def get_level_data():
     try:
         user_id = get_jwt_identity()
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         level_data = athletic_service._get_user_level_data(user_id)
         
         return jsonify({
@@ -168,8 +171,8 @@ def get_athletic_dashboard():
     try:
         user_id = get_jwt_identity()
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         
         # Get all athletic data
         performance_summary = athletic_service.get_user_performance_summary(user_id, 30)
@@ -209,16 +212,16 @@ def get_leaderboard():
         user_id = get_jwt_identity()
         leaderboard_type = request.args.get('type', 'week')  # week, month, all_time
         
-        db = next(get_db())
+        session = db.session
         
         # Get leaderboard data (anonymous)
         from sqlalchemy import func, desc
-        from ..models.athletic import DailyPerformance, UserStreak
+        from models import DailyPerformance, UserStreak
         from datetime import timedelta
         
         if leaderboard_type == 'week':
             week_ago = date.today() - timedelta(days=7)
-            leaderboard_query = db.query(
+            leaderboard_query = session.query(
                 func.avg(DailyPerformance.performance_score).label('avg_score'),
                 func.count(DailyPerformance.id).label('days_count')
             ).filter(
@@ -227,7 +230,7 @@ def get_leaderboard():
             
         elif leaderboard_type == 'month':
             month_ago = date.today() - timedelta(days=30)
-            leaderboard_query = db.query(
+            leaderboard_query = session.query(
                 func.avg(DailyPerformance.performance_score).label('avg_score'),
                 func.count(DailyPerformance.id).label('days_count')
             ).filter(
@@ -235,7 +238,7 @@ def get_leaderboard():
             ).group_by(DailyPerformance.user_id).order_by(desc('avg_score')).limit(10)
             
         else:  # all_time
-            leaderboard_query = db.query(
+            leaderboard_query = session.query(
                 UserStreak.current_streak.label('streak'),
                 UserStreak.longest_streak.label('longest_streak'),
                 UserStreak.total_training_days.label('total_days')
@@ -291,8 +294,8 @@ def simulate_performance():
         base_target = data.get('base_target', 50.0)
         performance_variation = data.get('performance_variation', 0.3)  # 30% variation
         
-        db = next(get_db())
-        athletic_service = get_athletic_service(db)
+        session = db.session
+        athletic_service = get_athletic_service(session)
         
         import random
         results = []

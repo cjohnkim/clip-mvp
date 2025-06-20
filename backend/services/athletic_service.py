@@ -2,12 +2,13 @@ from datetime import datetime, date, timedelta
 from typing import List, Dict, Optional, Tuple
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
-from ..models.athletic import (
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models import (
     UserStreak, Achievement, UserAchievement, 
-    DailyPerformance, UserLevel
+    DailyPerformance, UserLevel, User, db
 )
-from ..models import User
-from ..database import get_db
 
 class AthleticService:
     """Service for managing the athletic/gaming aspects of financial training"""
@@ -487,8 +488,10 @@ class AthleticService:
         }
 
 
-def get_athletic_service(db: Session = None) -> AthleticService:
+def get_athletic_service(db_session: Session = None) -> AthleticService:
     """Get AthleticService instance with database session"""
-    if db is None:
-        db = next(get_db())
-    return AthleticService(db)
+    if db_session is None:
+        # Use Flask-SQLAlchemy session from current app
+        from flask import current_app
+        db_session = current_app.extensions['sqlalchemy'].session
+    return AthleticService(db_session)
