@@ -328,3 +328,20 @@ class UserLevel(db.Model):
     
     def __repr__(self):
         return f'<UserLevel user_id={self.user_id} level={self.current_level} xp={self.total_xp}>'
+
+
+class SignupToken(db.Model):
+    """Tokenized signup URLs for waitlist-approved users"""
+    __tablename__ = 'signup_tokens'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False, index=True)
+    token = db.Column(db.String(32), nullable=False, unique=True, index=True)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    used_at = db.Column(db.DateTime, nullable=True)
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<SignupToken email={self.email} token={self.token[:8]}... expires={self.expires_at}>'
