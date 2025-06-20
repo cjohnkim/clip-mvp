@@ -53,7 +53,7 @@ def get_admin_token():
     print("4. Find 'access_token' key and copy its value")
     print("5. Use that token as the second argument")
     print()
-    print("Note: Your account must match the ADMIN_EMAIL environment variable")
+    print("Note: Your account must match the ADMIN_EMAIL environment variable (cjohnkim@gmail.com)")
 
 if __name__ == "__main__":
     if len(sys.argv) == 1:
