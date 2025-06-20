@@ -25,6 +25,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 function RootRoute() {
   const { isAuthenticated, isLoading } = useAuth();
   
+  // Check if we're on the marketing domain
+  const isMarketingSite = window.location.hostname === 'moneyclip.money';
+  
+  // If on marketing site, always show landing page
+  if (isMarketingSite) {
+    return <LandingPage />;
+  }
+  
+  // If on app domain, handle authentication
   if (isLoading) {
     return <div>Loading...</div>;
   }

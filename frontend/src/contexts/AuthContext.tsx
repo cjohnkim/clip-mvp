@@ -37,6 +37,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Skip auth check on marketing site
+    if (window.location.hostname === 'moneyclip.money') {
+      setIsLoading(false);
+      return;
+    }
+    
     // Check for stored token on app start
     const storedToken = localStorage.getItem('money_clip_token');
     if (storedToken) {
