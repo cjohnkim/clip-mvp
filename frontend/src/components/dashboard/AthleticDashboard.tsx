@@ -145,14 +145,14 @@ const AchievementGrid = styled(Box)({
   },
 });
 
-const QuickStatChip = styled(Chip)<{ variant: 'positive' | 'neutral' | 'negative' }>(({ variant }) => ({
+const QuickStatChip = styled(Chip)<{ chipvariant: 'positive' | 'neutral' | 'negative' }>(({ chipvariant }) => ({
   fontWeight: 600,
   fontSize: '0.875rem',
-  backgroundColor: variant === 'positive' ? 'rgba(16, 185, 129, 0.2)'
-                  : variant === 'negative' ? 'rgba(239, 68, 68, 0.2)'
+  backgroundColor: chipvariant === 'positive' ? 'rgba(16, 185, 129, 0.2)'
+                  : chipvariant === 'negative' ? 'rgba(239, 68, 68, 0.2)'
                   : 'rgba(255, 255, 255, 0.2)',
-  color: variant === 'positive' ? '#059669'
-        : variant === 'negative' ? '#dc2626'
+  color: chipvariant === 'positive' ? '#059669'
+        : chipvariant === 'negative' ? '#dc2626'
         : '#6b7280',
   '& .MuiChip-icon': {
     color: 'inherit',
@@ -452,13 +452,13 @@ const AthleticDashboard: React.FC = () => {
                   
                   <Box display="flex" gap={1} justifyContent="center" flexWrap="wrap">
                     <QuickStatChip
-                      variant={dashboardData.analytics.trend_direction === 'improving' ? 'positive' : 'neutral'}
+                      chipvariant={dashboardData.analytics.trend_direction === 'improving' ? 'positive' : 'neutral'}
                       icon={<TrendingUp />}
                       label={`${dashboardData.analytics.trend_direction} trend`}
                       size="small"
                     />
                     <QuickStatChip
-                      variant="positive"
+                      chipvariant="positive"
                       icon={<EmojiEvents />}
                       label={`${dashboardData.achievements.total_unlocked} badges`}
                       size="small"

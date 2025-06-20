@@ -123,9 +123,9 @@ const PerformanceMeter = styled(Box)<{ score: number }>(({ score }) => ({
   },
 }));
 
-const StatChip = styled(Chip)<{ variant: 'positive' | 'negative' | 'neutral' }>(({ variant }) => ({
-  backgroundColor: variant === 'positive' ? 'rgba(16, 185, 129, 0.2)'
-                  : variant === 'negative' ? 'rgba(239, 68, 68, 0.2)'
+const StatChip = styled(Chip)<{ chipvariant: 'positive' | 'negative' | 'neutral' }>(({ chipvariant }) => ({
+  backgroundColor: chipvariant === 'positive' ? 'rgba(16, 185, 129, 0.2)'
+                  : chipvariant === 'negative' ? 'rgba(239, 68, 68, 0.2)'
                   : 'rgba(255, 255, 255, 0.2)',
   color: 'white',
   fontWeight: 600,
@@ -286,7 +286,7 @@ const PerformanceScore: React.FC<PerformanceScoreProps> = ({
             
             <Box display="flex" gap={1} flexWrap="wrap" justifyContent="center">
               <StatChip
-                variant={performanceData.savedAmount >= 0 ? 'positive' : 'negative'}
+                chipvariant={performanceData.savedAmount >= 0 ? 'positive' : 'negative'}
                 icon={performanceData.savedAmount >= 0 ? <TrendingUp /> : <TrendingDown />}
                 label={`${performanceData.savedAmount >= 0 ? '+' : ''}$${performanceData.savedAmount.toFixed(0)}`}
                 size="small"
@@ -294,7 +294,7 @@ const PerformanceScore: React.FC<PerformanceScoreProps> = ({
               
               {performanceData.streakImpact && (
                 <StatChip
-                  variant="positive"
+                  chipvariant="positive"
                   icon={<LocalFireDepartment />}
                   label="Streak+"
                   size="small"
@@ -303,7 +303,7 @@ const PerformanceScore: React.FC<PerformanceScoreProps> = ({
               
               {performanceData.score > performanceData.personalBest && (
                 <StatChip
-                  variant="positive"
+                  chipvariant="positive"
                   icon={<EmojiEvents />}
                   label="Personal Best!"
                   size="small"

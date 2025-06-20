@@ -32,14 +32,14 @@ const victoryPulse = keyframes`
   }
 `;
 
-const ProgressContainer = styled(Card)<{ isComplete?: boolean; variant?: string }>(({ isComplete, variant }) => ({
+const ProgressContainer = styled(Card)<{ isComplete?: boolean; progressvariant?: string }>(({ isComplete, progressvariant }) => ({
   borderRadius: '16px',
   border: '1px solid #f1f5f9',
   boxShadow: '0 4px 20px rgba(0, 212, 170, 0.1)',
   overflow: 'hidden',
   transition: 'all 0.3s ease',
   
-  background: variant === 'hero' 
+  background: progressvariant === 'hero' 
     ? athleticColors.backgrounds.card
     : 'white',
     
@@ -249,7 +249,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   return (
     <ProgressContainer 
       isComplete={isComplete} 
-      variant={variant}
+      progressvariant={variant}
       elevation={0}
     >
       <CardContent sx={{ 
