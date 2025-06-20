@@ -501,7 +501,7 @@ const PerformanceAnalytics: React.FC = () => {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(value) => formatCurrency(value)} />
+                <Tooltip formatter={(value) => formatCurrency(Number(value))} />
                 <Bar dataKey="target" fill="#e5e7eb" name="Target" />
                 <Bar dataKey="saved" fill={athleticColors.primary} name="Actual Saved" />
               </RechartsBarChart>

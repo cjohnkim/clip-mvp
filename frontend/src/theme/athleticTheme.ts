@@ -273,6 +273,7 @@ export const getPerformanceStyle = (performance: keyof typeof performanceColors)
   return {
     background: perf.background,
     boxShadow: perf.shadow,
+    shadow: perf.shadow,
     transform: `scale(${perf.scale})`,
     transition: athleticAnimations.cardHover[performance],
   };
