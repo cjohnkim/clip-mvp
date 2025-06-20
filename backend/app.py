@@ -41,6 +41,7 @@ from routes.planning import planning_bp
 from routes.calculation import calculation_bp
 from routes.athletic import athletic_bp
 from routes.waitlist import waitlist_bp
+from routes.admin import admin_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -48,6 +49,7 @@ app.register_blueprint(planning_bp, url_prefix='/api/planning')
 app.register_blueprint(calculation_bp, url_prefix='/api/calculation')
 app.register_blueprint(athletic_bp, url_prefix='/api/athletic')
 app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
+app.register_blueprint(admin_bp, url_prefix='/api/admin')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
@@ -66,7 +68,8 @@ def api_info():
             'planning': '/api/planning (expenses, income)',
             'calculation': '/api/calculation (daily-clip, scenarios)',
             'athletic': '/api/athletic (performance, achievements, streaks)',
-            'waitlist': '/api/waitlist (join, approve, signup with token)'
+            'waitlist': '/api/waitlist (join, approve, signup with token)',
+            'admin': '/api/admin (waitlist management - JWT protected)'
         }
     })
 
