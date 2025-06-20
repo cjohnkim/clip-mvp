@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { athleticTheme } from './theme/athleticTheme';
+import LandingPage from './pages/LandingPage';
 import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import Setup from './components/setup/Setup';
@@ -19,6 +20,18 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
   
   return isAuthenticated ? <>{children}</> : <Navigate to="/auth" />;
+}
+
+function RootRoute() {
+  const { isAuthenticated, isLoading } = useAuth();
+  
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+  
+  // If authenticated, redirect to dashboard
+  // If not authenticated, show landing page
+  return isAuthenticated ? <Navigate to="/dashboard" /> : <LandingPage />;
 }
 
 function App() {
@@ -76,8 +89,8 @@ function App() {
                 } 
               />
               
-              {/* Default redirect */}
-              <Route path="/" element={<Navigate to="/dashboard" />} />
+              {/* Root route - landing page for unauthenticated, dashboard for authenticated */}
+              <Route path="/" element={<RootRoute />} />
             </Routes>
           </div>
         </Router>
