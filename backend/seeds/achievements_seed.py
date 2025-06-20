@@ -3,8 +3,17 @@ Seed data for achievements system
 Creates a comprehensive set of achievements for financial athletes
 """
 
-from ..models.athletic import Achievement
-from ..database import get_db
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+def get_achievement_model():
+    """Get Achievement model from app context"""
+    from flask import current_app
+    # This will be called after models are initialized
+    from models.athletic import init_athletic_models
+    _, Achievement, _, _, _ = init_athletic_models(current_app.extensions['sqlalchemy'])
+    return Achievement
 
 ACHIEVEMENTS_DATA = [
     # ==================== STREAK ACHIEVEMENTS ====================
@@ -310,11 +319,15 @@ ACHIEVEMENTS_DATA = [
 
 def seed_achievements():
     """Seed the database with default achievements"""
-    db = next(get_db())
+    from flask import current_app
     
     try:
+        # Get the Achievement model from app context
+        Achievement = get_achievement_model()
+        db = current_app.extensions['sqlalchemy']
+        
         # Check if achievements already exist
-        existing_count = db.query(Achievement).count()
+        existing_count = Achievement.query.count()
         if existing_count > 0:
             print(f"Achievements already seeded ({existing_count} exist). Skipping...")
             return
@@ -322,9 +335,9 @@ def seed_achievements():
         # Create achievements
         for achievement_data in ACHIEVEMENTS_DATA:
             achievement = Achievement(**achievement_data)
-            db.add(achievement)
+            db.session.add(achievement)
         
-        db.commit()
+        db.session.commit()
         print(f"Successfully seeded {len(ACHIEVEMENTS_DATA)} achievements!")
         
         # Print summary
@@ -343,7 +356,8 @@ def seed_achievements():
             print(f"  {tier}: {count}")
         
     except Exception as e:
-        db.rollback()
+        if 'db' in locals():
+            db.session.rollback()
         print(f"Error seeding achievements: {e}")
         raise
 

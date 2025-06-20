@@ -1,2 +1,1 @@
 web: gunicorn app:app
-release: python -c "from app import app; app.app_context().push(); from seeds.achievements_seed import seed_achievements; seed_achievements()"
