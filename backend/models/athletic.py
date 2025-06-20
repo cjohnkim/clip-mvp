@@ -1,37 +1,34 @@
 from datetime import datetime, date
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Date, Text, ForeignKey, JSON
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from .base import db
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from models import db
 
 class UserStreak(db.Model):
     """Track user's daily performance streaks"""
     __tablename__ = 'user_streaks'
     
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     # Current streak data
-    current_streak = Column(Integer, default=0)
-    longest_streak = Column(Integer, default=0)
-    total_training_days = Column(Integer, default=0)
+    current_streak = db.Column(db.Integer, default=0)
+    longest_streak = db.Column(db.Integer, default=0)
+    total_training_days = db.Column(db.Integer, default=0)
     
     # Streak timing
-    last_active_date = Column(Date, nullable=True)
-    streak_start_date = Column(Date, nullable=True)
-    longest_streak_start = Column(Date, nullable=True)
-    longest_streak_end = Column(Date, nullable=True)
+    last_active_date = db.Column(db.Date, nullable=True)
+    streak_start_date = db.Column(db.Date, nullable=True)
+    longest_streak_start = db.Column(db.Date, nullable=True)
+    longest_streak_end = db.Column(db.Date, nullable=True)
     
     # Performance tracking
-    current_streak_average_score = Column(Float, default=0.0)
-    longest_streak_average_score = Column(Float, default=0.0)
+    current_streak_average_score = db.Column(db.Float, default=0.0)
+    longest_streak_average_score = db.Column(db.Float, default=0.0)
     
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    user = relationship("User", back_populates="streak_data")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     def __repr__(self):
         return f'<UserStreak user_id={self.user_id} current={self.current_streak} longest={self.longest_streak}>'
@@ -80,9 +77,6 @@ class UserStreak(db.Model):
             self.longest_streak_start = self.streak_start_date
             self.longest_streak_end = today
         
-        # Update averages (simplified)
-        # TODO: Implement proper rolling average calculation
-        
         self.updated_at = datetime.utcnow()
         return True
     
@@ -97,31 +91,28 @@ class Achievement(db.Model):
     """Master list of all possible achievements"""
     __tablename__ = 'achievements'
     
-    id = Column(Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     
     # Achievement details
-    title = Column(String(100), nullable=False)
-    description = Column(Text, nullable=False)
-    icon = Column(String(10), nullable=False)  # Emoji or icon identifier
-    category = Column(String(50), nullable=False)  # streak, savings, performance, challenge, milestone
-    tier = Column(String(20), nullable=False)  # bronze, silver, gold, platinum
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    icon = db.Column(db.String(10), nullable=False)  # Emoji or icon identifier
+    category = db.Column(db.String(50), nullable=False)  # streak, savings, performance, challenge, milestone
+    tier = db.Column(db.String(20), nullable=False)  # bronze, silver, gold, platinum
     
     # Unlock criteria
-    requirement_type = Column(String(50), nullable=False)  # streak_days, savings_amount, performance_score, etc.
-    requirement_value = Column(Float, nullable=False)
-    requirement_description = Column(String(200), nullable=False)
+    requirement_type = db.Column(db.String(50), nullable=False)  # streak_days, savings_amount, performance_score, etc.
+    requirement_value = db.Column(db.Float, nullable=False)
+    requirement_description = db.Column(db.String(200), nullable=False)
     
     # Achievement metadata
-    points = Column(Integer, default=0)  # XP points awarded
-    is_active = Column(Boolean, default=True)
-    sort_order = Column(Integer, default=0)
+    points = db.Column(db.Integer, default=0)  # XP points awarded
+    is_active = db.Column(db.Boolean, default=True)
+    sort_order = db.Column(db.Integer, default=0)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    user_achievements = relationship("UserAchievement", back_populates="achievement")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     def __repr__(self):
         return f'<Achievement {self.title} ({self.tier})>'
@@ -131,63 +122,55 @@ class UserAchievement(db.Model):
     """Track which achievements users have unlocked"""
     __tablename__ = 'user_achievements'
     
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
-    achievement_id = Column(Integer, ForeignKey('achievements.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    achievement_id = db.Column(db.Integer, db.ForeignKey('achievements.id'), nullable=False)
     
     # Unlock details
-    unlocked_at = Column(DateTime, default=datetime.utcnow)
-    progress_when_unlocked = Column(Float, nullable=True)  # Progress value when achieved
+    unlocked_at = db.Column(db.DateTime, default=datetime.utcnow)
+    progress_when_unlocked = db.Column(db.Float, nullable=True)  # Progress value when achieved
     
     # Social sharing
-    is_shared = Column(Boolean, default=False)
-    shared_at = Column(DateTime, nullable=True)
+    is_shared = db.Column(db.Boolean, default=False)
+    shared_at = db.Column(db.DateTime, nullable=True)
     
     # Metadata
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    # Relationships
-    user = relationship("User", back_populates="achievements")
-    achievement = relationship("Achievement", back_populates="user_achievements")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):
-        return f'<UserAchievement user_id={self.user_id} achievement={self.achievement.title}>'
+        return f'<UserAchievement user_id={self.user_id} achievement_id={self.achievement_id}>'
 
 
 class DailyPerformance(db.Model):
     """Track daily performance scores and activities"""
     __tablename__ = 'daily_performance'
     
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     # Performance data
-    date = Column(Date, nullable=False)
-    performance_score = Column(Float, nullable=False)  # 0-100 score
+    date = db.Column(db.Date, nullable=False)
+    performance_score = db.Column(db.Float, nullable=False)  # 0-100 score
     
     # Spending data
-    daily_target = Column(Float, nullable=False)
-    actual_spent = Column(Float, nullable=False)
-    amount_saved = Column(Float, nullable=False)  # Can be negative if overspent
+    daily_target = db.Column(db.Float, nullable=False)
+    actual_spent = db.Column(db.Float, nullable=False)
+    amount_saved = db.Column(db.Float, nullable=False)  # Can be negative if overspent
     
     # Performance categorization
-    performance_category = Column(String(20), nullable=False)  # excellent, good, neutral, poor, critical
+    performance_category = db.Column(db.String(20), nullable=False)  # excellent, good, neutral, poor, critical
     
     # Streak impact
-    contributed_to_streak = Column(Boolean, default=False)
-    streak_day_number = Column(Integer, nullable=True)  # Which day of streak this was
+    contributed_to_streak = db.Column(db.Boolean, default=False)
+    streak_day_number = db.Column(db.Integer, nullable=True)  # Which day of streak this was
     
     # Additional metrics
-    expenses_count = Column(Integer, default=0)
-    largest_expense = Column(Float, nullable=True)
-    categories_used = Column(JSON, nullable=True)  # List of expense categories
+    expenses_count = db.Column(db.Integer, default=0)
+    largest_expense = db.Column(db.Float, nullable=True)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    user = relationship("User", back_populates="daily_performances")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Unique constraint on user_id + date
     __table_args__ = (
@@ -239,26 +222,23 @@ class UserLevel(db.Model):
     """Track user experience points and level progression"""
     __tablename__ = 'user_levels'
     
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey('users.id'), nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, unique=True)
     
     # Level system
-    current_level = Column(Integer, default=1)
-    total_xp = Column(Integer, default=0)
-    current_level_xp = Column(Integer, default=0)
-    xp_to_next_level = Column(Integer, default=100)
+    current_level = db.Column(db.Integer, default=1)
+    total_xp = db.Column(db.Integer, default=0)
+    current_level_xp = db.Column(db.Integer, default=0)
+    xp_to_next_level = db.Column(db.Integer, default=100)
     
     # Statistics
-    achievements_unlocked = Column(Integer, default=0)
-    total_days_trained = Column(Integer, default=0)
-    total_saved = Column(Float, default=0.0)
+    achievements_unlocked = db.Column(db.Integer, default=0)
+    total_days_trained = db.Column(db.Integer, default=0)
+    total_saved = db.Column(db.Float, default=0.0)
     
     # Timestamps
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    # Relationships
-    user = relationship("User", back_populates="level_data")
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     def __repr__(self):
         return f'<UserLevel user_id={self.user_id} level={self.current_level} xp={self.total_xp}>'
@@ -284,17 +264,3 @@ class UserLevel(db.Model):
         """Calculate XP required to reach a specific level"""
         # Exponential growth: level^2.2 * 50
         return int((level ** 2.2) * 50)
-
-
-# Add relationships to existing User model
-# Note: This would be added to the existing User model
-"""
-class User(db.Model):
-    # ... existing fields ...
-    
-    # Athletic system relationships
-    streak_data = relationship("UserStreak", back_populates="user", uselist=False)
-    achievements = relationship("UserAchievement", back_populates="user")
-    daily_performances = relationship("DailyPerformance", back_populates="user")
-    level_data = relationship("UserLevel", back_populates="user", uselist=False)
-"""

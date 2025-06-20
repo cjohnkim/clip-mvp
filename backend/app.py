@@ -24,6 +24,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
 # Import models first
 from models import db, User, Account, PlannedExpense, PlannedIncome, PaycheckSchedule
+from models.athletic import UserStreak, Achievement, UserAchievement, DailyPerformance, UserLevel
 
 # Initialize extensions
 db.init_app(app)
@@ -38,11 +39,13 @@ with app.app_context():
 from routes.auth import auth_bp
 from routes.planning import planning_bp
 from routes.calculation import calculation_bp
+from routes.athletic import athletic_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(planning_bp, url_prefix='/api/planning')
 app.register_blueprint(calculation_bp, url_prefix='/api/calculation')
+app.register_blueprint(athletic_bp, url_prefix='/api/athletic')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
