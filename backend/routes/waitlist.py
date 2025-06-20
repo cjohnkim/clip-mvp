@@ -5,6 +5,7 @@ import secrets
 import string
 import os
 from models import db, User
+from sqlalchemy import text
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -137,7 +138,7 @@ def join_waitlist():
         # Check if email already exists
         session = db.session
         existing = session.execute(
-            "SELECT id FROM waitlist WHERE email = :email",
+            text("SELECT id FROM waitlist WHERE email = :email"),
             {'email': email}
         ).fetchone()
         
@@ -145,10 +146,10 @@ def join_waitlist():
             return jsonify({'error': 'Email already on waitlist'}), 400
         
         # Insert into waitlist table
-        session.execute("""
+        session.execute(text("""
             INSERT INTO waitlist (email, name, source, user_agent, metadata, status, created_at)
             VALUES (:email, :name, :source, :user_agent, :metadata, 'pending', NOW())
-        """, {
+        """), {
             'email': email,
             'name': name,
             'source': source,
@@ -182,7 +183,7 @@ def approve_waitlist_user():
         
         # Check if user exists in waitlist
         waitlist_user = session.execute(
-            "SELECT id, name, status FROM waitlist WHERE email = :email",
+            text("SELECT id, name, status FROM waitlist WHERE email = :email"),
             {'email': email}
         ).fetchone()
         
@@ -197,21 +198,21 @@ def approve_waitlist_user():
         expires_at = datetime.utcnow() + timedelta(days=7)
         
         # Store token in signup_tokens table
-        session.execute("""
+        session.execute(text("""
             INSERT INTO signup_tokens (email, token, expires_at, created_at)
             VALUES (:email, :token, :expires_at, NOW())
-        """, {
+        """), {
             'email': email,
             'token': token,
             'expires_at': expires_at
         })
         
         # Update waitlist status to 'approved'
-        session.execute("""
+        session.execute(text("""
             UPDATE waitlist 
             SET status = 'approved', approved_at = NOW(), approved_by = :approved_by
             WHERE email = :email
-        """, {
+        """), {
             'email': email,
             'approved_by': approved_by
         })
@@ -240,12 +241,12 @@ def validate_token(token):
         session = db.session
         
         # Check if token exists and is valid
-        token_data = session.execute("""
+        token_data = session.execute(text("""
             SELECT st.email, st.expires_at, st.used_at, w.name
             FROM signup_tokens st
             JOIN waitlist w ON st.email = w.email
             WHERE st.token = :token
-        """, {'token': token}).fetchone()
+        """), {'token': token}).fetchone()
         
         if not token_data:
             return jsonify({'valid': False, 'error': 'Invalid token'}), 404
@@ -285,12 +286,12 @@ def signup_with_token():
         session = db.session
         
         # Validate token
-        token_data = session.execute("""
+        token_data = session.execute(text("""
             SELECT st.email, st.expires_at, st.used_at, w.name
             FROM signup_tokens st
             JOIN waitlist w ON st.email = w.email
             WHERE st.token = :token
-        """, {'token': token}).fetchone()
+        """), {'token': token}).fetchone()
         
         if not token_data:
             return jsonify({'error': 'Invalid token'}), 404
@@ -316,18 +317,18 @@ def signup_with_token():
         session.add(user)
         
         # Mark token as used
-        session.execute("""
+        session.execute(text("""
             UPDATE signup_tokens 
             SET used_at = NOW() 
             WHERE token = :token
-        """, {'token': token})
+        """), {'token': token})
         
         # Update waitlist status
-        session.execute("""
+        session.execute(text("""
             UPDATE waitlist 
             SET status = 'signed_up' 
             WHERE email = :email
-        """, {'email': token_data.email})
+        """), {'email': token_data.email})
         
         session.commit()
         
