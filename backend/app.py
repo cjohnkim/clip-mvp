@@ -24,8 +24,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
 # Import models first
 from models import db, User, Account, PlannedExpense, PlannedIncome, PaycheckSchedule
-
-# Import athletic models after app context is created (will be imported in routes)
+from models import UserStreak, Achievement, UserAchievement, DailyPerformance, UserLevel
 
 # Initialize extensions
 db.init_app(app)
@@ -34,9 +33,6 @@ CORS(app)
 
 # Ensure all models are created
 with app.app_context():
-    # Initialize athletic models with db instance
-    from models.athletic import init_athletic_models
-    UserStreak, Achievement, UserAchievement, DailyPerformance, UserLevel = init_athletic_models(db)
     db.create_all()
 
 # Import routes
