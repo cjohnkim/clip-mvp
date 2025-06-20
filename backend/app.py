@@ -40,12 +40,14 @@ from routes.auth import auth_bp
 from routes.planning import planning_bp
 from routes.calculation import calculation_bp
 from routes.athletic import athletic_bp
+from routes.waitlist import waitlist_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(planning_bp, url_prefix='/api/planning')
 app.register_blueprint(calculation_bp, url_prefix='/api/calculation')
 app.register_blueprint(athletic_bp, url_prefix='/api/athletic')
+app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
