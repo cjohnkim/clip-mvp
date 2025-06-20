@@ -1,26 +1,15 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Login from './components/auth/Login';
-import Signup from './components/auth/Signup';
-import Dashboard from './components/dashboard/Dashboard';
+import { athleticTheme } from './theme/athleticTheme';
+import AuthPage from './pages/AuthPage';
+import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import Setup from './components/setup/Setup';
 import Planning from './components/planning/Planning';
 import Timeline from './components/timeline/Timeline';
 import ScenarioTest from './components/scenario/ScenarioTest';
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#1976d2',
-    },
-    secondary: {
-      main: '#dc004e',
-    },
-  },
-});
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -29,19 +18,31 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return <div>Loading...</div>;
   }
   
-  return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+  return isAuthenticated ? <>{children}</> : <Navigate to="/auth" />;
 }
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={athleticTheme}>
       <CssBaseline />
       <AuthProvider>
         <Router>
           <div className="App">
             <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
+              {/* Authentication routes */}
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/login" element={<Navigate to="/auth" replace />} />
+              <Route path="/signup" element={<AuthPage />} />
+              
+              {/* Protected routes */}
+              <Route 
+                path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <AthleticDashboard />
+                  </ProtectedRoute>
+                } 
+              />
               <Route 
                 path="/setup" 
                 element={
@@ -74,14 +75,8 @@ function App() {
                   </ProtectedRoute>
                 } 
               />
-              <Route 
-                path="/dashboard" 
-                element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } 
-              />
+              
+              {/* Default redirect */}
               <Route path="/" element={<Navigate to="/dashboard" />} />
             </Routes>
           </div>
