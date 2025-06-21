@@ -38,6 +38,7 @@ def validate_password(password):
 
 def send_waitlist_confirmation_email(email, name):
     """Send confirmation email when user joins waitlist"""
+    print(f"Starting email send to {email}")
     try:
         # Email configuration
         smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')

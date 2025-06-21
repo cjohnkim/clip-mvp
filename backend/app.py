@@ -332,6 +332,54 @@ def debug_token(token):
     except Exception as e:
         return jsonify({'error': str(e)})
 
+@app.route('/api/debug-waitlist-flow', methods=['POST'])
+def debug_waitlist_flow():
+    """Debug the complete waitlist signup flow"""
+    try:
+        from routes.waitlist import send_waitlist_confirmation_email
+        from models import Waitlist
+        
+        data = request.get_json() or {}
+        email = data.get('email', 'cjohnkim+debug@gmail.com')
+        name = data.get('name', 'Debug User')
+        
+        # Check if email exists
+        existing = Waitlist.query.filter_by(email=email).first()
+        
+        debug_info = {
+            'email': email,
+            'name': name,
+            'existing_in_db': bool(existing),
+            'existing_details': str(existing) if existing else None
+        }
+        
+        if existing:
+            return jsonify({
+                'error': 'Email already exists in waitlist',
+                'debug': debug_info
+            })
+        
+        # Try to send email without adding to DB
+        print(f"Debug: Attempting to send email to {email}")
+        email_result = send_waitlist_confirmation_email(email, name)
+        print(f"Debug: Email send result: {email_result}")
+        
+        debug_info['email_send_attempt'] = email_result
+        
+        return jsonify({
+            'success': True,
+            'message': 'Debug email sent (not added to waitlist)',
+            'debug': debug_info
+        })
+        
+    except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        return jsonify({
+            'error': str(e),
+            'traceback': error_trace
+        }), 500
+
 @app.route('/api/test-waitlist-email', methods=['POST'])
 def test_waitlist_email():
     """Test waitlist confirmation email directly"""
