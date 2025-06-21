@@ -197,51 +197,17 @@ def join_waitlist():
             status='pending'
         )
         
-        # BYPASS: Use the working test email function directly
-        print(f"Using bypass: sending test email to {email}")
+        # BYPASS: Call the working debug email function directly
+        print(f"Using debug email bypass for {email}")
         try:
-            # Import and use the exact working test email code
-            import smtplib
-            from email.mime.text import MIMEText
-            from email.mime.multipart import MIMEMultipart
-            import os
-            
-            smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
-            smtp_port = int(os.environ.get('SMTP_PORT', '587'))
-            smtp_username = os.environ.get('SMTP_USERNAME')
-            smtp_password = os.environ.get('SMTP_PASSWORD')
-            
-            msg = MIMEMultipart('alternative')
-            msg['Subject'] = f"Welcome to Money Clip waitlist, {name or 'there'}!"
-            msg['From'] = smtp_username
-            msg['To'] = email
-            
-            html_body = f"""
-            <html>
-            <body>
-                <h2>Hey {name or 'there'}! 👋</h2>
-                <p>Thanks for joining the Money Clip waitlist!</p>
-                <p>You're signed up for early access to our financial athletics platform.</p>
-                <p>We'll email you when your spot is ready.</p>
-                <hr>
-                <small>Money Clip Waitlist</small>
-            </body>
-            </html>
-            """
-            
-            html_part = MIMEText(html_body, 'html')
-            msg.attach(html_part)
-            
-            with smtplib.SMTP(smtp_server, smtp_port) as server:
-                server.starttls()
-                server.login(smtp_username, smtp_password)
-                server.send_message(msg)
-            
-            email_sent = True
-            print("Bypass email sent successfully")
-            
+            # Use the exact same code from the debug endpoint that works
+            from routes.waitlist import send_waitlist_confirmation_email
+            email_sent = send_waitlist_confirmation_email(email, name or 'there')
+            print(f"Debug bypass result: {email_sent}")
         except Exception as e:
-            print(f"Bypass email failed: {e}")
+            print(f"Debug bypass failed: {e}")
+            import traceback
+            traceback.print_exc()
             email_sent = False
         
         # Only commit to database if email was sent successfully
