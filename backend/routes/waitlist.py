@@ -37,70 +37,53 @@ def validate_password(password):
     return True, "Password meets all requirements"
 
 def send_waitlist_confirmation_email(email, name):
-    """Send confirmation email when user joins waitlist"""
-    print(f"Starting email send to {email}")
+    """Send confirmation email when user joins waitlist - using same structure as working test email"""
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    
+    print(f"Starting waitlist email send to {email}")
     try:
-        # Email configuration
+        # Email configuration from environment (same as test email)
         smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
         smtp_port = int(os.environ.get('SMTP_PORT', '587'))
         smtp_username = os.environ.get('SMTP_USERNAME')
         smtp_password = os.environ.get('SMTP_PASSWORD')
         
         if not smtp_username or not smtp_password:
-            print("Email credentials not configured")
+            print("SMTP credentials not configured")
             return False
         
-        # Email content
-        subject = "🏆 You're on the Money Clip waitlist!"
+        # Create message (same structure as test email)
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f"Welcome to Money Clip waitlist, {name}!"
+        msg['From'] = smtp_username
+        msg['To'] = email
         
         html_body = f"""
         <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #000; background: #fff;">
-            <div style="max-width: 500px; margin: 0 auto; padding: 20px;">
-                <h1 style="color: #000;">Hey {name}! 👋</h1>
-                
-                <p>Thanks for joining the Money Clip waitlist!</p>
-                
-                <p>You're now signed up for early access to our financial athletics platform. We'll email you when your spot is ready.</p>
-                
-                <p><strong>What's Money Clip?</strong><br>
-                It's a platform that turns budgeting into an athletic performance game. Think daily scores, streaks, and achievements for your money habits.</p>
-                
-                <p><strong>What happens next?</strong></p>
-                <ul>
-                    <li>We'll email you when approved</li>
-                    <li>You'll get early access before launch</li>
-                    <li>Start training your financial fitness</li>
-                </ul>
-                
-                <p>Thanks again!</p>
-                
-                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
-                <p style="font-size: 14px; color: #666;">
-                    Questions? Just reply to this email.<br>
-                    You're getting this because you signed up for Money Clip.
-                </p>
-            </div>
+        <body>
+            <h2>Hey {name}! 👋</h2>
+            <p>Thanks for joining the Money Clip waitlist!</p>
+            <p>You're now signed up for early access to our financial athletics platform.</p>
+            <p><strong>What's Money Clip?</strong> It's a platform that turns budgeting into an athletic performance game.</p>
+            <p>We'll email you when your spot is ready.</p>
+            <hr>
+            <small>Money Clip Waitlist Confirmation</small>
         </body>
         </html>
         """
         
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = smtp_username
-        msg['To'] = email
-        
-        # Add HTML part
         html_part = MIMEText(html_body, 'html')
         msg.attach(html_part)
         
-        # Send email
+        # Send email (same method as test email)
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(smtp_username, smtp_password)
             server.send_message(msg)
         
+        print(f"Waitlist email sent successfully to {email}")
         return True
         
     except Exception as e:
