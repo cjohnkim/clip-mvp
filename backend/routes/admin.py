@@ -38,7 +38,7 @@ def send_approval_email(email, token):
         
         # Create signup URL
         frontend_url = os.environ.get('FRONTEND_URL', 'https://app.moneyclip.money')
-        signup_url = f"{frontend_url}/auth?token={token}"
+        signup_url = f"{frontend_url}/signup.html?token={token}"
         
         # Email content
         subject = "🏆 Welcome to Money Clip - Your Financial Athletics Journey Begins!"
