@@ -54,7 +54,11 @@ app.register_blueprint(admin_bp, url_prefix='/api/admin')
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Simple health check endpoint"""
-    return jsonify({'status': 'healthy', 'timestamp': datetime.now().isoformat()})
+    return jsonify({
+        'status': 'healthy', 
+        'timestamp': datetime.now().isoformat(),
+        'database': 'connected' if db else 'disconnected'
+    })
 
 @app.route('/api', methods=['GET'])
 def api_info():
