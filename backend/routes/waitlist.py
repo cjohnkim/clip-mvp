@@ -314,7 +314,12 @@ def validate_token(token):
         if signup_token.used_at:
             return jsonify({'valid': False, 'error': 'Token already used'}), 400
         
-        if signup_token.expires_at < datetime.utcnow():
+        # Handle both string and datetime types for expires_at
+        expires_at = signup_token.expires_at
+        if isinstance(expires_at, str):
+            expires_at = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+        
+        if expires_at < datetime.utcnow():
             return jsonify({'valid': False, 'error': 'Token expired'}), 400
         
         # Get associated waitlist user
@@ -355,7 +360,12 @@ def signup_with_token():
         if signup_token.used_at:
             return jsonify({'error': 'Token already used'}), 400
         
-        if signup_token.expires_at < datetime.utcnow():
+        # Handle both string and datetime types for expires_at
+        expires_at = signup_token.expires_at
+        if isinstance(expires_at, str):
+            expires_at = datetime.fromisoformat(expires_at.replace('Z', '+00:00'))
+        
+        if expires_at < datetime.utcnow():
             return jsonify({'error': 'Token expired'}), 400
         
         # Check if user already exists
