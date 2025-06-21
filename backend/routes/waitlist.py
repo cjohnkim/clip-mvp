@@ -201,19 +201,11 @@ def join_waitlist():
         if not email:
             return jsonify({'error': 'Email is required'}), 400
         
-        # Check if email already exists (allow + variations)
+        # Check if exact email already exists
         existing = Waitlist.query.filter_by(email=email).first()
         
         if existing:
-            # Allow + variations of the same email for testing
-            base_email = email.split('+')[0] + '@' + email.split('@')[1]
-            existing_base = existing.email.split('+')[0] + '@' + existing.email.split('@')[1]
-            
-            if base_email == existing_base and '+' in email:
-                # Allow the + variation
-                pass
-            else:
-                return jsonify({'error': 'Email already on waitlist'}), 400
+            return jsonify({'error': 'Email already on waitlist'}), 400
         
         # Create new waitlist entry
         waitlist_user = Waitlist(
@@ -229,7 +221,9 @@ def join_waitlist():
         db.session.commit()
         
         # Send welcome email
+        print(f"Attempting to send welcome email to {email} with name '{name or 'there'}'")
         email_sent = send_waitlist_confirmation_email(email, name or 'there')
+        print(f"Email send result: {email_sent}")
         
         return jsonify({
             'success': True,
