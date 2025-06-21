@@ -151,6 +151,162 @@ def test_approve():
         db.session.rollback()
         return jsonify({'error': f'Approval failed: {str(e)}'}), 500
 
+@app.route('/signup/<token>')
+def signup_page(token):
+    """Serve signup page directly from backend"""
+    return f'''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Your Money Clip Signup</title>
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{ 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a2540 0%, #1e3a8a 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }}
+        .signup-container {{ 
+            background: white; border-radius: 16px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px; width: 100%; overflow: hidden;
+        }}
+        .header {{ 
+            background: linear-gradient(135deg, #0a2540 0%, #1e3a8a 100%);
+            color: white; padding: 40px 30px; text-align: center;
+        }}
+        .header h1 {{ font-size: 2rem; margin-bottom: 10px; }}
+        .header p {{ opacity: 0.9; font-size: 1.1rem; }}
+        .form-container {{ padding: 40px 30px; }}
+        .form-group {{ margin-bottom: 20px; }}
+        .form-group label {{ display: block; margin-bottom: 8px; font-weight: 600; color: #0a2540; }}
+        .form-group input {{ 
+            width: 100%; padding: 12px 16px; border: 2px solid #e5e7eb; border-radius: 8px;
+            font-size: 16px; transition: border-color 0.2s ease;
+        }}
+        .form-group input:focus {{ outline: none; border-color: #059669; }}
+        .submit-btn {{ 
+            width: 100%; background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: white; border: none; padding: 16px; border-radius: 8px;
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: transform 0.2s ease;
+        }}
+        .submit-btn:hover {{ transform: translateY(-2px); }}
+        .submit-btn:disabled {{ opacity: 0.6; cursor: not-allowed; transform: none; }}
+        .alert {{ padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }}
+        .alert.error {{ background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }}
+        .alert.success {{ background: #f0fdf4; color: #059669; border: 1px solid #bbf7d0; }}
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="header">
+            <h1>🏆 Welcome to Money Clip!</h1>
+            <p>Complete your account setup to start your financial athletics journey</p>
+        </div>
+        
+        <div class="form-container">
+            <div id="alert" class="alert"></div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Create Password</label>
+                    <input type="password" id="password" name="password" placeholder="8+ chars, uppercase, lowercase, number, symbol">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password">
+                </div>
+                
+                <button type="submit" id="submitBtn" class="submit-btn">
+                    Create Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const token = "{token}";
+        
+        async function validateToken() {{
+            try {{
+                const response = await fetch(`https://clip-mvp-production.up.railway.app/api/waitlist/validate-token/${{token}}`);
+                const data = await response.json();
+                
+                if (data.valid) {{
+                    document.getElementById('email').value = data.email;
+                }} else {{
+                    showAlert(data.error || 'Invalid or expired token', 'error');
+                }}
+            }} catch (error) {{
+                showAlert('Unable to validate token. Please try again.', 'error');
+            }}
+        }}
+        
+        function showAlert(message, type) {{
+            const alert = document.getElementById('alert');
+            alert.textContent = message;
+            alert.className = `alert ${{type}}`;
+            alert.style.display = 'block';
+        }}
+        
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {{
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const submitBtn = document.getElementById('submitBtn');
+            
+            if (password !== confirmPassword) {{
+                showAlert('Passwords do not match', 'error');
+                return;
+            }}
+            
+            if (password.length < 8) {{
+                showAlert('Password must be at least 8 characters', 'error');
+                return;
+            }}
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating Account...';
+            
+            try {{
+                const response = await fetch('https://clip-mvp-production.up.railway.app/api/waitlist/signup-with-token', {{
+                    method: 'POST',
+                    headers: {{ 'Content-Type': 'application/json' }},
+                    body: JSON.stringify({{ token: token, password: password }})
+                }});
+                
+                const data = await response.json();
+                
+                if (data.success) {{
+                    showAlert('Account created successfully! Redirecting...', 'success');
+                    setTimeout(() => {{
+                        window.location.href = 'https://app.moneyclip.money/';
+                    }}, 2000);
+                }} else {{
+                    showAlert(data.error || 'Failed to create account', 'error');
+                }}
+            }} catch (error) {{
+                showAlert('Unable to create account. Please try again.', 'error');
+            }} finally {{
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Account';
+            }}
+        }});
+        
+        validateToken();
+    </script>
+</body>
+</html>
+    '''
+
 @app.route('/api/test-email', methods=['POST'])
 def test_email():
     """Test email sending directly from production"""

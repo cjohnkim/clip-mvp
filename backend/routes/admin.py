@@ -36,9 +36,8 @@ def send_approval_email(email, token):
             print("Email credentials not configured")
             return False
         
-        # Create signup URL
-        frontend_url = os.environ.get('FRONTEND_URL', 'https://app.moneyclip.money')
-        signup_url = f"{frontend_url}/auth.html?token={token}"
+        # Create signup URL - point to backend-served page
+        signup_url = f"https://clip-mvp-production.up.railway.app/signup/{token}"
         
         # Email content
         subject = "🏆 Welcome to Money Clip - Your Financial Athletics Journey Begins!"
