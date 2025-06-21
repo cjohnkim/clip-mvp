@@ -25,6 +25,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 # Import models first
 from models import db, User, Account, PlannedExpense, PlannedIncome, PaycheckSchedule
 from models import UserStreak, Achievement, UserAchievement, DailyPerformance, UserLevel
+from models import Waitlist, SignupToken
 
 # Initialize extensions
 db.init_app(app)
@@ -39,37 +40,7 @@ def init_database():
         try:
             with app.app_context():
                 db.create_all()
-                
-                # Create waitlist tables if they don't exist
-                from sqlalchemy import text
-                db.session.execute(text("""
-                    CREATE TABLE IF NOT EXISTS waitlist (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        email VARCHAR(255) UNIQUE NOT NULL,
-                        name VARCHAR(255),
-                        status VARCHAR(50) DEFAULT 'pending',
-                        source VARCHAR(100),
-                        user_agent TEXT,
-                        metadata TEXT,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        approved_at TIMESTAMP,
-                        approved_by VARCHAR(255)
-                    )
-                """))
-                
-                db.session.execute(text("""
-                    CREATE TABLE IF NOT EXISTS signup_tokens (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        email VARCHAR(255) NOT NULL,
-                        token VARCHAR(255) UNIQUE NOT NULL,
-                        expires_at TIMESTAMP NOT NULL,
-                        used_at TIMESTAMP,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                    )
-                """))
-                
-                db.session.commit()
-                print(f"✅ Database connected and tables created on attempt {attempt + 1}")
+                print(f"✅ Database connected and all tables created on attempt {attempt + 1}")
                 return True
         except Exception as e:
             print(f"❌ Database connection attempt {attempt + 1} failed: {e}")

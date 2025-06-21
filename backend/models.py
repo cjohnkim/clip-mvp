@@ -330,6 +330,29 @@ class UserLevel(db.Model):
         return f'<UserLevel user_id={self.user_id} level={self.current_level} xp={self.total_xp}>'
 
 
+class Waitlist(db.Model):
+    """Waitlist for user signups"""
+    __tablename__ = 'waitlist'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(255), nullable=False, unique=True, index=True)
+    name = db.Column(db.String(255), nullable=True)
+    status = db.Column(db.String(50), default='pending', index=True)
+    source = db.Column(db.String(100), nullable=True)
+    user_agent = db.Column(db.Text, nullable=True)
+    metadata = db.Column(db.Text, nullable=True)
+    
+    # Approval tracking
+    approved_at = db.Column(db.DateTime, nullable=True)
+    approved_by = db.Column(db.String(255), nullable=True)
+    
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def __repr__(self):
+        return f'<Waitlist email={self.email} status={self.status}>'
+
+
 class SignupToken(db.Model):
     """Tokenized signup URLs for waitlist-approved users"""
     __tablename__ = 'signup_tokens'
