@@ -142,7 +142,7 @@ def test_approve():
             'success': True,
             'message': f'Test approval completed for {email}',
             'token': token,
-            'signup_url': f"https://app.moneyclip.money/signup.html?token={token}",
+            'signup_url': f"https://app.moneyclip.money/auth.html?token={token}",
             'expires_at': expires_at.isoformat(),
             'email_sent': email_sent
         })
