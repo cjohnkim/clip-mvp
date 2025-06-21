@@ -97,6 +97,60 @@ def test_env():
         'missing_vars': [k for k, v in smtp_vars.items() if v is None and k != 'SMTP_PASSWORD']
     })
 
+@app.route('/api/test-approve', methods=['POST'])
+def test_approve():
+    """Test approval flow without JWT for debugging"""
+    from routes.admin import send_approval_email, generate_signup_token
+    from models import Waitlist, SignupToken
+    
+    try:
+        data = request.get_json()
+        email = data.get('email', 'cjohnkim+railway@gmail.com')
+        
+        # Check if user exists in waitlist
+        waitlist_user = Waitlist.query.filter_by(email=email).first()
+        
+        if not waitlist_user:
+            return jsonify({'error': 'Email not found in waitlist'}), 404
+        
+        if waitlist_user.status == 'approved':
+            return jsonify({'error': 'User already approved'}), 400
+        
+        # Generate token
+        token = generate_signup_token()
+        expires_at = datetime.utcnow() + timedelta(days=7)
+        
+        # Create signup token
+        signup_token = SignupToken(
+            email=email,
+            token=token,
+            expires_at=expires_at
+        )
+        db.session.add(signup_token)
+        
+        # Update waitlist status to 'approved'
+        waitlist_user.status = 'approved'
+        waitlist_user.approved_at = datetime.utcnow()
+        waitlist_user.approved_by = 'test-admin'
+        
+        db.session.commit()
+        
+        # Send approval email
+        email_sent = send_approval_email(email, token)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Test approval completed for {email}',
+            'token': token,
+            'signup_url': f"https://app.moneyclip.money/auth?token={token}",
+            'expires_at': expires_at.isoformat(),
+            'email_sent': email_sent
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': f'Approval failed: {str(e)}'}), 500
+
 @app.route('/api/test-email', methods=['POST'])
 def test_email():
     """Test email sending directly from production"""
