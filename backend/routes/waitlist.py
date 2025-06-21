@@ -305,28 +305,26 @@ def approve_waitlist_user():
 def validate_token(token):
     """Validate signup token"""
     try:
-        # Check if token exists and is valid
-        token_data = db.session.execute(text("""
-            SELECT st.email, st.expires_at, st.used_at, w.name
-            FROM signup_tokens st
-            JOIN waitlist w ON st.email = w.email
-            WHERE st.token = :token
-        """), {'token': token}).fetchone()
+        # Check if token exists and is valid using SQLAlchemy ORM
+        signup_token = SignupToken.query.filter_by(token=token).first()
         
-        if not token_data:
+        if not signup_token:
             return jsonify({'valid': False, 'error': 'Invalid token'}), 404
         
-        if token_data.used_at:
+        if signup_token.used_at:
             return jsonify({'valid': False, 'error': 'Token already used'}), 400
         
-        if token_data.expires_at < datetime.utcnow():
+        if signup_token.expires_at < datetime.utcnow():
             return jsonify({'valid': False, 'error': 'Token expired'}), 400
+        
+        # Get associated waitlist user
+        waitlist_user = Waitlist.query.filter_by(email=signup_token.email).first()
         
         return jsonify({
             'valid': True,
-            'email': token_data.email,
-            'name': token_data.name,
-            'expires_at': token_data.expires_at.isoformat()
+            'email': signup_token.email,
+            'name': waitlist_user.name if waitlist_user else signup_token.email.split('@')[0],
+            'expires_at': signup_token.expires_at.isoformat()
         })
         
     except Exception as e:
@@ -348,44 +346,39 @@ def signup_with_token():
         if not is_valid:
             return jsonify({'error': message}), 400
         
-        # Validate token
-        token_data = db.session.execute(text("""
-            SELECT st.email, st.expires_at, st.used_at, w.name
-            FROM signup_tokens st
-            JOIN waitlist w ON st.email = w.email
-            WHERE st.token = :token
-        """), {'token': token}).fetchone()
+        # Validate token using SQLAlchemy ORM
+        signup_token = SignupToken.query.filter_by(token=token).first()
         
-        if not token_data:
+        if not signup_token:
             return jsonify({'error': 'Invalid token'}), 404
         
-        if token_data.used_at:
+        if signup_token.used_at:
             return jsonify({'error': 'Token already used'}), 400
         
-        if token_data.expires_at < datetime.utcnow():
+        if signup_token.expires_at < datetime.utcnow():
             return jsonify({'error': 'Token expired'}), 400
         
         # Check if user already exists
-        existing_user = User.query.filter_by(email=token_data.email).first()
+        existing_user = User.query.filter_by(email=signup_token.email).first()
         if existing_user:
             return jsonify({'error': 'Account already exists'}), 400
         
+        # Get waitlist user for name
+        waitlist_user = Waitlist.query.filter_by(email=signup_token.email).first()
+        
         # Create user account
         user = User(
-            email=token_data.email,
-            first_name=token_data.name or token_data.email.split('@')[0]
+            email=signup_token.email,
+            first_name=waitlist_user.name if waitlist_user else signup_token.email.split('@')[0]
         )
         user.set_password(password)
         
         db.session.add(user)
         
         # Mark token as used
-        signup_token_obj = SignupToken.query.filter_by(token=token).first()
-        if signup_token_obj:
-            signup_token_obj.used_at = datetime.utcnow()
+        signup_token.used_at = datetime.utcnow()
         
         # Update waitlist status
-        waitlist_user = Waitlist.query.filter_by(email=token_data.email).first()
         if waitlist_user:
             waitlist_user.status = 'signed_up'
         
