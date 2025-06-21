@@ -1,5 +1,5 @@
-import React from 'react';
-import { Box, Container, Typography, Button, Grid, Card, CardContent } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Container, Typography, Button, Grid, Card, CardContent, TextField, Alert, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const LandingContainer = styled(Box)(() => ({
@@ -145,12 +145,55 @@ const CTASection = styled(Box)(() => ({
 }));
 
 const LandingPage: React.FC = () => {
+  const [showWaitlist, setShowWaitlist] = useState(false);
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
   const handleSignInClick = () => {
     window.location.href = 'https://app.moneyclip.money/auth';
   };
 
   const handleJoinWaitlistClick = () => {
-    window.location.href = 'https://app.moneyclip.money/auth?mode=waitlist';
+    setShowWaitlist(true);
+  };
+
+  const handleWaitlistSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !name) return;
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('https://clip-mvp-production.up.railway.app/api/waitlist/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          name,
+          source: 'landing_page'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess(true);
+        setEmail('');
+        setName('');
+      } else {
+        setError(data.error || 'Failed to join waitlist');
+      }
+    } catch (err) {
+      setError('Unable to connect to server. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const features = [
@@ -316,6 +359,101 @@ const LandingPage: React.FC = () => {
           </Typography>
         </Container>
       </CTASection>
+
+      {/* Waitlist Modal */}
+      {showWaitlist && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0,0,0,0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            p: 2
+          }}
+          onClick={() => setShowWaitlist(false)}
+        >
+          <Card
+            sx={{ maxWidth: 500, width: '100%' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <CardContent sx={{ p: 4 }}>
+              <Typography variant="h4" sx={{ mb: 2, textAlign: 'center', color: '#0a2540' }}>
+                🏆 Join the Waitlist
+              </Typography>
+              <Typography variant="body1" sx={{ mb: 3, textAlign: 'center', color: '#64748b' }}>
+                Be the first to transform your finances into athletic performance
+              </Typography>
+              
+              {success ? (
+                <Box sx={{ textAlign: 'center', py: 2 }}>
+                  <Typography variant="h6" sx={{ color: '#059669', mb: 2 }}>
+                    🎉 You're on the list!
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: '#64748b', mb: 3 }}>
+                    We'll notify you when Money Clip is ready for your financial athletics journey.
+                  </Typography>
+                  <Button onClick={() => setShowWaitlist(false)} variant="contained">
+                    Close
+                  </Button>
+                </Box>
+              ) : (
+                <form onSubmit={handleWaitlistSubmit}>
+                  <TextField
+                    fullWidth
+                    label="Full Name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    sx={{ mb: 2 }}
+                    required
+                  />
+                  <TextField
+                    fullWidth
+                    label="Email Address"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    sx={{ mb: 3 }}
+                    required
+                  />
+                  
+                  {error && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                      {error}
+                    </Alert>
+                  )}
+                  
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Button
+                      onClick={() => setShowWaitlist(false)}
+                      variant="outlined"
+                      fullWidth
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      fullWidth
+                      disabled={loading || !email || !name}
+                      sx={{
+                        background: 'linear-gradient(135deg, #00d4aa 0%, #00b894 100%)',
+                      }}
+                    >
+                      {loading ? <CircularProgress size={24} /> : 'Join Waitlist'}
+                    </Button>
+                  </Box>
+                </form>
+              )}
+            </CardContent>
+          </Card>
+        </Box>
+      )}
     </LandingContainer>
   );
 };
