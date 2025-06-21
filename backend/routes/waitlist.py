@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import secrets
 import string
 import os
-from models import db, User
+from models import db, User, Waitlist, SignupToken
 from sqlalchemy import text
 import smtplib
 from email.mime.text import MIMEText
@@ -136,27 +136,23 @@ def join_waitlist():
             return jsonify({'error': 'Email is required'}), 400
         
         # Check if email already exists
-        session = db.session
-        existing = session.execute(
-            text("SELECT id FROM waitlist WHERE email = :email"),
-            {'email': email}
-        ).fetchone()
+        existing = Waitlist.query.filter_by(email=email).first()
         
         if existing:
             return jsonify({'error': 'Email already on waitlist'}), 400
         
-        # Insert into waitlist table
-        session.execute(text("""
-            INSERT INTO waitlist (email, name, source, user_agent, metadata, status, created_at)
-            VALUES (:email, :name, :source, :user_agent, :metadata, 'pending', NOW())
-        """), {
-            'email': email,
-            'name': name,
-            'source': source,
-            'user_agent': user_agent,
-            'metadata': str(metadata) if metadata else None
-        })
-        session.commit()
+        # Create new waitlist entry
+        waitlist_user = Waitlist(
+            email=email,
+            name=name,
+            source=source,
+            user_agent=user_agent,
+            metadata=str(metadata) if metadata else None,
+            status='pending'
+        )
+        
+        db.session.add(waitlist_user)
+        db.session.commit()
         
         return jsonify({
             'success': True,
@@ -164,7 +160,7 @@ def join_waitlist():
         })
         
     except Exception as e:
-        session.rollback()
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @waitlist_bp.route('/approve', methods=['POST'])
