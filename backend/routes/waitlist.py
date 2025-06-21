@@ -147,7 +147,7 @@ def join_waitlist():
             name=name,
             source=source,
             user_agent=user_agent,
-            metadata=str(metadata) if metadata else None,
+            user_metadata=str(metadata) if metadata else None,
             status='pending'
         )
         

@@ -340,7 +340,7 @@ class Waitlist(db.Model):
     status = db.Column(db.String(50), default='pending', index=True)
     source = db.Column(db.String(100), nullable=True)
     user_agent = db.Column(db.Text, nullable=True)
-    metadata = db.Column(db.Text, nullable=True)
+    user_metadata = db.Column(db.Text, nullable=True)
     
     # Approval tracking
     approved_at = db.Column(db.DateTime, nullable=True)
