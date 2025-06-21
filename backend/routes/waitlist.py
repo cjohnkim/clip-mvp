@@ -36,6 +36,85 @@ def validate_password(password):
     
     return True, "Password meets all requirements"
 
+def send_waitlist_confirmation_email(email, name):
+    """Send confirmation email when user joins waitlist"""
+    try:
+        # Email configuration
+        smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+        smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+        smtp_username = os.environ.get('SMTP_USERNAME')
+        smtp_password = os.environ.get('SMTP_PASSWORD')
+        
+        if not smtp_username or not smtp_password:
+            print("Email credentials not configured")
+            return False
+        
+        # Email content
+        subject = "🏆 You're on the Money Clip waitlist!"
+        
+        html_body = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <h1 style="color: #0a2540; margin-bottom: 10px;">🏆 Welcome to the Team!</h1>
+                    <p style="font-size: 18px; color: #059669; font-weight: 600;">You're officially on the Money Clip waitlist</p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #0a2540 0%, #1e3a8a 100%); padding: 30px; border-radius: 12px; color: white; text-align: center; margin-bottom: 30px;">
+                    <h2 style="margin-top: 0; color: white;">Hey {name}! 👋</h2>
+                    <p style="margin-bottom: 25px; font-size: 16px;">Thanks for joining the Money Clip waitlist! You're now part of an exclusive group getting early access to the financial athletics platform.</p>
+                </div>
+                
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                    <h3 style="color: #0a2540; margin-top: 0;">What happens next?</h3>
+                    <ul style="color: #64748b; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;">📧 We'll email you when your spot is ready</li>
+                        <li style="margin-bottom: 8px;">🚀 Get exclusive early access before public launch</li>
+                        <li style="margin-bottom: 8px;">🏆 Start your financial athletics journey first</li>
+                        <li style="margin-bottom: 8px;">💪 Transform your money habits into winning performance</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #e6fffa; padding: 20px; border-radius: 8px; border-left: 4px solid #059669; margin-bottom: 25px;">
+                    <p style="margin: 0; font-weight: 600; color: #0a2540;">💡 Get Ready</p>
+                    <p style="margin: 10px 0 0 0; color: #666;">While you wait, start thinking like a financial athlete. Every dollar is training, every save is a rep, every budget decision is performance.</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+                    <p style="color: #059669; font-weight: 600;">Welcome to the future of financial fitness! 🎉</p>
+                    <p style="color: #94a3b8; font-size: 0.9rem; margin-top: 15px;">
+                        You're receiving this because you signed up for Money Clip.<br>
+                        Questions? Just reply to this email.
+                    </p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """
+        
+        # Create message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = smtp_username
+        msg['To'] = email
+        
+        # Add HTML part
+        html_part = MIMEText(html_body, 'html')
+        msg.attach(html_part)
+        
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.send_message(msg)
+        
+        return True
+        
+    except Exception as e:
+        print(f"Failed to send waitlist confirmation email: {e}")
+        return False
+
 def send_approval_email(email, token):
     """Send approval email with signup link"""
     try:
@@ -154,9 +233,13 @@ def join_waitlist():
         db.session.add(waitlist_user)
         db.session.commit()
         
+        # Send welcome email
+        email_sent = send_waitlist_confirmation_email(email, name or 'there')
+        
         return jsonify({
             'success': True,
-            'message': 'Added to waitlist! We\'ll notify you when a spot opens up.'
+            'message': 'Added to waitlist! Check your email for confirmation.',
+            'email_sent': email_sent
         })
         
     except Exception as e:
