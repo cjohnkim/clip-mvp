@@ -97,6 +97,65 @@ def test_env():
         'missing_vars': [k for k, v in smtp_vars.items() if v is None and k != 'SMTP_PASSWORD']
     })
 
+@app.route('/api/test-email', methods=['POST'])
+def test_email():
+    """Test email sending directly from production"""
+    import smtplib
+    from email.mime.text import MIMEText
+    from email.mime.multipart import MIMEMultipart
+    
+    try:
+        recipient = request.json.get('email', 'cjohnkim+railway@gmail.com')
+        
+        # Email configuration from environment
+        smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+        smtp_port = int(os.environ.get('SMTP_PORT', '587'))
+        smtp_username = os.environ.get('SMTP_USERNAME')
+        smtp_password = os.environ.get('SMTP_PASSWORD')
+        
+        if not smtp_username or not smtp_password:
+            return jsonify({'error': 'SMTP credentials not configured'}), 500
+        
+        # Create test message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = "🧪 Production SMTP Test - Money Clip"
+        msg['From'] = smtp_username
+        msg['To'] = recipient
+        
+        html_body = """
+        <html>
+        <body>
+            <h2>🧪 Production SMTP Test Successful!</h2>
+            <p>This email was sent from the Railway production server.</p>
+            <p>The email system is working correctly!</p>
+            <hr>
+            <small>Money Clip Production Test</small>
+        </body>
+        </html>
+        """
+        
+        html_part = MIMEText(html_body, 'html')
+        msg.attach(html_part)
+        
+        # Send email
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_username, smtp_password)
+            server.send_message(msg)
+        
+        return jsonify({
+            'success': True,
+            'message': f'Test email sent to {recipient}',
+            'smtp_server': smtp_server,
+            'smtp_port': smtp_port
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'error': f'Failed to send email: {str(e)}',
+            'smtp_configured': bool(os.environ.get('SMTP_USERNAME') and os.environ.get('SMTP_PASSWORD'))
+        }), 500
+
 @app.route('/api', methods=['GET'])
 def api_info():
     """API information endpoint"""
