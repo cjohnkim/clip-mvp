@@ -44,30 +44,36 @@ def send_approval_email(email, token):
         
         html_body = f"""
         <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h1 style="color: #0a2540; margin-bottom: 10px;">🏆 You're In!</h1>
-                    <p style="font-size: 18px; color: #059669; font-weight: 600;">Your Financial Athletics Journey Starts Now</p>
-                </div>
+        <body style="font-family: Arial, sans-serif; line-height: 1.5; color: #000; background: #fff;">
+            <div style="max-width: 500px; margin: 0 auto; padding: 20px;">
+                <h1 style="color: #000;">You're approved! 🎉</h1>
                 
-                <div style="background: linear-gradient(135deg, #0a2540 0%, #1e3a8a 100%); padding: 30px; border-radius: 12px; color: white; text-align: center; margin-bottom: 30px;">
-                    <h2 style="margin-top: 0; color: white;">Ready to Transform Your Finances? 💪</h2>
-                    <p style="margin-bottom: 25px; font-size: 16px;">You've been approved for Money Clip - the financial training platform that turns budgeting into an athletic performance game!</p>
-                    
-                    <a href="{signup_url}" style="display: inline-block; background: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
-                        🚀 Complete Your Signup
+                <p>Your Money Clip account is ready. Click the link below to create your password and start using the app.</p>
+                
+                <p style="margin: 30px 0;">
+                    <a href="{signup_url}" style="background: #000; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        Complete Signup →
                     </a>
-                </div>
+                </p>
                 
-                <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border-left: 4px solid #059669; margin-bottom: 25px;">
-                    <p style="margin: 0; font-weight: 600; color: #0a2540;">⏰ Important: This signup link expires in 7 days</p>
-                    <p style="margin: 10px 0 0 0; color: #666;">Complete your registration soon to start your financial training!</p>
-                </div>
+                <p><strong>What you'll get:</strong></p>
+                <ul>
+                    <li>Daily performance scores (0-100)</li>
+                    <li>Streak tracking for good habits</li>
+                    <li>Achievement badges</li>
+                    <li>Progress analytics</li>
+                    <li>Level-up system</li>
+                </ul>
                 
-                <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
-                    <p style="color: #059669; font-weight: 600;">Welcome to the future of financial fitness! 🎉</p>
-                </div>
+                <p><strong>Important:</strong> This signup link expires in 7 days.</p>
+                
+                <p>Ready to start training? 💪</p>
+                
+                <hr style="border: none; border-top: 1px solid #ddd; margin: 30px 0;">
+                <p style="font-size: 14px; color: #666;">
+                    Questions? Just reply to this email.<br>
+                    Link not working? Copy and paste: {signup_url}
+                </p>
             </div>
         </body>
         </html>

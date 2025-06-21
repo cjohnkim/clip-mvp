@@ -77,10 +77,13 @@ Instead of guilt-based budgeting, Clip calculates your daily spending capacity a
 - **RESTful API** design with comprehensive endpoints
 
 ### Design System
-- **Mint Green Theme** (`#00d4aa`) for consistent branding
-- **Inter Font Family** for clean, modern typography
+- **Hand-Crafted Design Philosophy** - readable first, human touch
+- **Black on White** color scheme for maximum readability
+- **Arial/Sans-Serif** typography for clarity
 - **Performance-Based Visual Scaling** for UI feedback
 - **Mobile-Responsive** design throughout
+
+*See [DESIGN_PHILOSOPHY.md](DESIGN_PHILOSOPHY.md) for complete design guidelines*
 
 ## Project Structure
 
@@ -192,6 +195,7 @@ money-clip-mvp/
 2. **Visual Progress** - Make financial improvements immediately visible
 3. **Athletic Mindset** - Use training and performance metaphors throughout
 4. **Transparency** - Users should understand how every calculation works
+5. **Hand-Crafted Design** - Readable, human-centered UI over polished corporate design
 
 ## Success Metrics
 
