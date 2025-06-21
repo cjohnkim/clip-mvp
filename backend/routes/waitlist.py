@@ -201,13 +201,19 @@ def join_waitlist():
             status='pending'
         )
         
-        db.session.add(waitlist_user)
-        db.session.commit()
-        
-        # Send welcome email
+        # Send welcome email BEFORE database commit to test
         print(f"Attempting to send welcome email to {email} with name '{name or 'there'}'")
         email_sent = send_waitlist_confirmation_email(email, name or 'there')
         print(f"Email send result: {email_sent}")
+        
+        # Only commit to database if email was sent successfully
+        if email_sent:
+            db.session.add(waitlist_user)
+            db.session.commit()
+            print("Database committed after successful email")
+        else:
+            print("Email failed, not committing to database")
+            return jsonify({'error': 'Failed to send confirmation email'}), 500
         
         return jsonify({
             'success': True,
