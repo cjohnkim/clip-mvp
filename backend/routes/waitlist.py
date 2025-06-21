@@ -175,13 +175,8 @@ def approve_waitlist_user():
         if not email:
             return jsonify({'error': 'Email is required'}), 400
         
-        session = db.session
-        
         # Check if user exists in waitlist
-        waitlist_user = session.execute(
-            text("SELECT id, name, status FROM waitlist WHERE email = :email"),
-            {'email': email}
-        ).fetchone()
+        waitlist_user = Waitlist.query.filter_by(email=email).first()
         
         if not waitlist_user:
             return jsonify({'error': 'Email not found in waitlist'}), 404
@@ -193,27 +188,20 @@ def approve_waitlist_user():
         token = generate_signup_token()
         expires_at = datetime.utcnow() + timedelta(days=7)
         
-        # Store token in signup_tokens table
-        session.execute(text("""
-            INSERT INTO signup_tokens (email, token, expires_at, created_at)
-            VALUES (:email, :token, :expires_at, NOW())
-        """), {
-            'email': email,
-            'token': token,
-            'expires_at': expires_at
-        })
+        # Create signup token
+        signup_token = SignupToken(
+            email=email,
+            token=token,
+            expires_at=expires_at
+        )
+        db.session.add(signup_token)
         
         # Update waitlist status to 'approved'
-        session.execute(text("""
-            UPDATE waitlist 
-            SET status = 'approved', approved_at = NOW(), approved_by = :approved_by
-            WHERE email = :email
-        """), {
-            'email': email,
-            'approved_by': approved_by
-        })
+        waitlist_user.status = 'approved'
+        waitlist_user.approved_at = datetime.utcnow()
+        waitlist_user.approved_by = approved_by
         
-        session.commit()
+        db.session.commit()
         
         # Send approval email
         if send_approval_email(email, token):
@@ -227,17 +215,15 @@ def approve_waitlist_user():
             return jsonify({'error': 'Failed to send approval email'}), 500
             
     except Exception as e:
-        session.rollback()
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @waitlist_bp.route('/validate-token/<token>', methods=['GET'])
 def validate_token(token):
     """Validate signup token"""
     try:
-        session = db.session
-        
         # Check if token exists and is valid
-        token_data = session.execute(text("""
+        token_data = db.session.execute(text("""
             SELECT st.email, st.expires_at, st.used_at, w.name
             FROM signup_tokens st
             JOIN waitlist w ON st.email = w.email
@@ -279,10 +265,8 @@ def signup_with_token():
         if not is_valid:
             return jsonify({'error': message}), 400
         
-        session = db.session
-        
         # Validate token
-        token_data = session.execute(text("""
+        token_data = db.session.execute(text("""
             SELECT st.email, st.expires_at, st.used_at, w.name
             FROM signup_tokens st
             JOIN waitlist w ON st.email = w.email
@@ -310,23 +294,19 @@ def signup_with_token():
         )
         user.set_password(password)
         
-        session.add(user)
+        db.session.add(user)
         
         # Mark token as used
-        session.execute(text("""
-            UPDATE signup_tokens 
-            SET used_at = NOW() 
-            WHERE token = :token
-        """), {'token': token})
+        signup_token_obj = SignupToken.query.filter_by(token=token).first()
+        if signup_token_obj:
+            signup_token_obj.used_at = datetime.utcnow()
         
         # Update waitlist status
-        session.execute(text("""
-            UPDATE waitlist 
-            SET status = 'signed_up' 
-            WHERE email = :email
-        """), {'email': token_data.email})
+        waitlist_user = Waitlist.query.filter_by(email=token_data.email).first()
+        if waitlist_user:
+            waitlist_user.status = 'signed_up'
         
-        session.commit()
+        db.session.commit()
         
         return jsonify({
             'success': True,
@@ -338,7 +318,7 @@ def signup_with_token():
         })
         
     except Exception as e:
-        session.rollback()
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @waitlist_bp.route('/validate-password', methods=['POST'])
