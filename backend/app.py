@@ -76,7 +76,9 @@ def health_check():
     return jsonify({
         'status': 'healthy', 
         'timestamp': datetime.now().isoformat(),
-        'database': 'connected' if db else 'disconnected'
+        'database': 'connected' if db else 'disconnected',
+        'version': 'bypass-test-v1',
+        'latest_commit': '35c283f'
     })
 
 @app.route('/api/test-env', methods=['GET'])
