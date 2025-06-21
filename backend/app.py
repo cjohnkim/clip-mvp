@@ -307,6 +307,31 @@ def signup_page(token):
 </html>
     '''
 
+@app.route('/api/debug-token/<token>')
+def debug_token(token):
+    """Debug token data types"""
+    try:
+        from models import SignupToken
+        signup_token = SignupToken.query.filter_by(token=token).first()
+        
+        if not signup_token:
+            return jsonify({'error': 'Token not found'})
+        
+        return jsonify({
+            'token': token,
+            'email': signup_token.email,
+            'expires_at': str(signup_token.expires_at),
+            'expires_at_type': str(type(signup_token.expires_at)),
+            'used_at': str(signup_token.used_at),
+            'used_at_type': str(type(signup_token.used_at)),
+            'now': str(datetime.utcnow()),
+            'now_type': str(type(datetime.utcnow())),
+            'comparison': signup_token.expires_at < datetime.utcnow() if signup_token.expires_at else 'N/A'
+        })
+        
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 @app.route('/api/test-email', methods=['POST'])
 def test_email():
     """Test email sending directly from production"""
