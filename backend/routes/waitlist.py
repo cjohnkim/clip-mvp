@@ -201,11 +201,19 @@ def join_waitlist():
         if not email:
             return jsonify({'error': 'Email is required'}), 400
         
-        # Check if email already exists
+        # Check if email already exists (allow + variations)
         existing = Waitlist.query.filter_by(email=email).first()
         
         if existing:
-            return jsonify({'error': 'Email already on waitlist'}), 400
+            # Allow + variations of the same email for testing
+            base_email = email.split('+')[0] + '@' + email.split('@')[1]
+            existing_base = existing.email.split('+')[0] + '@' + existing.email.split('@')[1]
+            
+            if base_email == existing_base and '+' in email:
+                # Allow the + variation
+                pass
+            else:
+                return jsonify({'error': 'Email already on waitlist'}), 400
         
         # Create new waitlist entry
         waitlist_user = Waitlist(
