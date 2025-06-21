@@ -62,11 +62,13 @@ def send_waitlist_confirmation_email(email, name):
         html_body = f"""
         <html>
         <body>
-            <h2>Waitlist Confirmation for {name}</h2>
-            <p>This email was sent from the Railway production server.</p>
-            <p>You've been added to the Money Clip waitlist!</p>
+            <h2>Hey {name}! 👋</h2>
+            <p>Thanks for joining the Money Clip waitlist!</p>
+            <p>You're now signed up for early access to our financial athletics platform.</p>
+            <p><strong>What's Money Clip?</strong> It's a platform that turns budgeting into an athletic performance game with daily scores, streaks, and achievements.</p>
+            <p>We'll email you when your spot is ready.</p>
             <hr>
-            <small>Money Clip Waitlist System</small>
+            <small>Money Clip Waitlist</small>
         </body>
         </html>
         """
