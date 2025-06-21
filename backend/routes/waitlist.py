@@ -37,39 +37,36 @@ def validate_password(password):
     return True, "Password meets all requirements"
 
 def send_waitlist_confirmation_email(email, name):
-    """Send confirmation email when user joins waitlist - using same structure as working test email"""
+    """Send confirmation email - EXACT copy of working test email function"""
     import smtplib
     from email.mime.text import MIMEText
     from email.mime.multipart import MIMEMultipart
+    import os
     
-    print(f"Starting waitlist email send to {email}")
     try:
-        # Email configuration from environment (same as test email)
+        # Email configuration from environment (EXACT copy from test_email function)
         smtp_server = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
         smtp_port = int(os.environ.get('SMTP_PORT', '587'))
         smtp_username = os.environ.get('SMTP_USERNAME')
         smtp_password = os.environ.get('SMTP_PASSWORD')
         
         if not smtp_username or not smtp_password:
-            print("SMTP credentials not configured")
             return False
         
-        # Create message (same structure as test email)
+        # Create test message (EXACT copy from test_email function)
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = f"Welcome to Money Clip waitlist, {name}!"
+        msg['Subject'] = f"Money Clip Waitlist - {name}"
         msg['From'] = smtp_username
         msg['To'] = email
         
         html_body = f"""
         <html>
         <body>
-            <h2>Hey {name}! 👋</h2>
-            <p>Thanks for joining the Money Clip waitlist!</p>
-            <p>You're now signed up for early access to our financial athletics platform.</p>
-            <p><strong>What's Money Clip?</strong> It's a platform that turns budgeting into an athletic performance game.</p>
-            <p>We'll email you when your spot is ready.</p>
+            <h2>Waitlist Confirmation for {name}</h2>
+            <p>This email was sent from the Railway production server.</p>
+            <p>You've been added to the Money Clip waitlist!</p>
             <hr>
-            <small>Money Clip Waitlist Confirmation</small>
+            <small>Money Clip Waitlist System</small>
         </body>
         </html>
         """
@@ -77,19 +74,16 @@ def send_waitlist_confirmation_email(email, name):
         html_part = MIMEText(html_body, 'html')
         msg.attach(html_part)
         
-        # Send email (same method as test email)
+        # Send email (EXACT copy from test_email function)
         with smtplib.SMTP(smtp_server, smtp_port) as server:
             server.starttls()
             server.login(smtp_username, smtp_password)
             server.send_message(msg)
         
-        print(f"Waitlist email sent successfully to {email}")
         return True
         
     except Exception as e:
-        print(f"Failed to send waitlist confirmation email: {e}")
-        import traceback
-        traceback.print_exc()
+        print(f"Waitlist email error: {e}")
         return False
 
 def send_approval_email(email, token):
