@@ -31,9 +31,27 @@ db.init_app(app)
 jwt = JWTManager(app)
 CORS(app)
 
-# Ensure all models are created
-with app.app_context():
-    db.create_all()
+# Database initialization with retry logic
+def init_database():
+    """Initialize database with retry logic"""
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            with app.app_context():
+                db.create_all()
+                print(f"✅ Database connected successfully on attempt {attempt + 1}")
+                return True
+        except Exception as e:
+            print(f"❌ Database connection attempt {attempt + 1} failed: {e}")
+            if attempt < max_retries - 1:
+                import time
+                time.sleep(2)  # Wait 2 seconds before retry
+            else:
+                print("⚠️  Database connection failed, but app will continue")
+                return False
+
+# Try to initialize database (don't fail if it doesn't work)
+init_database()
 
 # Import routes
 from routes.auth import auth_bp
