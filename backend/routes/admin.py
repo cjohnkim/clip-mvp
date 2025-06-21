@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import secrets
 import string
 import os
-from models import db, User
+from models import db, User, Waitlist, SignupToken
 from sqlalchemy import text
 import smtplib
 from email.mime.text import MIMEText
@@ -339,13 +339,8 @@ def approve_user_admin(email):
         if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
             return jsonify({'error': 'Admin access required'}), 403
         
-        session = db.session
-        
         # Check if user exists in waitlist
-        waitlist_user = session.execute(
-            text("SELECT id, name, status FROM waitlist WHERE email = :email"),
-            {'email': email}
-        ).fetchone()
+        waitlist_user = Waitlist.query.filter_by(email=email).first()
         
         if not waitlist_user:
             return jsonify({'error': 'Email not found in waitlist'}), 404
@@ -357,27 +352,20 @@ def approve_user_admin(email):
         token = generate_signup_token()
         expires_at = datetime.utcnow() + timedelta(days=7)
         
-        # Store token in signup_tokens table
-        session.execute(text("""
-            INSERT INTO signup_tokens (email, token, expires_at, created_at)
-            VALUES (:email, :token, :expires_at, NOW())
-        """), {
-            'email': email,
-            'token': token,
-            'expires_at': expires_at
-        })
+        # Create signup token
+        signup_token = SignupToken(
+            email=email,
+            token=token,
+            expires_at=expires_at
+        )
+        db.session.add(signup_token)
         
         # Update waitlist status to 'approved'
-        session.execute(text("""
-            UPDATE waitlist 
-            SET status = 'approved', approved_at = NOW(), approved_by = :approved_by
-            WHERE email = :email
-        """), {
-            'email': email,
-            'approved_by': admin_user.email
-        })
+        waitlist_user.status = 'approved'
+        waitlist_user.approved_at = datetime.utcnow()
+        waitlist_user.approved_by = admin_user.email
         
-        session.commit()
+        db.session.commit()
         
         # Send approval email
         email_sent = send_approval_email(email, token)
@@ -392,7 +380,7 @@ def approve_user_admin(email):
         })
         
     except Exception as e:
-        session.rollback()
+        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/waitlist/delete/<email>', methods=['DELETE'])
