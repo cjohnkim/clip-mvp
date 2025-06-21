@@ -104,6 +104,8 @@ def send_waitlist_confirmation_email(email, name):
         
     except Exception as e:
         print(f"Failed to send waitlist confirmation email: {e}")
+        import traceback
+        traceback.print_exc()
         return False
 
 def send_approval_email(email, token):

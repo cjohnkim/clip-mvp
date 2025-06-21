@@ -332,6 +332,32 @@ def debug_token(token):
     except Exception as e:
         return jsonify({'error': str(e)})
 
+@app.route('/api/test-waitlist-email', methods=['POST'])
+def test_waitlist_email():
+    """Test waitlist confirmation email directly"""
+    try:
+        from routes.waitlist import send_waitlist_confirmation_email
+        
+        data = request.get_json() or {}
+        email = data.get('email', 'cjohnkim@gmail.com')
+        name = data.get('name', 'Test User')
+        
+        print(f"Testing waitlist email to {email} with name {name}")
+        
+        result = send_waitlist_confirmation_email(email, name)
+        
+        return jsonify({
+            'success': result,
+            'message': f'Waitlist confirmation email {"sent" if result else "failed"} to {email}',
+            'email': email,
+            'name': name
+        })
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': f'Failed to test waitlist email: {str(e)}'}), 500
+
 @app.route('/api/test-email', methods=['POST'])
 def test_email():
     """Test email sending directly from production"""
