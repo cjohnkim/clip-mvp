@@ -175,8 +175,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
       setLoading(true);
       setError('');
       
-      // TEMP FIX: Use Railway backend directly
-      const response = await fetch(`https://clip-mvp-production.up.railway.app/api/waitlist/join`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/waitlist/join`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
