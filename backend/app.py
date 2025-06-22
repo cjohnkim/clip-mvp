@@ -53,14 +53,10 @@ def init_database():
 # Try to initialize database (don't fail if it doesn't work)
 init_database()
 
-# Import routes
+# Import routes - focus on simplified MVP features only
 from routes.auth import auth_bp
-from routes.planning import planning_bp
-from routes.calculation import calculation_bp
-from routes.athletic import athletic_bp
 from routes.waitlist import waitlist_bp
 from routes.admin import admin_bp
-from routes.migration import migration_bp
 from routes.transactions import transactions_bp
 from routes.daily_allowance import daily_allowance_bp
 from routes.plaid import plaid_bp
@@ -68,12 +64,8 @@ from routes.migrate import migrate_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(planning_bp, url_prefix='/api/planning')
-app.register_blueprint(calculation_bp, url_prefix='/api/calculation')
-app.register_blueprint(athletic_bp, url_prefix='/api/athletic')
 app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
-app.register_blueprint(migration_bp, url_prefix='/api/migration')
 app.register_blueprint(transactions_bp)
 app.register_blueprint(daily_allowance_bp)
 app.register_blueprint(plaid_bp)
