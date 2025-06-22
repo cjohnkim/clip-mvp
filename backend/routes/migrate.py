@@ -127,6 +127,32 @@ def create_tables():
             'error': str(e)
         }), 500
 
+@migrate_bp.route('/production-fix', methods=['POST'])
+def production_fix():
+    """Run complete production database fix"""
+    try:
+        from production_fix import fix_production_database
+        success = fix_production_database()
+        
+        if success:
+            return jsonify({
+                'success': True,
+                'message': 'Production database fixed successfully',
+                'user_created': 'cjohnkim@gmail.com with password SimpleClip123'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'Production fix failed'
+            }), 500
+            
+    except Exception as e:
+        logger.error(f"Production fix error: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
 @migrate_bp.route('/status', methods=['GET'])
 def migration_status():
     """Check database schema status"""
