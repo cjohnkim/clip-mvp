@@ -159,7 +159,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                 color: '#000',
                 fontSize: '2rem'
               }}>
-                Join the Clip waitlist
+                Join the financial training
               </Typography>
               
               <Typography variant="body1" sx={{ 
@@ -168,14 +168,14 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                 fontWeight: 400,
                 fontSize: '1.1rem'
               }}>
-                Daily spending insights that actually work
+                Train your money like an athlete
               </Typography>
             </Box>
 
             {/* Simple Features */}
             <Box sx={{ mb: 4, textAlign: 'center' }}>
               <Typography variant="body1" sx={{ mb: 2, color: '#666', fontWeight: 400 }}>
-                Get early access to daily spending insights and simple financial progress tools.
+                Get early access to performance-driven financial tools that help you build winning money habits.
               </Typography>
             </Box>
 
@@ -255,7 +255,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                   }
                 }}
               >
-                Sign In
+                Sign In to Training
               </Button>
             </Box>
           </CardContent>
@@ -278,10 +278,10 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
         
         <DialogContent sx={{ textAlign: 'center', pb: 2 }}>
           <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
-            Thanks for joining the Clip waitlist.
+            Welcome to the team, athlete.
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            We'll email you when we're ready to launch. Simple daily spending insights are coming soon.
+            We'll email you when it's time to start training. Get ready to level up your money game.
           </Typography>
           
           <Box sx={{ 
@@ -291,7 +291,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
             border: '1px solid #e5e5e5' 
           }}>
             <Typography variant="body2" sx={{ fontWeight: 600, color: '#000' }}>
-              We'll email you when Clip is ready to launch.
+              Time to start your financial training journey.
             </Typography>
           </Box>
         </DialogContent>

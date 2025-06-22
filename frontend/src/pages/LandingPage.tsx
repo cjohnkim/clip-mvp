@@ -199,52 +199,52 @@ const LandingPage: React.FC = () => {
   const features = [
     {
       icon: '📊',
-      title: 'Daily Insights',
-      description: 'See exactly where your money goes each day. Clear, simple tracking without complex categories or judgmental budgets.'
+      title: 'Daily Performance',
+      description: 'Track your spending like an athlete tracks workouts. Clear daily insights that show exactly how you\'re performing against your goals.'
     },
     {
       icon: '📈',
-      title: 'Progress Tracking',
-      description: 'Visual progress towards your goals. See how your spending decisions impact your financial timeline.'
+      title: 'Build Momentum',
+      description: 'See your financial progress in real-time. Watch your money habits improve as you build winning streaks and hit your targets.'
     },
     {
       icon: '🎯',
-      title: 'Smart Planning',
-      description: 'Test scenarios before big purchases. See exactly how that vacation or expense affects your goals.'
+      title: 'Smart Strategy',
+      description: 'Test scenarios before big moves. See exactly how that purchase impacts your game plan and adjust accordingly.'
     },
     {
-      icon: '✨',
-      title: 'Simple Interface',
-      description: 'Clean design that gets out of your way. Focus on insights, not complicated features.'
+      icon: '🏆',
+      title: 'Level Up',
+      description: 'Progress through financial milestones with clear achievements. Make saving and smart spending feel like winning.'
     },
     {
       icon: '💡',
-      title: 'Actionable Data',
-      description: 'Get insights that actually help you make better decisions. No overwhelming charts or confusing metrics.'
+      title: 'Winning Insights',
+      description: 'Get the data you need to make champion-level money decisions. No confusion, just clear paths to victory.'
     },
     {
       icon: '📱',
-      title: 'Effortless Design',
-      description: 'Professional interface built for busy people. Simple, clean, and effective.'
+      title: 'Athlete-Grade Tools',
+      description: 'Professional-grade financial training tools designed for people who want to excel with money.'
     }
   ];
 
   const targetAudiences = [
     {
-      title: 'Busy Professionals',
-      description: 'People who want financial clarity without spending hours on budget management'
+      title: 'Financial Athletes',
+      description: 'High performers who want to apply the same discipline to money that they do to everything else'
     },
     {
-      title: 'Goal-Oriented',
-      description: 'Those who have specific financial goals and want to track progress simply'
+      title: 'Goal Crushers',
+      description: 'People who set ambitious targets and want the tools to track progress like a champion'
     },
     {
-      title: 'Data-Driven',
-      description: 'People who make decisions based on clear information, not emotions'
+      title: 'Performance-Driven',
+      description: 'Those who make decisions based on data and want to continuously improve their financial game'
     },
     {
-      title: 'Simplicity Seekers',
-      description: 'Anyone tired of complex budgeting apps and wants something that just works'
+      title: 'Winners',
+      description: 'Anyone who refuses to settle for "good enough" and wants to dominate their money management'
     }
   ];
 
@@ -270,11 +270,11 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <HeroSection>
         <Container maxWidth="lg">
-          <HeroTitle>Daily spending insights that actually work</HeroTitle>
-          <HeroSubtitle>Simple financial progress tracking</HeroSubtitle>
+          <HeroTitle>Train your money like an athlete</HeroTitle>
+          <HeroSubtitle>Daily spending insights that actually work</HeroSubtitle>
           <HeroDescription>
-            See exactly how your spending affects your goals. Clean insights without judgment. 
-            Progress tracking that feels effortless.
+            See exactly how your spending affects your goals. Build momentum with daily insights, 
+            track your financial performance, and level up your money game.
           </HeroDescription>
           <CTAButton 
             onClick={handleJoinWaitlistClick}
@@ -289,7 +289,7 @@ const LandingPage: React.FC = () => {
       <FeaturesSection>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            Simple spending insights
+            Financial fitness made simple
           </Typography>
           <Grid container spacing={3}>
             {features.map((feature, index) => (
@@ -315,11 +315,11 @@ const LandingPage: React.FC = () => {
       <TargetSection>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 3 }}>
-            Built for professionals who want clarity
+            Built for financial athletes
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: '800px', mx: 'auto' }}>
-            Clean financial insights without the complexity. 
-            Clip gives you the clarity you need to make smart spending decisions.
+            Performance-driven insights for people who want to win with money. 
+            Clean data, clear progress, and the motivation to keep improving.
           </Typography>
           
           <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -343,10 +343,10 @@ const LandingPage: React.FC = () => {
       <CTASection>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 2, color: '#0a2540' }}>
-            Ready to simplify your finances?
+            Ready to become a financial athlete?
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, color: '#64748b' }}>
-            Join the waitlist for daily spending insights that actually work
+            Join the waitlist and start training your money habits
           </Typography>
           <CTAButton 
             onClick={handleJoinWaitlistClick}
@@ -355,7 +355,7 @@ const LandingPage: React.FC = () => {
             Join the Waitlist
           </CTAButton>
           <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-            Early access • Email notification when ready • Simple financial clarity
+            Early access • Email notification when ready • Start your financial training
           </Typography>
         </Container>
       </CTASection>
@@ -384,19 +384,19 @@ const LandingPage: React.FC = () => {
           >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h4" sx={{ mb: 2, textAlign: 'center', color: '#0a2540' }}>
-                Join the Clip Waitlist
+                Join the Financial Training
               </Typography>
               <Typography variant="body1" sx={{ mb: 3, textAlign: 'center', color: '#64748b' }}>
-                Get early access to daily spending insights
+                Be first in line to train your money like an athlete
               </Typography>
               
               {success ? (
                 <Box sx={{ textAlign: 'center', py: 2 }}>
                   <Typography variant="h6" sx={{ color: '#059669', mb: 2 }}>
-                    You're on the list!
+                    Welcome to the team!
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#64748b', mb: 3 }}>
-                    We'll notify you when Clip is ready to launch.
+                    We'll notify you when training begins.
                   </Typography>
                   <Button onClick={() => setShowWaitlist(false)} variant="contained">
                     Close
