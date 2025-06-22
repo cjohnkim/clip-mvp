@@ -108,9 +108,9 @@ def list_waitlist_users():
     try:
         current_user_id = get_jwt_identity()
         
-        # Check if user is admin (you can implement your own admin logic here)
+        # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         session = db.session
@@ -153,7 +153,7 @@ def create_waitlist_user():
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         data = request.get_json()
@@ -210,7 +210,7 @@ def edit_waitlist_user(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         data = request.get_json()
@@ -278,7 +278,7 @@ def change_user_status(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         data = request.get_json()
@@ -341,7 +341,7 @@ def approve_user_admin(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         # Check if user exists in waitlist
@@ -397,7 +397,7 @@ def delete_waitlist_user(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         session = db.session
@@ -441,7 +441,7 @@ def list_signup_tokens():
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        if not admin_user or admin_user.email != os.environ.get('ADMIN_EMAIL', 'admin@moneyclip.money'):
+        if not admin_user or not admin_user.is_admin:
             return jsonify({'error': 'Admin access required'}), 403
         
         session = db.session
