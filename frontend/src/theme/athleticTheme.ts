@@ -40,11 +40,11 @@ export const performanceColors = {
   },
 };
 
-// Athletic brand colors
+// Clip brand colors - clean and focused
 export const athleticColors = {
-  // Primary brand (Clip mint green)
-  primary: '#00d4aa',
-  primaryDark: '#00b894',
+  // Primary brand (simple black/white)
+  primary: '#000000',
+  primaryDark: '#333333',
   
   // Achievement colors
   gold: '#ffd700',
@@ -75,15 +75,14 @@ export const athleticColors = {
   }
 };
 
-// Athletic Typography
+// Clean Typography - marketing site style
 export const athleticTypography = {
   fontFamily: [
-    '"Inter"',
-    '"SF Pro Display"', 
     '-apple-system',
     'BlinkMacSystemFont',
     '"Segoe UI"',
     'Roboto',
+    'Arial',
     'sans-serif'
   ].join(','),
   

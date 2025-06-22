@@ -20,96 +20,37 @@ import {
 import {
   Email,
   Person,
-  SportsMma,
-  EmojiEvents,
-  CheckCircle,
-  TrendingUp,
-  LocalFireDepartment
+  CheckCircle
 } from '@mui/icons-material';
 import { styled, keyframes } from '@mui/material/styles';
-import { athleticColors } from '../../theme/athleticTheme';
 
-// Animations
-const successPulse = keyframes`
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
-`;
-
-const floatAnimation = keyframes`
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-`;
 
 // Styled Components
 const WaitlistContainer = styled(Box)(() => ({
-  background: `linear-gradient(135deg, #0a2540 0%, #1e3a8a 100%)`,
+  background: '#fff',
   minHeight: '100vh',
   display: 'flex',
   alignItems: 'center',
   position: 'relative',
-  overflow: 'hidden',
-  
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'radial-gradient(circle at 20% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)',
-    zIndex: 1,
-  }
 }));
 
 const WaitlistCard = styled(Card)(() => ({
   position: 'relative',
-  zIndex: 2,
-  borderRadius: '24px',
-  border: 'none',
-  background: 'rgba(255, 255, 255, 0.95)',
-  backdropFilter: 'blur(20px)',
-  boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
-  
-  '&:hover': {
-    transform: 'translateY(-4px)',
-    transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-  }
+  borderRadius: '8px',
+  border: '1px solid #ddd',
+  background: '#fff',
+  boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
 }));
 
-const FloatingIcon = styled(Avatar)<{ delay?: number }>(({ delay = 0 }) => ({
-  width: 60,
-  height: 60,
-  background: `linear-gradient(135deg, ${athleticColors.primary} 0%, ${athleticColors.victory} 100%)`,
-  animation: `${floatAnimation} 3s ease-in-out infinite`,
-  animationDelay: `${delay}s`,
-  boxShadow: '0 8px 32px rgba(16, 185, 129, 0.3)',
-}));
 
-const FeatureChip = styled(Chip)(() => ({
-  background: `linear-gradient(135deg, ${athleticColors.victory} 0%, ${athleticColors.gold} 100%)`,
-  color: 'white',
-  fontWeight: 600,
-  fontSize: '0.875rem',
-  margin: '4px',
-}));
 
 const StyledTextField = styled(TextField)(() => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: '12px',
-    transition: 'all 0.3s ease',
-    
-    '&:hover': {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.15)',
-    },
+    borderRadius: '4px',
     
     '&.Mui-focused': {
-      transform: 'translateY(-2px)',
-      boxShadow: '0 8px 25px rgba(16, 185, 129, 0.25)',
-      
       '& fieldset': {
-        borderColor: athleticColors.primary,
+        borderColor: '#000',
         borderWidth: '2px',
       }
     }
@@ -117,32 +58,24 @@ const StyledTextField = styled(TextField)(() => ({
 }));
 
 const ActionButton = styled(Button)(() => ({
-  borderRadius: '12px',
-  padding: '16px 32px',
-  fontSize: '1.1rem',
-  fontWeight: 700,
+  borderRadius: '4px',
+  padding: '12px 24px',
+  fontSize: '1rem',
+  fontWeight: 600,
   textTransform: 'none',
-  background: `linear-gradient(135deg, ${athleticColors.primary} 0%, ${athleticColors.victory} 100%)`,
+  background: '#000',
   color: 'white',
   border: 'none',
-  transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
   
   '&:hover': {
-    background: `linear-gradient(135deg, ${athleticColors.victory} 0%, ${athleticColors.primary} 100%)`,
-    transform: 'translateY(-3px)',
-    boxShadow: '0 12px 35px rgba(16, 185, 129, 0.4)',
+    background: '#333',
   },
-  
-  '&:active': {
-    transform: 'translateY(-1px)',
-  }
 }));
 
 const SuccessDialog = styled(Dialog)(() => ({
   '& .MuiDialog-paper': {
-    borderRadius: '24px',
-    background: 'rgba(255, 255, 255, 0.98)',
-    backdropFilter: 'blur(20px)',
+    borderRadius: '8px',
+    background: 'white',
   }
 }));
 
@@ -212,85 +145,38 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
     }
   };
 
-  const features = [
-    { icon: '🎯', label: 'Performance Scoring' },
-    { icon: '🔥', label: 'Streak Tracking' },
-    { icon: '🏆', label: '25+ Achievements' },
-    { icon: '📈', label: 'Athletic Analytics' },
-    { icon: '💪', label: 'Level System' },
-    { icon: '🎮', label: 'Gamified Experience' }
-  ];
 
   return (
     <WaitlistContainer>
       <Container maxWidth="sm" sx={{ position: 'relative', zIndex: 2 }}>
-        {/* Floating Achievement Icons */}
-        <Box sx={{ position: 'absolute', top: -100, left: -50 }}>
-          <FloatingIcon delay={0}>
-            <EmojiEvents sx={{ fontSize: '2rem' }} />
-          </FloatingIcon>
-        </Box>
-        <Box sx={{ position: 'absolute', top: -80, right: -30 }}>
-          <FloatingIcon delay={1}>
-            <LocalFireDepartment sx={{ fontSize: '2rem' }} />
-          </FloatingIcon>
-        </Box>
-        <Box sx={{ position: 'absolute', bottom: -120, left: 20 }}>
-          <FloatingIcon delay={2}>
-            <TrendingUp sx={{ fontSize: '2rem' }} />
-          </FloatingIcon>
-        </Box>
 
         <WaitlistCard elevation={0}>
           <CardContent sx={{ p: 5 }}>
             {/* Header */}
             <Box textAlign="center" sx={{ mb: 4 }}>
-              <Box sx={{ mb: 2 }}>
-                <Avatar sx={{
-                  width: 80,
-                  height: 80,
-                  margin: '0 auto',
-                  background: `linear-gradient(135deg, ${athleticColors.primary} 0%, ${athleticColors.victory} 100%)`,
-                  mb: 2,
-                  animation: `${successPulse} 2s ease-in-out infinite`
-                }}>
-                  <SportsMma sx={{ fontSize: '2.5rem' }} />
-                </Avatar>
-              </Box>
-              
-              <Typography variant="h3" fontWeight={800} sx={{ 
-                mb: 1,
-                background: `linear-gradient(135deg, #0a2540 0%, ${athleticColors.primary} 100%)`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+              <Typography variant="h3" fontWeight={700} sx={{ 
+                mb: 2,
+                color: '#000',
+                fontSize: '2rem'
               }}>
-                Join the Financial Athletics Revolution
+                Join the Clip waitlist
               </Typography>
               
-              <Typography variant="h6" sx={{ 
+              <Typography variant="body1" sx={{ 
                 mb: 3, 
-                color: 'text.secondary',
-                fontWeight: 500
+                color: '#666',
+                fontWeight: 400,
+                fontSize: '1.1rem'
               }}>
-                Transform your money habits into athletic performance
+                Daily spending insights that actually work
               </Typography>
             </Box>
 
-            {/* Features Grid */}
+            {/* Simple Features */}
             <Box sx={{ mb: 4, textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ mb: 2, color: athleticColors.primary, fontWeight: 600 }}>
-                What You'll Get:
+              <Typography variant="body1" sx={{ mb: 2, color: '#666', fontWeight: 400 }}>
+                Get early access to daily spending insights and simple financial progress tools.
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 1 }}>
-                {features.map((feature, index) => (
-                  <FeatureChip
-                    key={index}
-                    label={`${feature.icon} ${feature.label}`}
-                    size="small"
-                  />
-                ))}
-              </Box>
             </Box>
 
             {error && (
@@ -311,7 +197,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Person sx={{ color: athleticColors.primary }} />
+                        <Person sx={{ color: '#000' }} />
                       </InputAdornment>
                     ),
                   }}
@@ -328,7 +214,7 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Email sx={{ color: athleticColors.primary }} />
+                        <Email sx={{ color: '#000' }} />
                       </InputAdornment>
                     ),
                   }}
@@ -344,10 +230,10 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                 {loading ? (
                   <>
                     <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
-                    Joining Training Camp...
+                    Joining...
                   </>
                 ) : (
-                  '🚀 Join the Waitlist'
+                  'Join Waitlist'
                 )}
               </ActionButton>
             </form>
@@ -361,15 +247,15 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
                 variant="text"
                 onClick={onSignInClick}
                 sx={{
-                  color: athleticColors.primary,
+                  color: '#000',
                   fontWeight: 600,
                   textTransform: 'none',
                   '&:hover': {
-                    background: 'rgba(16, 185, 129, 0.05)',
+                    background: '#f5f5f5',
                   }
                 }}
               >
-                Sign In to Training Portal
+                Sign In
               </Button>
             </Box>
           </CardContent>
@@ -384,37 +270,28 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
         fullWidth
       >
         <DialogTitle sx={{ textAlign: 'center', pt: 4 }}>
-          <Avatar sx={{
-            width: 80,
-            height: 80,
-            margin: '0 auto',
-            background: `linear-gradient(135deg, ${athleticColors.victory} 0%, ${athleticColors.gold} 100%)`,
-            mb: 2,
-            animation: `${successPulse} 1.5s ease-in-out infinite`
-          }}>
-            <CheckCircle sx={{ fontSize: '3rem' }} />
-          </Avatar>
-          <Typography variant="h4" fontWeight={700} sx={{ color: athleticColors.primary }}>
-            Welcome to the Team! 🎉
+          <CheckCircle sx={{ fontSize: '3rem', color: '#10b981', mb: 2 }} />
+          <Typography variant="h4" fontWeight={700} sx={{ color: '#000' }}>
+            You're on the list! 
           </Typography>
         </DialogTitle>
         
         <DialogContent sx={{ textAlign: 'center', pb: 2 }}>
           <Typography variant="h6" sx={{ mb: 2, color: 'text.primary' }}>
-            You're officially in the training camp!
+            Thanks for joining the Clip waitlist.
           </Typography>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            We'll notify you via email when your spot opens up. Get ready to transform your financial habits into athletic performance!
+            We'll email you when we're ready to launch. Simple daily spending insights are coming soon.
           </Typography>
           
           <Box sx={{ 
-            background: 'rgba(16, 185, 129, 0.05)', 
-            borderRadius: '12px', 
+            background: '#f5f5f5', 
+            borderRadius: '8px', 
             p: 2, 
-            border: `1px solid ${athleticColors.primary}20` 
+            border: '1px solid #e5e5e5' 
           }}>
-            <Typography variant="body2" sx={{ fontWeight: 600, color: athleticColors.primary }}>
-              💡 Pro Tip: Follow us on social media for training tips and early access content!
+            <Typography variant="body2" sx={{ fontWeight: 600, color: '#000' }}>
+              We'll email you when Clip is ready to launch.
             </Typography>
           </Box>
         </DialogContent>
@@ -424,15 +301,19 @@ const WaitlistSignup: React.FC<WaitlistSignupProps> = ({ onSignInClick, onSucces
             variant="contained"
             onClick={() => setSuccessDialogOpen(false)}
             sx={{
-              background: `linear-gradient(135deg, ${athleticColors.primary} 0%, ${athleticColors.victory} 100%)`,
-              borderRadius: '12px',
+              background: '#000',
+              color: 'white',
+              borderRadius: '4px',
               px: 4,
               py: 1.5,
               fontWeight: 600,
               textTransform: 'none',
+              '&:hover': {
+                background: '#333',
+              }
             }}
           >
-            Got it! 💪
+            Got it!
           </Button>
         </DialogActions>
       </SuccessDialog>

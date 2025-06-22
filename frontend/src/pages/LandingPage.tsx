@@ -198,53 +198,53 @@ const LandingPage: React.FC = () => {
 
   const features = [
     {
-      icon: '⚡',
-      title: 'Daily Spending Power',
-      description: 'See exactly how much financial power you have each day. No complex budgets - just clear, actionable numbers that help you make smart spending decisions.'
+      icon: '📊',
+      title: 'Daily Insights',
+      description: 'See exactly where your money goes each day. Clear, simple tracking without complex categories or judgmental budgets.'
     },
     {
       icon: '📈',
-      title: 'Performance Tracking',
-      description: 'Gamify your savings with visual performance metrics. Watch your financial momentum build as you level up your money game day by day.'
+      title: 'Progress Tracking',
+      description: 'Visual progress towards your goals. See how your spending decisions impact your financial timeline.'
     },
     {
       icon: '🎯',
-      title: 'Scenario Modeling',
-      description: 'Test "what if" scenarios before making big financial moves. See exactly how that vacation or purchase affects your cash flow timeline.'
+      title: 'Smart Planning',
+      description: 'Test scenarios before big purchases. See exactly how that vacation or expense affects your goals.'
     },
     {
-      icon: '🔥',
-      title: 'Momentum Building',
-      description: 'Turn saving into a streak game. Visual progress tracking that makes building financial discipline feel like leveling up in your favorite app.'
+      icon: '✨',
+      title: 'Simple Interface',
+      description: 'Clean design that gets out of your way. Focus on insights, not complicated features.'
     },
     {
       icon: '💡',
-      title: 'Smart Optimization',
-      description: 'Get intelligent insights about your spending patterns without judgmental budget categories. Focus on optimization, not restriction.'
+      title: 'Actionable Data',
+      description: 'Get insights that actually help you make better decisions. No overwhelming charts or confusing metrics.'
     },
     {
       icon: '📱',
       title: 'Effortless Design',
-      description: 'Clean, professional interface that matches your lifestyle. No toy-like budgeting apps - this feels like a tool built for professionals.'
+      description: 'Professional interface built for busy people. Simple, clean, and effective.'
     }
   ];
 
   const targetAudiences = [
     {
-      title: 'Tech Professionals',
-      description: 'Software engineers, product managers, designers who want to optimize their financial performance'
+      title: 'Busy Professionals',
+      description: 'People who want financial clarity without spending hours on budget management'
     },
     {
-      title: 'Finance & Consulting',
-      description: 'Analysts, consultants, bankers who think in metrics and want data-driven financial tools'
+      title: 'Goal-Oriented',
+      description: 'Those who have specific financial goals and want to track progress simply'
     },
     {
-      title: 'Young Professionals',
-      description: 'High earners in expensive cities who need sophisticated cash flow management'
+      title: 'Data-Driven',
+      description: 'People who make decisions based on clear information, not emotions'
     },
     {
-      title: 'Performance-Oriented',
-      description: 'Anyone who optimizes everything else in their life and wants to level up their money game'
+      title: 'Simplicity Seekers',
+      description: 'Anyone tired of complex budgeting apps and wants something that just works'
     }
   ];
 
@@ -254,7 +254,7 @@ const LandingPage: React.FC = () => {
       <Header>
         <Container maxWidth="lg">
           <HeaderContent>
-            <Logo>💪 Money Clip</Logo>
+            <Logo>Clip</Logo>
             <NavLinks>
               <LoginLink onClick={handleSignInClick}>
                 Sign In
@@ -270,17 +270,17 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <HeroSection>
         <Container maxWidth="lg">
-          <HeroTitle>Transform Into a Financial Athlete</HeroTitle>
-          <HeroSubtitle>Performance-driven financial training for achievers</HeroSubtitle>
+          <HeroTitle>Daily spending insights that actually work</HeroTitle>
+          <HeroSubtitle>Simple financial progress tracking</HeroSubtitle>
           <HeroDescription>
-            Turn your money habits into athletic performance. Get scored daily, build streaks, unlock achievements, 
-            and level up your financial fitness. No lectures - just results that feel like winning.
+            See exactly how your spending affects your goals. Clean insights without judgment. 
+            Progress tracking that feels effortless.
           </HeroDescription>
           <CTAButton 
             onClick={handleJoinWaitlistClick}
             sx={{ fontSize: '1.2rem', padding: '16px 32px' }}
           >
-            Join the Training Camp 🏆
+            Join Waitlist
           </CTAButton>
         </Container>
       </HeroSection>
@@ -289,7 +289,7 @@ const LandingPage: React.FC = () => {
       <FeaturesSection>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            Built for Financial Athletes
+            Simple spending insights
           </Typography>
           <Grid container spacing={3}>
             {features.map((feature, index) => (
@@ -315,11 +315,11 @@ const LandingPage: React.FC = () => {
       <TargetSection>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 3 }}>
-            Perfect for High Earners Who Want More
+            Built for professionals who want clarity
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: '800px', mx: 'auto' }}>
-            Making $150K+ but still feeling financially behind? You're not alone. Traditional budgeting apps treat you like you're broke. 
-            Money Clip treats you like the high performer you are.
+            Clean financial insights without the complexity. 
+            Clip gives you the clarity you need to make smart spending decisions.
           </Typography>
           
           <Grid container spacing={3} sx={{ mt: 2 }}>
@@ -343,10 +343,10 @@ const LandingPage: React.FC = () => {
       <CTASection>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 2, color: '#0a2540' }}>
-            Ready to Become a Financial Athlete?
+            Ready to simplify your finances?
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, color: '#64748b' }}>
-            Join the waitlist and transform your money habits into winning performance
+            Join the waitlist for daily spending insights that actually work
           </Typography>
           <CTAButton 
             onClick={handleJoinWaitlistClick}
@@ -355,7 +355,7 @@ const LandingPage: React.FC = () => {
             Join the Waitlist
           </CTAButton>
           <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-            Early access • Email notification when ready • Start your training journey
+            Early access • Email notification when ready • Simple financial clarity
           </Typography>
         </Container>
       </CTASection>
@@ -384,19 +384,19 @@ const LandingPage: React.FC = () => {
           >
             <CardContent sx={{ p: 4 }}>
               <Typography variant="h4" sx={{ mb: 2, textAlign: 'center', color: '#0a2540' }}>
-                🏆 Join the Waitlist
+                Join the Clip Waitlist
               </Typography>
               <Typography variant="body1" sx={{ mb: 3, textAlign: 'center', color: '#64748b' }}>
-                Be the first to transform your finances into athletic performance
+                Get early access to daily spending insights
               </Typography>
               
               {success ? (
                 <Box sx={{ textAlign: 'center', py: 2 }}>
                   <Typography variant="h6" sx={{ color: '#059669', mb: 2 }}>
-                    🎉 You're on the list!
+                    You're on the list!
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#64748b', mb: 3 }}>
-                    We'll notify you when Money Clip is ready for your financial athletics journey.
+                    We'll notify you when Clip is ready to launch.
                   </Typography>
                   <Button onClick={() => setShowWaitlist(false)} variant="contained">
                     Close
