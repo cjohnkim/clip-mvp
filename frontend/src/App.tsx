@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { athleticTheme } from './theme/athleticTheme';
 import LandingPage from './pages/LandingPage';
 import AboutPage from './pages/AboutPage';
+import AdminPage from './pages/AdminPage';
 import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import Setup from './components/setup/Setup';
@@ -54,6 +55,16 @@ function App() {
             <Routes>
               {/* Public routes */}
               <Route path="/about" element={<AboutPage />} />
+              
+              {/* Admin routes */}
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminPage />
+                  </ProtectedRoute>
+                } 
+              />
               
               {/* Authentication routes */}
               <Route path="/auth" element={<AuthPage />} />

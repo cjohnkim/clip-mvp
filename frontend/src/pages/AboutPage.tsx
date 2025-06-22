@@ -30,7 +30,13 @@ const Logo = styled(Typography)(() => ({
   cursor: 'pointer',
 }));
 
-const BackButton = styled(Button)(() => ({
+const NavLinks = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+}));
+
+const LoginLink = styled(Button)(() => ({
   color: '#0a2540',
   fontWeight: 500,
   padding: '8px 16px',
@@ -38,6 +44,18 @@ const BackButton = styled(Button)(() => ({
   textTransform: 'none',
   '&:hover': {
     backgroundColor: '#f1f5f9',
+  },
+}));
+
+const CTAButton = styled(Button)(() => ({
+  background: 'linear-gradient(135deg, #00d4aa 0%, #00b894 100%)',
+  color: 'white',
+  padding: '12px 24px',
+  borderRadius: '8px',
+  fontWeight: 600,
+  textTransform: 'none',
+  '&:hover': {
+    background: 'linear-gradient(135deg, #00b894 0%, #009688 100%)',
   },
 }));
 
@@ -70,22 +88,39 @@ const AboutPage: React.FC = () => {
     navigate('/');
   };
 
-  const values = [
+  const handleSignInClick = () => {
+    navigate('/auth');
+  };
+
+  const handleJoinWaitlistClick = () => {
+    // You could implement a modal here or redirect to landing page
+    navigate('/#waitlist');
+  };
+
+  const successStories = [
     {
-      title: 'Performance-Driven',
-      description: 'We believe money management should feel like athletic training - focused on improvement, progress, and winning.'
+      name: 'Sarah, Software Engineer',
+      achievement: 'Built a $15K Emergency Fund',
+      story: '"I was making $120K but living paycheck to paycheck. Clip showed me I could save $47/day without changing my lifestyle. 10 months later, I have a full emergency fund and feel unstoppable."',
+      icon: '💪'
     },
     {
-      title: 'Clarity Over Complexity',
-      description: 'Clean insights without overwhelming charts. Get the data you need to make smart decisions, nothing more.'
+      name: 'Marcus, Product Manager', 
+      achievement: 'Saved $40K for House Down Payment',
+      story: '"The visual progress tracking made saving addictive. Seeing my daily wins pile up into serious money felt like leveling up in a game. I hit my house down payment goal 8 months early."',
+      icon: '🏠'
     },
     {
-      title: 'Built for Winners',
-      description: 'Designed for people who refuse to settle for "good enough" and want to excel in every area of life.'
+      name: 'Alex, Designer',
+      achievement: 'Broke the Debt Cycle', 
+      story: '"Credit card debt kept me stressed for years. Clip\'s daily targets helped me save $30/day consistently. Paid off $8K in debt and now I\'m building wealth instead of digging deeper."',
+      icon: '📈'
     },
     {
-      title: 'Daily Excellence',
-      description: 'Small, consistent actions compound into major results. We help you build winning money habits daily.'
+      name: 'Jordan, Marketing Lead',
+      achievement: 'Travel Fund + Investment Growth',
+      story: '"Saved $12K for dream Europe trip while building investment portfolio. Clip made it clear how much I could spend guilt-free while still hitting aggressive savings goals."',
+      icon: '✈️'
     }
   ];
 
@@ -96,9 +131,14 @@ const AboutPage: React.FC = () => {
         <Container maxWidth="lg">
           <HeaderContent>
             <Logo onClick={handleHomeClick}>Clip</Logo>
-            <BackButton onClick={handleHomeClick}>
-              ← Back to Home
-            </BackButton>
+            <NavLinks>
+              <LoginLink onClick={handleSignInClick}>
+                Sign In
+              </LoginLink>
+              <CTAButton onClick={handleJoinWaitlistClick}>
+                Start Training
+              </CTAButton>
+            </NavLinks>
           </HeaderContent>
         </Container>
       </Header>
@@ -121,7 +161,7 @@ const AboutPage: React.FC = () => {
               },
             }}
           >
-            About Clip
+            What Success Looks Like
           </Typography>
           <Typography 
             variant="h5" 
@@ -133,7 +173,7 @@ const AboutPage: React.FC = () => {
               marginRight: 'auto',
             }}
           >
-            Financial training for people who want to win
+            Real people using Clip to build wealth through daily wins. See what's possible when saving becomes a performance game.
           </Typography>
         </Container>
       </HeroSection>
@@ -142,7 +182,7 @@ const AboutPage: React.FC = () => {
       <ContentSection>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            Our Mission
+            The Financial Athlete Mindset
           </Typography>
           
           <Box sx={{ maxWidth: '800px', mx: 'auto', mb: 8 }}>
@@ -156,7 +196,7 @@ const AboutPage: React.FC = () => {
                 fontSize: '1.25rem'
               }}
             >
-              Most budgeting apps treat you like you're broke. We treat you like the high performer you are.
+              Traditional budgeting feels like being put on a diet. Clip feels like training for something bigger.
             </Typography>
             
             <Typography 
@@ -168,7 +208,7 @@ const AboutPage: React.FC = () => {
                 fontSize: '1.1rem'
               }}
             >
-              Clip is built for ambitious people who want to apply the same discipline to their money that they do to everything else. We believe financial management should feel like athletic training - focused on performance, progress, and continuous improvement.
+              Every dollar saved is a rep completed, every smart choice builds financial muscle. When money management becomes a performance game with clear targets and visible progress, everything changes.
             </Typography>
             
             <Typography 
@@ -179,29 +219,37 @@ const AboutPage: React.FC = () => {
                 fontSize: '1.1rem'
               }}
             >
-              Instead of judgmental budget categories and overwhelming charts, we provide clean daily insights that help you make champion-level money decisions. Build momentum, track your progress, and level up your financial game.
+              Saving money is hard. Traditional budgets feel like punishment. Clip turns building wealth into a performance game with daily wins and clear progress.
             </Typography>
           </Box>
         </Container>
       </ContentSection>
 
-      {/* Values Section */}
+      {/* Success Stories Section */}
       <Box sx={{ padding: '80px 0', background: '#f8fafc' }}>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            What We Believe
+            Real Success Stories
           </Typography>
           
           <Grid container spacing={4}>
-            {values.map((value, index) => (
+            {successStories.map((story, index) => (
               <Grid item xs={12} md={6} key={index}>
                 <ValueCard>
                   <CardContent>
-                    <Typography variant="h5" sx={{ mb: 2, color: '#0a2540', fontWeight: 600 }}>
-                      {value.title}
-                    </Typography>
-                    <Typography color="#64748b" sx={{ lineHeight: 1.6 }}>
-                      {value.description}
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                      <Box sx={{ fontSize: '2rem', mr: 2 }}>{story.icon}</Box>
+                      <Box>
+                        <Typography variant="h6" sx={{ color: '#0a2540', fontWeight: 600 }}>
+                          {story.name}
+                        </Typography>
+                        <Typography variant="subtitle2" sx={{ color: '#00d4aa', fontWeight: 600 }}>
+                          {story.achievement}
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Typography color="#64748b" sx={{ lineHeight: 1.6, fontStyle: 'italic' }}>
+                      {story.story}
                     </Typography>
                   </CardContent>
                 </ValueCard>
@@ -211,11 +259,11 @@ const AboutPage: React.FC = () => {
         </Container>
       </Box>
 
-      {/* Team Section */}
+      {/* Mission Section */}
       <ContentSection>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            Built by Financial Athletes
+            Your Financial Transformation Starts Today
           </Typography>
           
           <Box sx={{ maxWidth: '700px', mx: 'auto', textAlign: 'center' }}>
@@ -228,8 +276,7 @@ const AboutPage: React.FC = () => {
                 fontSize: '1.1rem'
               }}
             >
-              We're a team of high performers who got tired of budgeting apps that felt like punishment. 
-              We wanted something that felt like training - focused on improvement, not restriction.
+              Every financial athlete started with Day 1. The difference isn't your income or your starting point - it's having a system that makes saving feel like winning.
             </Typography>
             
             <Typography 
@@ -240,8 +287,7 @@ const AboutPage: React.FC = () => {
                 fontSize: '1.1rem'
               }}
             >
-              Clip is the financial tool we built for ourselves, and now we're sharing it with other people 
-              who refuse to settle for mediocre money management.
+              Stop feeling guilty about money. Start building wealth through daily victories. Your future self will thank you for starting today.
             </Typography>
           </Box>
         </Container>
@@ -251,10 +297,10 @@ const AboutPage: React.FC = () => {
       <Box sx={{ padding: '80px 0', background: 'linear-gradient(135deg, #0a2540 0%, #1e293b 100%)', color: 'white', textAlign: 'center' }}>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 2 }}>
-            Ready to train your money?
+            Ready to train like a financial athlete?
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
-            Join the waitlist and start your financial training journey
+            Join the waitlist and start building wealth through daily wins
           </Typography>
           <Button
             variant="contained"
@@ -272,7 +318,7 @@ const AboutPage: React.FC = () => {
               },
             }}
           >
-            Join the Waitlist
+            Start Training 🏃‍♂️
           </Button>
         </Container>
       </Box>

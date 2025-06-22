@@ -225,24 +225,6 @@ const LandingPage: React.FC = () => {
     }
   ];
 
-  const targetAudiences = [
-    {
-      title: 'Financial Athletes',
-      description: 'High performers who want to apply the same discipline to money that they do to everything else'
-    },
-    {
-      title: 'Goal Crushers',
-      description: 'People who set ambitious targets and want the tools to track progress like a champion'
-    },
-    {
-      title: 'Performance-Driven',
-      description: 'Those who make decisions based on data and want to continuously improve their financial game'
-    },
-    {
-      title: 'Winners',
-      description: 'Anyone who refuses to settle for "good enough" and wants to dominate their money management'
-    }
-  ];
 
   return (
     <LandingContainer>
@@ -269,17 +251,17 @@ const LandingPage: React.FC = () => {
       {/* Hero Section */}
       <HeroSection>
         <Container maxWidth="lg">
-          <HeroTitle>Train your money like an athlete</HeroTitle>
-          <HeroSubtitle>Daily spending insights that actually work</HeroSubtitle>
+          <HeroTitle>Train Like a Financial Athlete</HeroTitle>
+          <HeroSubtitle>Saving money is hard. Traditional budgets feel like punishment.</HeroSubtitle>
           <HeroDescription>
-            See exactly how your spending affects your goals. Build momentum with daily insights, 
-            track your financial performance, and level up your money game.
+            Clip turns building wealth into a performance game with daily wins and clear progress. 
+            Every dollar saved is a rep completed, every smart choice builds financial muscle.
           </HeroDescription>
           <CTAButton 
             onClick={handleJoinWaitlistClick}
             sx={{ fontSize: '1.2rem', padding: '16px 32px' }}
           >
-            Join Waitlist
+            Start Training 🏃‍♂️
           </CTAButton>
         </Container>
       </HeroSection>
@@ -288,7 +270,7 @@ const LandingPage: React.FC = () => {
       <FeaturesSection>
         <Container maxWidth="lg">
           <Typography variant="h2" textAlign="center" sx={{ mb: 6, color: '#0a2540' }}>
-            Financial fitness made simple
+            Your Financial Training Platform
           </Typography>
           <Grid container spacing={3}>
             {features.map((feature, index) => (
@@ -310,33 +292,108 @@ const LandingPage: React.FC = () => {
         </Container>
       </FeaturesSection>
 
-      {/* Target Audience Section */}
+      {/* Problem Section */}
       <TargetSection>
         <Container maxWidth="lg">
           <Typography variant="h2" sx={{ mb: 3 }}>
-            Built for financial athletes
+            Why Saving Money Is So Hard
           </Typography>
           <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: '800px', mx: 'auto' }}>
-            Performance-driven insights for people who want to win with money. 
-            Clean data, clear progress, and the motivation to keep improving.
+            You know you should save more, but traditional apps make it feel impossible. 
+            They're full of guilt, restrictions, and complicated budgets that don't fit real life.
           </Typography>
           
           <Grid container spacing={3} sx={{ mt: 2 }}>
-            {targetAudiences.map((audience, index) => (
-              <Grid item xs={12} sm={6} md={3} key={index}>
-                <TargetItem>
-                  <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
-                    {audience.title}
-                  </Typography>
-                  <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                    {audience.description}
-                  </Typography>
-                </TargetItem>
-              </Grid>
-            ))}
+            <Grid item xs={12} sm={6} md={3}>
+              <TargetItem>
+                <Typography sx={{ fontSize: '2rem', mb: 2 }}>😤</Typography>
+                <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
+                  Budgets Feel Like Punishment
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  Traditional budgeting feels like being put on a financial diet. You're told what you can't have instead of being shown what you can achieve.
+                </Typography>
+              </TargetItem>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TargetItem>
+                <Typography sx={{ fontSize: '2rem', mb: 2 }}>📊</Typography>
+                <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
+                  Progress Is Invisible
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  You save $20 here and there, but it doesn't feel like progress. Small wins get lost in spreadsheets and account balances.
+                </Typography>
+              </TargetItem>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TargetItem>
+                <Typography sx={{ fontSize: '2rem', mb: 2 }}>🤷‍♂️</Typography>
+                <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
+                  No Clear Training Plan
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  Every expert says "just save more" but nobody gives you a daily practice. How much today? What's the next milestone?
+                </Typography>
+              </TargetItem>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <TargetItem>
+                <Typography sx={{ fontSize: '2rem', mb: 2 }}>🎯</Typography>
+                <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
+                  All Goals Feel Impossible
+                </Typography>
+                <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                  $10K for emergencies? $100K for a house? These numbers feel so big that starting feels pointless.
+                </Typography>
+              </TargetItem>
+            </Grid>
           </Grid>
         </Container>
       </TargetSection>
+
+      {/* Benefits Section */}
+      <Box sx={{ padding: '80px 0', background: 'white' }}>
+        <Container maxWidth="lg">
+          <Typography variant="h2" textAlign="center" sx={{ mb: 3, color: '#0a2540' }}>
+            Train Your Way to Financial Strength
+          </Typography>
+          <Typography variant="h6" textAlign="center" sx={{ mb: 6, color: '#64748b', maxWidth: '700px', mx: 'auto' }}>
+            Clip treats saving like athletic training. Every day you get a clear target, see your progress, and build the discipline that creates real wealth.
+          </Typography>
+          
+          <Grid container spacing={4} sx={{ maxWidth: '800px', mx: 'auto' }}>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                <Box sx={{ fontSize: '1.5rem', mr: 2, mt: 0.5 }}>💪</Box>
+                <Typography variant="body1" sx={{ color: '#475569', lineHeight: 1.6 }}>
+                  Daily spending targets that build saving muscle memory
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                <Box sx={{ fontSize: '1.5rem', mr: 2, mt: 0.5 }}>🏆</Box>
+                <Typography variant="body1" sx={{ color: '#475569', lineHeight: 1.6 }}>
+                  Visual progress that makes every dollar saved feel like a victory
+                </Typography>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                <Box sx={{ fontSize: '1.5rem', mr: 2, mt: 0.5 }}>📈</Box>
+                <Typography variant="body1" sx={{ color: '#475569', lineHeight: 1.6 }}>
+                  Clear milestones that break big goals into achievable steps
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 3 }}>
+                <Box sx={{ fontSize: '1.5rem', mr: 2, mt: 0.5 }}>🔥</Box>
+                <Typography variant="body1" sx={{ color: '#475569', lineHeight: 1.6 }}>
+                  Performance tracking that shows your financial fitness improving
+                </Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
 
       {/* Final CTA Section */}
       <CTASection>
@@ -351,10 +408,10 @@ const LandingPage: React.FC = () => {
             onClick={handleJoinWaitlistClick}
             sx={{ fontSize: '1.2rem', padding: '16px 32px', mb: 2 }}
           >
-            Join the Waitlist
+            Start Training
           </CTAButton>
           <Typography variant="body2" sx={{ color: '#94a3b8' }}>
-            Early access • Email notification when ready • Start your financial training
+            Join the financial athletes • Email when ready • Turn saving into winning
           </Typography>
         </Container>
       </CTASection>
