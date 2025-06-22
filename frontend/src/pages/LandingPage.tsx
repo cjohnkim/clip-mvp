@@ -133,6 +133,9 @@ const TargetItem = styled(Box)(() => ({
   padding: '1.5rem',
   borderRadius: '8px',
   border: '1px solid rgba(255, 255, 255, 0.2)',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const CTASection = styled(Box)(() => ({
