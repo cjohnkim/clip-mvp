@@ -228,10 +228,9 @@ export const athleticTheme = createTheme({
           borderRadius: '16px',
           border: '1px solid #f1f5f9',
           boxShadow: '0 4px 20px rgba(0, 212, 170, 0.1)',
-          transition: 'all 0.3s ease',
+          transition: 'box-shadow 0.3s ease',
           '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 8px 30px rgba(0, 212, 170, 0.15)',
+            boxShadow: '0 6px 25px rgba(0, 212, 170, 0.15)',
           },
         },
       },
@@ -249,8 +248,7 @@ export const athleticTheme = createTheme({
           background: athleticColors.backgrounds.hero,
           boxShadow: '0 4px 15px rgba(0, 212, 170, 0.3)',
           '&:hover': {
-            transform: 'translateY(-2px)',
-            boxShadow: '0 8px 25px rgba(0, 212, 170, 0.4)',
+            boxShadow: '0 6px 20px rgba(0, 212, 170, 0.4)',
           },
         },
       },

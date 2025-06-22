@@ -52,10 +52,8 @@ const CTAButton = styled(Button)(() => ({
   borderRadius: '8px',
   fontWeight: 600,
   textTransform: 'none',
-  transition: 'transform 0.2s ease',
   '&:hover': {
-    transform: 'translateY(-2px)',
-    boxShadow: '0 8px 25px rgba(0, 212, 170, 0.3)',
+    background: 'linear-gradient(135deg, #00b894 0%, #009688 100%)',
   },
 }));
 
@@ -111,11 +109,9 @@ const FeatureCard = styled(Card)(() => ({
   padding: '2rem',
   borderRadius: '12px',
   border: '1px solid #f1f5f9',
-  transition: 'transform 0.2s ease',
   height: '100%',
   '&:hover': {
-    transform: 'translateY(-4px)',
-    boxShadow: '0 10px 30px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
   },
 }));
 
@@ -256,6 +252,9 @@ const LandingPage: React.FC = () => {
           <HeaderContent>
             <Logo>Clip</Logo>
             <NavLinks>
+              <LoginLink href="/about">
+                About
+              </LoginLink>
               <LoginLink onClick={handleSignInClick}>
                 Sign In
               </LoginLink>

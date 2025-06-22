@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { athleticTheme } from './theme/athleticTheme';
 import LandingPage from './pages/LandingPage';
+import AboutPage from './pages/AboutPage';
 import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import Setup from './components/setup/Setup';
@@ -51,6 +52,9 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
+              {/* Public routes */}
+              <Route path="/about" element={<AboutPage />} />
+              
               {/* Authentication routes */}
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
