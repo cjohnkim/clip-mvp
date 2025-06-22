@@ -1,6 +1,6 @@
 {
   "name": "money-clip-mvp-frontend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Money Clip MVP - React Frontend",
   "private": true,
   "dependencies": {
