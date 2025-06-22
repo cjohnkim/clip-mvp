@@ -89,12 +89,11 @@ const AboutPage: React.FC = () => {
   };
 
   const handleSignInClick = () => {
-    navigate('/auth');
+    window.location.href = 'https://app.moneyclip.money/auth';
   };
 
   const handleJoinWaitlistClick = () => {
-    // You could implement a modal here or redirect to landing page
-    navigate('/#waitlist');
+    navigate('/');
   };
 
   const successStories = [
@@ -132,6 +131,9 @@ const AboutPage: React.FC = () => {
           <HeaderContent>
             <Logo onClick={handleHomeClick}>Clip</Logo>
             <NavLinks>
+              <LoginLink onClick={() => navigate('/about')}>
+                About
+              </LoginLink>
               <LoginLink onClick={handleSignInClick}>
                 Sign In
               </LoginLink>

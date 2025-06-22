@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Container, Typography, Button, Grid, Card, CardContent, TextField, Alert, CircularProgress } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useNavigate } from 'react-router-dom';
 
 const LandingContainer = styled(Box)(() => ({
   minHeight: '100vh',
@@ -141,6 +142,7 @@ const CTASection = styled(Box)(() => ({
 }));
 
 const LandingPage: React.FC = () => {
+  const navigate = useNavigate();
   const [showWaitlist, setShowWaitlist] = useState(false);
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
@@ -234,7 +236,7 @@ const LandingPage: React.FC = () => {
           <HeaderContent>
             <Logo>Clip</Logo>
             <NavLinks>
-              <LoginLink href="/about">
+              <LoginLink onClick={() => navigate('/about')}>
                 About
               </LoginLink>
               <LoginLink onClick={handleSignInClick}>

@@ -113,6 +113,9 @@ function App() {
                 } 
               />
               
+              {/* Index.html redirect */}
+              <Route path="/index.html" element={<Navigate to="/" replace />} />
+              
               {/* Root route - landing page for unauthenticated, dashboard for authenticated */}
               <Route path="/" element={<RootRoute />} />
             </Routes>
