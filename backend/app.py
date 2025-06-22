@@ -77,8 +77,26 @@ def health_check():
         'status': 'healthy', 
         'timestamp': datetime.now().isoformat(),
         'database': 'connected' if db else 'disconnected',
-        'version': 'bypass-test-v1',
-        'latest_commit': '35c283f'
+        'version': 'debug-v2',
+        'latest_commit': 'bca2cb1'
+    })
+
+# Global counter to track requests
+request_counter = 0
+
+@app.route('/api/debug/ping', methods=['GET', 'POST'])
+def debug_ping():
+    """Debug endpoint to see if website is reaching server"""
+    global request_counter
+    request_counter += 1
+    
+    return jsonify({
+        'ping': 'pong',
+        'counter': request_counter,
+        'timestamp': datetime.now().isoformat(),
+        'method': request.method,
+        'headers': dict(request.headers),
+        'data': request.get_json() if request.method == 'POST' else None
     })
 
 @app.route('/api/test-env', methods=['GET'])
