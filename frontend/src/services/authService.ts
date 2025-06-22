@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || '/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -21,7 +21,7 @@ export const authService = {
 
   // Login user
   login: async (email: string, password: string) => {
-    const response = await apiClient.post('/auth/login', {
+    const response = await apiClient.post('/api/auth/login', {
       email,
       password,
     });
@@ -30,7 +30,7 @@ export const authService = {
 
   // Signup user
   signup: async (email: string, password: string, firstName?: string) => {
-    const response = await apiClient.post('/auth/signup', {
+    const response = await apiClient.post('/api/auth/signup', {
       email,
       password,
       first_name: firstName,
@@ -40,13 +40,13 @@ export const authService = {
 
   // Get user profile
   getProfile: async () => {
-    const response = await apiClient.get('/auth/profile');
+    const response = await apiClient.get('/api/auth/profile');
     return response;
   },
 
   // Logout user
   logout: async () => {
-    const response = await apiClient.post('/auth/logout');
+    const response = await apiClient.post('/api/auth/logout');
     return response;
   },
 };
