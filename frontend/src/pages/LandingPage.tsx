@@ -313,7 +313,7 @@ const LandingPage: React.FC = () => {
               <TargetItem>
                 <Typography sx={{ fontSize: '2rem', mb: 2 }}>😤</Typography>
                 <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
-                  Budgets Feel Like Punishment
+                  Budgets feel like punishment
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Traditional budgeting feels like being put on a financial diet. You're told what you can't have instead of being shown what you can achieve.
@@ -324,7 +324,7 @@ const LandingPage: React.FC = () => {
               <TargetItem>
                 <Typography sx={{ fontSize: '2rem', mb: 2 }}>📊</Typography>
                 <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
-                  Progress Is Invisible
+                  Progress is invisible
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   You save $20 here and there, but it doesn't feel like progress. Small wins get lost in spreadsheets and account balances.
@@ -335,7 +335,7 @@ const LandingPage: React.FC = () => {
               <TargetItem>
                 <Typography sx={{ fontSize: '2rem', mb: 2 }}>🤷‍♂️</Typography>
                 <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
-                  No Clear Training Plan
+                  No clear training plan
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   Every expert says "just save more" but nobody gives you a daily practice. How much today? What's the next milestone?
@@ -346,7 +346,7 @@ const LandingPage: React.FC = () => {
               <TargetItem>
                 <Typography sx={{ fontSize: '2rem', mb: 2 }}>🎯</Typography>
                 <Typography variant="h6" sx={{ mb: 1, color: '#00d4aa', fontWeight: 600 }}>
-                  All Goals Feel Impossible
+                  All goals feel impossible
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
                   $10K for emergencies? $100K for a house? These numbers feel so big that starting feels pointless.

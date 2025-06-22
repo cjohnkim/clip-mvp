@@ -138,7 +138,7 @@ const AboutPage: React.FC = () => {
                 Sign In
               </LoginLink>
               <CTAButton onClick={handleJoinWaitlistClick}>
-                Start Training
+                Join Waitlist
               </CTAButton>
             </NavLinks>
           </HeaderContent>
