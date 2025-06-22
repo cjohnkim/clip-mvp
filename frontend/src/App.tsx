@@ -9,6 +9,7 @@ import AboutPage from './pages/AboutPage';
 import AdminPage from './pages/AdminPage';
 import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
+import SimpleDashboard from './pages/SimpleDashboard';
 import Setup from './components/setup/Setup';
 import Planning from './components/planning/Planning';
 import Timeline from './components/timeline/Timeline';
@@ -74,6 +75,14 @@ function App() {
               {/* Protected routes */}
               <Route 
                 path="/dashboard" 
+                element={
+                  <ProtectedRoute>
+                    <SimpleDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/dashboard-old" 
                 element={
                   <ProtectedRoute>
                     <AthleticDashboard />
