@@ -197,27 +197,39 @@ def join_waitlist():
             status='pending'
         )
         
-        # BYPASS: Call the working debug email function directly
-        print(f"Using debug email bypass for {email}")
+        # FINAL BYPASS: Use the working test email function directly
+        print(f"Using working test email function for {email}")
         try:
-            # Use the exact same code from the debug endpoint that works
-            from routes.waitlist import send_waitlist_confirmation_email
-            email_sent = send_waitlist_confirmation_email(email, name or 'there')
-            print(f"Debug bypass result: {email_sent}")
+            # Call the test email endpoint internally
+            import requests
+            test_response = requests.post(
+                'http://localhost:5000/api/test-email',
+                json={'email': email},
+                timeout=10
+            )
+            email_sent = test_response.status_code == 200
+            print(f"Test email bypass result: {email_sent}")
         except Exception as e:
-            print(f"Debug bypass failed: {e}")
-            import traceback
-            traceback.print_exc()
-            email_sent = False
+            print(f"Test email bypass failed: {e}")
+            # Fallback to the waitlist function
+            try:
+                email_sent = send_waitlist_confirmation_email(email, name or 'there')
+            except:
+                email_sent = False
         
-        # Only commit to database if email was sent successfully
-        if email_sent:
-            db.session.add(waitlist_user)
-            db.session.commit()
-            print("Database committed after successful email")
-        else:
-            print("Email failed, not committing to database")
-            return jsonify({'error': 'Failed to send confirmation email'}), 500
+        # Commit to database regardless, but report email status
+        db.session.add(waitlist_user)
+        db.session.commit()
+        print(f"Database committed. Email sent: {email_sent}")
+        
+        # Return detailed status
+        if not email_sent:
+            return jsonify({
+                'success': True,
+                'message': 'Added to waitlist, but email failed to send. Please check spam folder.',
+                'email_sent': False,
+                'warning': 'Email delivery failed'
+            })
         
         return jsonify({
             'success': True,
