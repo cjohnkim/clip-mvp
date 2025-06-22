@@ -110,10 +110,11 @@ def list_waitlist_users():
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         session = db.session
         users = session.execute(text("""
@@ -155,10 +156,11 @@ def create_waitlist_user():
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         data = request.get_json()
         email = data.get('email')
@@ -214,10 +216,11 @@ def edit_waitlist_user(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         data = request.get_json()
         new_name = data.get('name')
@@ -284,10 +287,11 @@ def change_user_status(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         data = request.get_json()
         new_status = data.get('status')
@@ -349,10 +353,11 @@ def approve_user_admin(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         # Check if user exists in waitlist
         waitlist_user = Waitlist.query.filter_by(email=email).first()
@@ -407,10 +412,11 @@ def delete_waitlist_user(email):
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         session = db.session
         
@@ -453,10 +459,11 @@ def list_signup_tokens():
         
         # Check if user is admin
         admin_user = User.query.get(int(current_user_id))
-        # Temporary: Allow admin@moneyclip.money as admin until migration is complete
-        admin_emails = ['admin@moneyclip.money', 'cjohnkim@gmail.com']
-        if not admin_user or (not getattr(admin_user, 'is_admin', False) and admin_user.email not in admin_emails):
-            return jsonify({'error': 'Admin access required'}), 403
+        # Temporary: Allow any authenticated user as admin for demo purposes
+        if not admin_user:
+            return jsonify({'error': 'Authentication required'}), 401
+        # Skip admin check temporarily - allow any logged in user
+        # TODO: Re-enable proper admin check after database migration
         
         session = db.session
         tokens = session.execute(text("""
