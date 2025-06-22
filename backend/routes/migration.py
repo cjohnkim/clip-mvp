@@ -6,7 +6,7 @@ One-time migration endpoints for schema updates.
 
 from flask import Blueprint, request, jsonify
 from sqlalchemy import text
-from models import db, User
+from models_simple import db, User
 import os
 
 migration_bp = Blueprint('migration', __name__)

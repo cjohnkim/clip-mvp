@@ -5,7 +5,7 @@ import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from services.athletic_service import get_athletic_service
-from models import db
+from models_simple import db
 
 athletic_bp = Blueprint('athletic', __name__, url_prefix='/api/athletic')
 
@@ -123,7 +123,7 @@ def share_achievement():
         session = db.session
         
         # Find user's achievement
-        from models import UserAchievement
+        from models_simple import UserAchievement
         user_achievement = session.query(UserAchievement).filter(
             UserAchievement.user_id == user_id,
             UserAchievement.achievement_id == achievement_id
@@ -216,7 +216,7 @@ def get_leaderboard():
         
         # Get leaderboard data (anonymous)
         from sqlalchemy import func, desc
-        from models import DailyPerformance, UserStreak
+        from models_simple import DailyPerformance, UserStreak
         from datetime import timedelta
         
         if leaderboard_type == 'week':

@@ -7,7 +7,7 @@ Routes for daily clip calculation and scenario testing.
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from services.clip_calculator import ClipCalculator
-from models import db
+from models_simple import db
 from datetime import datetime, date, timedelta
 
 calculation_bp = Blueprint('calculation', __name__)

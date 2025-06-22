@@ -6,7 +6,7 @@ Simple JWT-based authentication for user management.
 
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from models import db, User
+from models_simple import db, User
 from datetime import datetime
 
 auth_bp = Blueprint('auth', __name__)

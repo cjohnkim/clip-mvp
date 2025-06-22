@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import secrets
 import string
 import os
-from models import db, User, Waitlist, SignupToken
+from models_simple import db, User, Waitlist, SignupToken
 from sqlalchemy import text
 import smtplib
 from email.mime.text import MIMEText
