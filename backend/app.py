@@ -64,6 +64,7 @@ from routes.migration import migration_bp
 from routes.transactions import transactions_bp
 from routes.daily_allowance import daily_allowance_bp
 from routes.plaid import plaid_bp
+from routes.migrate import migrate_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -76,6 +77,7 @@ app.register_blueprint(migration_bp, url_prefix='/api/migration')
 app.register_blueprint(transactions_bp)
 app.register_blueprint(daily_allowance_bp)
 app.register_blueprint(plaid_bp)
+app.register_blueprint(migrate_bp)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
