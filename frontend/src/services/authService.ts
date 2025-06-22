@@ -1,12 +1,26 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// Determine API URL based on environment
+const getApiBaseUrl = () => {
+  // If we're on the production domain, use the production API
+  if (window.location.hostname === 'app.moneyclip.money') {
+    return 'https://clip-mvp-production.up.railway.app';
+  }
+  
+  // Use environment variable or fall back to localhost
+  return process.env.REACT_APP_API_URL || 'http://localhost:5001';
+};
+
+const API_BASE_URL = getApiBaseUrl();
+
+console.log('Money Clip API URL:', API_BASE_URL);
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 10000, // 10 second timeout
 });
 
 export const authService = {
