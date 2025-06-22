@@ -10,7 +10,7 @@ import {
   Alert,
   InputAdornment,
   IconButton,
-  Link
+  Divider
 } from '@mui/material';
 import {
   Visibility,
@@ -34,10 +34,6 @@ const SignInCard = styled(Card)(() => ({
   border: '1px solid #e6ebf1',
   background: 'white',
   boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
-}));
-
-
-  animation: `${pulseSuccess} 2s ease-in-out infinite`,
 }));
 
 const StyledTextField = styled(TextField)(() => ({
@@ -84,7 +80,6 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isSignIn, setIsSignIn] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -199,18 +194,17 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                 fullWidth
                 onClick={onWaitlistSignup}
                 sx={{
-                  borderRadius: '12px',
+                  borderRadius: '4px',
                   padding: '12px 24px',
-                  borderColor: athleticColors.primary,
-                  color: athleticColors.primary,
+                  borderColor: '#000',
+                  color: '#000',
                   fontWeight: 600,
                   textTransform: 'none',
                   
                   '&:hover': {
-                    borderColor: athleticColors.victory,
-                    color: athleticColors.victory,
-                    background: 'rgba(16, 185, 129, 0.05)',
-                    transform: 'translateY(-2px)',
+                    borderColor: '#333',
+                    color: '#333',
+                    background: '#f5f5f5',
                   }
                 }}
               >

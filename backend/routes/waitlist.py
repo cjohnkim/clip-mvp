@@ -55,8 +55,8 @@ def send_waitlist_confirmation_email(email, name):
         
         # Create test message (EXACT copy from test_email function)
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = f"Money Clip Waitlist - {name}"
-        msg['From'] = smtp_username
+        msg['Subject'] = f"Welcome to Money Clip Waitlist - {name}"
+        msg['From'] = f"Money Clip <{smtp_username}>"
         msg['To'] = email
         
         html_body = f"""
@@ -148,7 +148,7 @@ def send_approval_email(email, token):
         # Create message
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From'] = smtp_username
+        msg['From'] = f"Money Clip <{smtp_username}>"
         msg['To'] = email
         
         # Add HTML part

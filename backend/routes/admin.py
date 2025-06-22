@@ -82,7 +82,7 @@ def send_approval_email(email, token):
         # Create message
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
-        msg['From'] = smtp_username
+        msg['From'] = f"Money Clip <{smtp_username}>"
         msg['To'] = email
         
         # Add HTML part
