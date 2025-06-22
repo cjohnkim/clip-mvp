@@ -3,12 +3,12 @@ import apiClient from './authService';
 export const planningService = {
   // Account management
   getAccounts: async () => {
-    const response = await apiClient.get('/planning/accounts');
+    const response = await apiClient.get('/api/planning/accounts');
     return response;
   },
 
   createAccount: async (accountData: any) => {
-    const response = await apiClient.post('/planning/accounts', accountData);
+    const response = await apiClient.post('/api/planning/accounts', accountData);
     return response;
   },
 
@@ -19,7 +19,7 @@ export const planningService = {
 
   // Expense management
   getExpenses: async (params?: any) => {
-    let url = '/planning/expenses';
+    let url = '/api/planning/expenses';
     if (params) {
       const searchParams = new URLSearchParams(params);
       url += `?${searchParams.toString()}`;
@@ -29,7 +29,7 @@ export const planningService = {
   },
 
   createExpense: async (expenseData: any) => {
-    const response = await apiClient.post('/planning/expenses', expenseData);
+    const response = await apiClient.post('/api/planning/expenses', expenseData);
     return response;
   },
 
@@ -45,7 +45,7 @@ export const planningService = {
 
   // Income management
   getIncome: async (params?: any) => {
-    let url = '/planning/income';
+    let url = '/api/planning/income';
     if (params) {
       const searchParams = new URLSearchParams(params);
       url += `?${searchParams.toString()}`;
@@ -55,7 +55,7 @@ export const planningService = {
   },
 
   createIncome: async (incomeData: any) => {
-    const response = await apiClient.post('/planning/income', incomeData);
+    const response = await apiClient.post('/api/planning/income', incomeData);
     return response;
   },
 
@@ -71,12 +71,12 @@ export const planningService = {
 
   // Paycheck schedule management
   getPaycheckSchedule: async () => {
-    const response = await apiClient.get('/planning/paycheck-schedule');
+    const response = await apiClient.get('/api/planning/paycheck-schedule');
     return response;
   },
 
   createPaycheckSchedule: async (scheduleData: any) => {
-    const response = await apiClient.post('/planning/paycheck-schedule', scheduleData);
+    const response = await apiClient.post('/api/planning/paycheck-schedule', scheduleData);
     return response;
   },
 
