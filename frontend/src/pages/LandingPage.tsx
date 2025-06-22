@@ -168,6 +168,7 @@ const LandingPage: React.FC = () => {
     setError('');
 
     try {
+      // FIX: Use Railway backend directly  
       const response = await fetch('https://clip-mvp-production.up.railway.app/api/waitlist/join', {
         method: 'POST',
         headers: {
