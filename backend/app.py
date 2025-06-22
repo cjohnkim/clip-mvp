@@ -22,10 +22,9 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY', 'jwt-dev-secret')
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 
-# Import models first
-from models import db, User, Account, PlannedExpense, PlannedIncome, PaycheckSchedule
-from models import UserStreak, Achievement, UserAchievement, DailyPerformance, UserLevel
-from models import Waitlist, SignupToken
+# Import models first - use simplified models
+from models_simple import db, User, Account, Transaction, RecurringItem, Budget
+from models_simple import Waitlist, SignupToken
 
 # Initialize extensions
 db.init_app(app)
@@ -62,6 +61,9 @@ from routes.athletic import athletic_bp
 from routes.waitlist import waitlist_bp
 from routes.admin import admin_bp
 from routes.migration import migration_bp
+from routes.transactions import transactions_bp
+from routes.daily_allowance import daily_allowance_bp
+from routes.plaid import plaid_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -71,6 +73,9 @@ app.register_blueprint(athletic_bp, url_prefix='/api/athletic')
 app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(migration_bp, url_prefix='/api/migration')
+app.register_blueprint(transactions_bp)
+app.register_blueprint(daily_allowance_bp)
+app.register_blueprint(plaid_bp)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():

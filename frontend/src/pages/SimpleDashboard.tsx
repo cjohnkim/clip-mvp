@@ -7,7 +7,6 @@ import {
   CardContent,
   Grid,
   Button,
-  IconButton,
   Stack,
   Divider,
   CircularProgress,
@@ -24,6 +23,7 @@ import {
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../contexts/AuthContext';
+import AddTransactionDialog from '../components/AddTransactionDialog';
 
 // Clean, Simple.com inspired styling
 const DashboardContainer = styled(Container)(({ theme }) => ({
@@ -59,11 +59,6 @@ const QuickActionCard = styled(Card)(({ theme }) => ({
   },
 }));
 
-const TransactionCard = styled(Card)(({ theme }) => ({
-  borderRadius: 8,
-  border: '1px solid #f1f5f9',
-  marginBottom: theme.spacing(1),
-}));
 
 const BalanceChip = styled(Box)(({ theme }) => ({
   display: 'inline-flex',
@@ -99,7 +94,10 @@ const SimpleDashboard: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [editingBalance, setEditingBalance] = useState(false);
+  const [addTransactionDialog, setAddTransactionDialog] = useState<{
+    open: boolean;
+    type: 'income' | 'expense';
+  }>({ open: false, type: 'expense' });
 
   useEffect(() => {
     loadDashboardData();
@@ -108,46 +106,51 @@ const SimpleDashboard: React.FC = () => {
   const loadDashboardData = async () => {
     try {
       setLoading(true);
-      // TODO: Replace with actual API call
-      // Simulated data for now
-      setTimeout(() => {
-        setDashboardData({
-          dailyAllowance: 47.50,
-          totalBalance: 2847.32,
-          accountsCount: 3,
-          recentTransactions: [
-            {
-              id: '1',
-              description: 'Starbucks Coffee',
-              amount: -5.67,
-              date: '2025-06-22',
-              category: 'Dining',
-              isIncome: false,
-            },
-            {
-              id: '2', 
-              description: 'Paycheck Deposit',
-              amount: 3200.00,
-              date: '2025-06-21',
-              category: 'Income',
-              isIncome: true,
-            },
-            {
-              id: '3',
-              description: 'Grocery Store',
-              amount: -87.43,
-              date: '2025-06-21',
-              category: 'Groceries',
-              isIncome: false,
-            },
-          ],
-          thisMonthSpent: 1247.89,
-          thisMonthIncome: 6400.00,
-        });
-        setLoading(false);
-      }, 1000);
+      const token = localStorage.getItem('access_token');
+      
+      // Fetch daily allowance and summary data
+      const [allowanceResponse, summaryResponse] = await Promise.all([
+        fetch('/api/daily-allowance', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }),
+        fetch('/api/transactions/summary', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        })
+      ]);
+
+      if (!allowanceResponse.ok || !summaryResponse.ok) {
+        throw new Error('Failed to load dashboard data');
+      }
+
+      const allowanceData = await allowanceResponse.json();
+      const summaryData = await summaryResponse.json();
+
+      setDashboardData({
+        dailyAllowance: allowanceData.daily_allowance || 0,
+        totalBalance: allowanceData.breakdown?.total_balance || 0,
+        accountsCount: allowanceData.accounts?.length || 0,
+        recentTransactions: summaryData.recent_transactions?.map((t: any) => ({
+          id: t.id.toString(),
+          description: t.description,
+          amount: t.amount,
+          date: t.date,
+          category: t.category,
+          isIncome: t.is_income,
+        })) || [],
+        thisMonthSpent: summaryData.month_expenses || 0,
+        thisMonthIncome: summaryData.month_income || 0,
+      });
+      
+      setError('');
     } catch (err: any) {
       setError(err.message || 'Failed to load dashboard data');
+    } finally {
       setLoading(false);
     }
   };
@@ -168,13 +171,56 @@ const SimpleDashboard: React.FC = () => {
   };
 
   const handleQuickAdd = (type: 'income' | 'expense') => {
-    // TODO: Open quick add dialog
-    console.log(`Add ${type}`);
+    setAddTransactionDialog({ open: true, type });
   };
 
-  const handleImport = () => {
-    // TODO: Open import dialog (Plaid, CSV, PDF)
-    console.log('Import data');
+  const handleImport = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch('/api/plaid/status', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const status = await response.json();
+        if (status.available) {
+          // TODO: Implement Plaid Link integration
+          alert('Plaid integration is available! Bank connection feature coming soon.');
+        } else {
+          alert('Import feature is in development. Manual CSV import coming soon!');
+        }
+      } else {
+        alert('Import feature coming soon!');
+      }
+    } catch (error) {
+      alert('Import feature coming soon!');
+    }
+  };
+
+  const handleAddTransaction = async (transactionData: any) => {
+    try {
+      const token = localStorage.getItem('access_token');
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(transactionData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to add ${transactionData.is_income ? 'income' : 'expense'}`);
+      }
+
+      // Refresh dashboard data
+      await loadDashboardData();
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to add transaction');
+    }
   };
 
   if (loading) {
@@ -247,7 +293,7 @@ const SimpleDashboard: React.FC = () => {
             </Typography>
             
             <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-              <BalanceChip onClick={() => setEditingBalance(true)}>
+              <BalanceChip>
                 <AccountBalance sx={{ fontSize: '1rem' }} />
                 <Typography variant="body2">
                   {formatCurrency(dashboardData.totalBalance)} total
@@ -382,6 +428,14 @@ const SimpleDashboard: React.FC = () => {
       >
         <Add />
       </Fab>
+
+      {/* Add Transaction Dialog */}
+      <AddTransactionDialog
+        open={addTransactionDialog.open}
+        type={addTransactionDialog.type}
+        onClose={() => setAddTransactionDialog({ open: false, type: 'expense' })}
+        onSubmit={handleAddTransaction}
+      />
     </DashboardContainer>
   );
 };

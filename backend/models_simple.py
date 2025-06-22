@@ -113,6 +113,11 @@ class Transaction(db.Model):
     is_income = db.Column(db.Boolean, default=False)
     is_recurring = db.Column(db.Boolean, default=False)
     
+    # Recurrence fields
+    recurrence_type = db.Column(db.String(20), nullable=True)  # 'daily', 'weekly', 'monthly', etc.
+    recurrence_interval = db.Column(db.Integer, nullable=True, default=1)  # Every N periods
+    notes = db.Column(db.Text, nullable=True)
+    
     # Optional integration fields
     plaid_transaction_id = db.Column(db.String(255), unique=True, nullable=True)
     merchant_name = db.Column(db.String(255), nullable=True)
@@ -129,6 +134,9 @@ class Transaction(db.Model):
             'category': self.category,
             'is_income': self.is_income,
             'is_recurring': self.is_recurring,
+            'recurrence_type': self.recurrence_type,
+            'recurrence_interval': self.recurrence_interval,
+            'notes': self.notes,
             'merchant_name': self.merchant_name,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
