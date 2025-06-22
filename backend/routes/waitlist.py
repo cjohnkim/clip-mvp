@@ -178,6 +178,16 @@ def join_waitlist():
         user_agent = request.headers.get('User-Agent', '')
         metadata = data.get('metadata', {})
         
+        # DEBUG: Log all incoming data
+        print(f"=== WAITLIST SIGNUP DEBUG ===")
+        print(f"Email: {email}")
+        print(f"Name: {name}")
+        print(f"Source: {source}")
+        print(f"User-Agent: {user_agent}")
+        print(f"Request data: {data}")
+        print(f"Request headers: {dict(request.headers)}")
+        print(f"================================")
+        
         if not email:
             return jsonify({'error': 'Email is required'}), 400
         
