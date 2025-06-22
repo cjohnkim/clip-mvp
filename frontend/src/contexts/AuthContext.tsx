@@ -5,12 +5,14 @@ interface User {
   id: number;
   email: string;
   first_name?: string;
+  is_admin?: boolean;
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, firstName?: string) => Promise<void>;
@@ -106,6 +108,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     token,
     isAuthenticated: !!token && !!user,
+    isAdmin: !!user?.is_admin,
     isLoading,
     login,
     signup,

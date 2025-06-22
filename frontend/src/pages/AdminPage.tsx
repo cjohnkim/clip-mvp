@@ -241,6 +241,9 @@ const AdminPage: React.FC = () => {
         <HeaderContent>
           <Logo onClick={() => navigate('/')}>Clip Admin</Logo>
           <Box>
+            <Button onClick={() => navigate('/dashboard')} sx={{ mr: 2 }}>
+              📊 My Dashboard
+            </Button>
             <Button onClick={() => navigate('/')} sx={{ mr: 2 }}>
               ← Back to Site
             </Button>

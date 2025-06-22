@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   Container,
   Box,
@@ -209,6 +210,7 @@ interface DashboardData {
 
 const AthleticDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { isAdmin, user, logout } = useAuth();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -386,6 +388,58 @@ const AthleticDashboard: React.FC = () => {
   return (
     <ThemeProvider theme={athleticTheme}>
       <DashboardContainer maxWidth="lg">
+        {/* Header with Admin Link */}
+        {isAdmin && (
+          <Box 
+            sx={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center', 
+              mb: 2,
+              p: 2,
+              backgroundColor: 'rgba(0, 212, 170, 0.1)',
+              borderRadius: '12px',
+              border: '1px solid rgba(0, 212, 170, 0.3)'
+            }}
+          >
+            <Typography variant="h6" sx={{ color: '#00d4aa', fontWeight: 600 }}>
+              👋 Welcome back, {user?.first_name || 'Admin'}!
+            </Typography>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button 
+                variant="outlined" 
+                size="small"
+                onClick={() => navigate('/admin')}
+                sx={{ 
+                  borderColor: '#00d4aa',
+                  color: '#00d4aa',
+                  '&:hover': {
+                    borderColor: '#00b894',
+                    backgroundColor: 'rgba(0, 212, 170, 0.1)'
+                  }
+                }}
+              >
+                🛡️ Admin Panel
+              </Button>
+              <Button 
+                variant="outlined" 
+                size="small"
+                onClick={logout}
+                sx={{ 
+                  borderColor: '#666',
+                  color: '#666',
+                  '&:hover': {
+                    borderColor: '#333',
+                    backgroundColor: 'rgba(0, 0, 0, 0.05)'
+                  }
+                }}
+              >
+                Logout
+              </Button>
+            </Box>
+          </Box>
+        )}
+        
         {/* Hero Performance Banner */}
         <HeroBanner performance={dashboardData.performance.category}>
           <CardContent sx={{ p: 3 }}>
