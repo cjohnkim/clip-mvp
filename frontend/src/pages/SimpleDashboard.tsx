@@ -45,23 +45,24 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const AmountCard = styled(Card)(({ theme }) => ({
-  background: 'white',
+  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+  color: 'white',
   borderRadius: 12,
-  border: '1px solid #e6ebf1',
-  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+  border: '2px solid #00d4aa',
+  boxShadow: `
+    0 0 20px rgba(0, 212, 170, 0.3),
+    0 0 40px rgba(0, 212, 170, 0.1)
+  `,
   marginBottom: theme.spacing(3),
-  transition: 'all 0.2s ease',
-  '&:hover': {
-    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-  },
 }));
 
 const Amount = styled(Typography)(({ theme }) => ({
-  fontSize: '3rem',
-  fontWeight: 600,
-  color: '#1a1a1a',
-  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
-  letterSpacing: '-0.02em',
+  fontSize: '3.5rem',
+  fontWeight: 700,
+  color: '#00d4aa',
+  fontFamily: '"JetBrains Mono", "Courier New", monospace',
+  letterSpacing: '1px',
+  textShadow: '0 0 10px rgba(0, 212, 170, 0.5)',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
@@ -544,10 +545,13 @@ const SimpleDashboard: React.FC = () => {
       <AmountCard>
         <CardContent sx={{ p: 4 }}>
           <Box textAlign="center">
+            <Typography variant="body1" sx={{ opacity: 0.8, mb: 2, fontWeight: 500 }}>
+              Save today, spend tomorrow
+            </Typography>
             <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
-            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body1" sx={{ opacity: 0.7, mt: 1 }}>
               Available today
             </Typography>
             
