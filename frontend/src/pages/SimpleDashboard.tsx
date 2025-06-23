@@ -19,6 +19,9 @@ import {
   TextField,
   Avatar,
   IconButton,
+  MenuList,
+  MenuItem,
+  Popover,
 } from '@mui/material';
 import {
   Add,
@@ -28,6 +31,8 @@ import {
   CloudUpload,
   Edit,
   Person,
+  MoreVert,
+  Menu,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../contexts/AuthContext';
@@ -65,11 +70,12 @@ const Amount = styled(Typography)(({ theme }) => ({
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  border: '1px solid #e6ebf1',
+  border: '2px solid #00d4aa',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
+  boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)',
   '&:hover': {
-    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.1)',
+    boxShadow: '0 0 20px rgba(0, 212, 170, 0.2)',
     transform: 'translateY(-2px)',
   },
 }));
@@ -121,6 +127,7 @@ const SimpleDashboard: React.FC = () => {
     amount: '',
   });
   const [success, setSuccess] = useState('');
+  const [userMenuAnchor, setUserMenuAnchor] = useState<null | HTMLElement>(null);
   const [linkToken, setLinkToken] = useState<string | null>(null);
   
   console.log('SimpleDashboard state:', { user: !!user, isAdmin, loading, error, dashboardData: !!dashboardData });
@@ -489,7 +496,7 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
-        <Typography variant="h4" fontWeight={700} color="#00d4aa">
+        <Typography variant="h2" fontWeight={700} color="#00d4aa">
           Clip
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
@@ -503,16 +510,8 @@ const SimpleDashboard: React.FC = () => {
               Admin
             </Button>
           )}
-          <Button 
-            variant="text" 
-            size="small"
-            onClick={() => navigate('/help')}
-            sx={{ color: '#666' }}
-          >
-            Help
-          </Button>
           <IconButton 
-            onClick={() => navigate('/profile')}
+            onClick={(e) => setUserMenuAnchor(e.currentTarget)}
             sx={{ 
               p: 0.5,
               '&:hover': { backgroundColor: 'rgba(0, 212, 170, 0.1)' } 
@@ -530,16 +529,9 @@ const SimpleDashboard: React.FC = () => {
               {getUserInitials()}
             </Avatar>
           </IconButton>
-          <Button onClick={logout} size="small" sx={{ color: '#666' }}>
-            Logout
-          </Button>
         </Stack>
       </Box>
 
-      {/* Motivational tagline */}
-      <Typography variant="body1" textAlign="center" color="text.secondary" sx={{ mb: 3, fontStyle: 'italic' }}>
-        Available today
-      </Typography>
 
       {/* AI Insights */}
       <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
@@ -552,7 +544,7 @@ const SimpleDashboard: React.FC = () => {
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
             <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-              Save today, spend tomorrow
+              Saving for tomorrow
             </Typography>
             
             <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #e5e7eb' }}>
@@ -563,13 +555,14 @@ const SimpleDashboard: React.FC = () => {
                       Total Balance
                     </Typography>
                     <Button 
-                      variant="outlined"
+                      variant="text"
                       onClick={handleBalanceEdit}
                       sx={{ 
-                        display: 'block',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
                         width: '100%',
-                        color: '#00d4aa', 
-                        borderColor: '#00d4aa',
+                        color: '#1a1a1a', 
                         fontWeight: 600,
                         textTransform: 'none',
                         fontSize: '1.1rem',
@@ -577,24 +570,22 @@ const SimpleDashboard: React.FC = () => {
                         fontFamily: '"JetBrains Mono", monospace',
                         '&:hover': { 
                           backgroundColor: 'rgba(0, 212, 170, 0.05)',
-                          borderColor: '#00a085'
+                          color: '#00a085'
                         }
                       }}
                     >
                       {formatCurrency(dashboardData.totalBalance)}
+                      <Edit sx={{ fontSize: '1rem', opacity: 0.6 }} />
                     </Button>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
                   <Box textAlign="center">
                     <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '1px' }}>
-                      Days Left
+                      Days Left in Month
                     </Typography>
                     <Typography variant="h6" sx={{ fontWeight: 600, color: '#00a085', mt: 1 }}>
                       {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate()}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-                      in month
                     </Typography>
                   </Box>
                 </Grid>
@@ -619,7 +610,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('expense')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Receipt sx={{ fontSize: '2rem', color: '#6b7280', mb: 1 }} />
+              <Receipt sx={{ fontSize: '2rem', color: '#ef4444', mb: 1 }} />
               <Typography variant="body2" fontWeight={600}>
                 Add Expense
               </Typography>
@@ -640,7 +631,12 @@ const SimpleDashboard: React.FC = () => {
 
 
       {/* This Month Summary */}
-      <Card sx={{ mb: 3, borderRadius: 2 }}>
+      <Card sx={{ 
+        mb: 3, 
+        borderRadius: 3,
+        border: '2px solid #00d4aa',
+        boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)'
+      }}>
         <CardContent>
           <Typography variant="h6" fontWeight={600} mb={2}>
             This Month
@@ -671,7 +667,11 @@ const SimpleDashboard: React.FC = () => {
       </Card>
 
       {/* Recent Transactions */}
-      <Card sx={{ borderRadius: 2 }}>
+      <Card sx={{ 
+        borderRadius: 3,
+        border: '2px solid #00d4aa',
+        boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)'
+      }}>
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6" fontWeight={600}>
@@ -709,7 +709,23 @@ const SimpleDashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Floating Action Button */}
+      {/* Floating Action Buttons */}
+      <Fab
+        color="primary"
+        sx={{
+          position: 'fixed',
+          bottom: 96,
+          right: 24,
+          backgroundColor: '#ef4444',
+          '&:hover': {
+            backgroundColor: '#dc2626',
+          },
+        }}
+        onClick={() => handleQuickAdd('expense')}
+      >
+        <Receipt />
+      </Fab>
+      
       <Fab
         color="primary"
         sx={{
@@ -721,7 +737,7 @@ const SimpleDashboard: React.FC = () => {
             backgroundColor: '#00b894',
           },
         }}
-        onClick={() => handleQuickAdd('expense')}
+        onClick={() => handleQuickAdd('income')}
       >
         <Add />
       </Fab>
@@ -768,6 +784,36 @@ const SimpleDashboard: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* User Menu */}
+      <Popover
+        open={Boolean(userMenuAnchor)}
+        anchorEl={userMenuAnchor}
+        onClose={() => setUserMenuAnchor(null)}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+      >
+        <MenuList sx={{ minWidth: 160 }}>
+          <MenuItem onClick={() => { setUserMenuAnchor(null); navigate('/profile'); }}>
+            <Person sx={{ mr: 1 }} />
+            Edit Profile
+          </MenuItem>
+          <MenuItem onClick={() => { setUserMenuAnchor(null); navigate('/help'); }}>
+            <CloudUpload sx={{ mr: 1 }} />
+            Help
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={() => { setUserMenuAnchor(null); logout(); }}>
+            Logout
+          </MenuItem>
+        </MenuList>
+      </Popover>
     </DashboardContainer>
   );
 };
