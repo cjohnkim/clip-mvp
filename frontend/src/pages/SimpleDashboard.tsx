@@ -53,9 +53,9 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 const AmountCard = styled(Card)(({ theme }) => ({
   background: 'white',
   borderRadius: 16,
-  border: '2px solid #00d4aa',
+  border: '1px solid #00d4aa',
   boxShadow: `
-    0 0 20px rgba(0, 212, 170, 0.2),
+    0 0 10px rgba(0, 212, 170, 0.1),
     0 4px 16px rgba(0, 0, 0, 0.1)
   `,
   marginBottom: theme.spacing(3),
@@ -542,7 +542,7 @@ const SimpleDashboard: React.FC = () => {
       <AmountCard>
         <CardContent sx={{ p: 4 }}>
           <Box textAlign="center">
-            <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', mb: 1, display: 'block' }}>
+            <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', mb: 0.5, display: 'block' }}>
               Saving for tomorrow
             </Typography>
             <Amount>
@@ -770,6 +770,7 @@ const SimpleDashboard: React.FC = () => {
             variant="outlined"
             value={balanceEditDialog.amount}
             onChange={(e) => setBalanceEditDialog({ ...balanceEditDialog, amount: e.target.value })}
+            onFocus={(e) => e.target.select()}
             InputProps={{
               startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>
             }}
