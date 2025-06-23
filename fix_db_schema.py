@@ -19,15 +19,25 @@ with app.app_context():
         else:
             print(f"❌ Error adding is_admin column: {e}")
     
-    try:
-        # Add missing columns to accounts table if needed
-        db.session.execute(text("ALTER TABLE accounts ADD COLUMN include_in_total BOOLEAN DEFAULT TRUE"))
-        print("✅ Added include_in_total column to accounts table")
-    except Exception as e:
-        if "duplicate column name" in str(e).lower() or "already exists" in str(e).lower():
-            print("ℹ️  include_in_total column already exists")
-        else:
-            print(f"❌ Error adding include_in_total column: {e}")
+    # Add all missing columns to accounts table
+    missing_columns = [
+        ("include_in_total", "BOOLEAN DEFAULT TRUE"),
+        ("plaid_account_id", "VARCHAR(255)"),
+        ("institution_name", "VARCHAR(100)"),
+        ("is_active", "BOOLEAN DEFAULT TRUE"),
+        ("created_at", "DATETIME DEFAULT CURRENT_TIMESTAMP"),
+        ("updated_at", "DATETIME DEFAULT CURRENT_TIMESTAMP")
+    ]
+    
+    for col_name, col_def in missing_columns:
+        try:
+            db.session.execute(text(f"ALTER TABLE accounts ADD COLUMN {col_name} {col_def}"))
+            print(f"✅ Added {col_name} column to accounts table")
+        except Exception as e:
+            if "duplicate column name" in str(e).lower() or "already exists" in str(e).lower():
+                print(f"ℹ️  {col_name} column already exists")
+            else:
+                print(f"❌ Error adding {col_name} column: {e}")
     
     try:
         # Commit changes

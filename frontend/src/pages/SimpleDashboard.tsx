@@ -490,7 +490,7 @@ const SimpleDashboard: React.FC = () => {
       )}
 
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
         <Typography variant="h4" fontWeight={700} color="#00d4aa">
           Clip
         </Typography>
@@ -538,6 +538,11 @@ const SimpleDashboard: React.FC = () => {
         </Stack>
       </Box>
 
+      {/* Motivational tagline */}
+      <Typography variant="body1" textAlign="center" color="text.secondary" sx={{ mb: 3, fontStyle: 'italic' }}>
+        Save today, spend tomorrow
+      </Typography>
+
       {/* AI Insights */}
       <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
 
@@ -545,9 +550,6 @@ const SimpleDashboard: React.FC = () => {
       <AmountCard>
         <CardContent sx={{ p: 4 }}>
           <Box textAlign="center">
-            <Typography variant="body1" sx={{ opacity: 0.8, mb: 2, fontWeight: 500 }}>
-              Save today, spend tomorrow
-            </Typography>
             <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
@@ -555,36 +557,46 @@ const SimpleDashboard: React.FC = () => {
               Available today
             </Typography>
             
-            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #f1f3f4' }}>
-              <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
-                <Box textAlign="center">
-                  <Typography variant="body2" color="text.secondary">
-                    Total Balance
-                  </Typography>
-                  <Button 
-                    variant="text" 
-                    onClick={handleBalanceEdit}
-                    sx={{ 
-                      color: '#1a1a1a', 
-                      fontWeight: 500,
-                      textTransform: 'none',
-                      fontSize: '0.875rem',
-                      minWidth: 'auto',
-                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' }
-                    }}
-                  >
-                    {formatCurrency(dashboardData.totalBalance)}
-                  </Button>
-                </Box>
-                <Box textAlign="center">
-                  <Typography variant="body2" color="text.secondary">
-                    Accounts
-                  </Typography>
-                  <Typography variant="body2" sx={{ fontWeight: 500, color: '#1a1a1a' }}>
-                    {dashboardData.accountsCount}
-                  </Typography>
-                </Box>
-              </Stack>
+            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <Grid container spacing={0}>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      Total Balance
+                    </Typography>
+                    <Button 
+                      variant="text" 
+                      onClick={handleBalanceEdit}
+                      sx={{ 
+                        display: 'block',
+                        width: '100%',
+                        color: '#00d4aa', 
+                        fontWeight: 600,
+                        textTransform: 'none',
+                        fontSize: '1.1rem',
+                        mt: 0.5,
+                        fontFamily: '"JetBrains Mono", monospace',
+                        '&:hover': { 
+                          backgroundColor: 'rgba(0, 212, 170, 0.1)',
+                          textShadow: '0 0 8px rgba(0, 212, 170, 0.6)'
+                        }
+                      }}
+                    >
+                      {formatCurrency(dashboardData.totalBalance)}
+                    </Button>
+                  </Box>
+                </Grid>
+                <Grid item xs={6}>
+                  <Box textAlign="center">
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      Accounts
+                    </Typography>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#00d4aa', mt: 0.5 }}>
+                      {dashboardData.accountsCount}
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
             </Box>
           </Box>
         </CardContent>
