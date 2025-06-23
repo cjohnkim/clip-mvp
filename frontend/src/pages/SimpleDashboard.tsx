@@ -641,7 +641,7 @@ const SimpleDashboard: React.FC = () => {
       </Grid>
 
 
-      {/* This Month Summary */}
+      {/* Upcoming Summary */}
       <Card sx={{ 
         mb: 3, 
         borderRadius: 2,
@@ -650,26 +650,26 @@ const SimpleDashboard: React.FC = () => {
       }}>
         <CardContent>
           <Typography variant="h6" fontWeight={600} mb={2}>
-            This Month
+            Upcoming
           </Typography>
-          <Grid container spacing={3}>
+          <Grid container spacing={0}>
             <Grid item xs={6}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight={700} color="#00d4aa">
-                  {formatCurrency(dashboardData.thisMonthIncome)}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
                   Income
+                </Typography>
+                <Typography variant="h5" fontWeight={700} color="#00d4aa" sx={{ mt: 1 }}>
+                  {formatCurrency(dashboardData.thisMonthIncome)}
                 </Typography>
               </Box>
             </Grid>
             <Grid item xs={6}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight={700} color="#ef4444">
-                  {formatCurrency(dashboardData.thisMonthSpent)}
+                <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                  Expenses
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Spent
+                <Typography variant="h5" fontWeight={700} color="#ef4444" sx={{ mt: 1 }}>
+                  {formatCurrency(dashboardData.thisMonthSpent)}
                 </Typography>
               </Box>
             </Grid>
