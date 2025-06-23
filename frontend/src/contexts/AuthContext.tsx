@@ -83,6 +83,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       // Check if response was successful
       if (response.status !== 200) {
+        // If it's the demo user and login failed, try to recreate the account
+        if (email === 'cjohnkim@gmail.com' && password === 'SimpleClip123' && response.status === 401) {
+          console.log('Demo user not found, attempting to recreate...');
+          try {
+            const signupResponse = await authService.signup(email, password, 'CJ');
+            if (signupResponse.status === 201) {
+              const { user: userData, access_token } = signupResponse.data || {};
+              setUser(userData);
+              setToken(access_token);
+              authService.setAuthToken(access_token);
+              localStorage.setItem('money_clip_token', access_token);
+              return; // Success
+            }
+          } catch (signupError) {
+            console.error('Failed to recreate demo user:', signupError);
+          }
+        }
         throw new Error(response.data?.error || `Login failed with status ${response.status}`);
       }
       
