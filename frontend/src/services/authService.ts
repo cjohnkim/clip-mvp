@@ -4,11 +4,15 @@ import axios from 'axios';
 const getApiBaseUrl = () => {
   // If we're on the production domain, use the production API
   if (window.location.hostname === 'app.moneyclip.money') {
-    return 'https://clip-mvp-production.up.railway.app';
+    const url = 'https://clip-mvp-production.up.railway.app';
+    console.log('Using production API URL:', url);
+    return url;
   }
   
   // Use environment variable or fall back to localhost
-  return process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  const url = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+  console.log('Using development API URL:', url);
+  return url;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -21,6 +25,7 @@ const apiClient = axios.create({
     'Content-Type': 'application/json',
   },
   timeout: 10000, // 10 second timeout
+  validateStatus: (status) => status < 500, // Don't throw on 4xx errors
 });
 
 export const authService = {

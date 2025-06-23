@@ -27,6 +27,7 @@ export default function Login() {
 
     try {
       console.log('Attempting login with email:', email);
+      console.log('Current hostname:', window.location.hostname);
       await login(email, password);
       console.log('Login successful, navigating to dashboard');
       navigate('/dashboard');
@@ -34,6 +35,7 @@ export default function Login() {
       console.error('Login error:', err);
       console.error('Error response:', err.response);
       console.error('Error message:', err.message);
+      console.error('Error config:', err.config);
       
       let errorMessage = 'Login failed. Please try again.';
       
@@ -82,7 +84,7 @@ export default function Login() {
             </Alert>
           )}
 
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1, width: '100%' }}>
+          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1, width: '100%' }}>
             <TextField
               margin="normal"
               required
