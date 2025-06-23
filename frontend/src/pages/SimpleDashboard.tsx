@@ -34,6 +34,7 @@ import {
   Person,
   MoreVert,
   Menu,
+  DragHandle,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../contexts/AuthContext';
@@ -53,12 +54,20 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 const AmountCard = styled(Card)(({ theme }) => ({
   background: 'white',
   borderRadius: 16,
-  border: '1px solid #00d4aa',
+  border: '1px solid #00f5c4',
   boxShadow: `
-    0 0 10px rgba(0, 212, 170, 0.1),
+    0 0 10px rgba(0, 245, 196, 0.2),
     0 4px 16px rgba(0, 0, 0, 0.1)
   `,
   marginBottom: theme.spacing(3),
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    border: '1px solid #00d4aa',
+    boxShadow: `
+      0 0 15px rgba(0, 212, 170, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.1)
+    `,
+  },
 }));
 
 const Amount = styled(Typography)(({ theme }) => ({
@@ -602,7 +611,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('income')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <TrendingUp sx={{ fontSize: '2rem', color: '#22c55e', mb: 1 }} />
+              <Add sx={{ fontSize: '2rem', color: '#22c55e', mb: 1 }} />
               <Typography variant="body2" fontWeight={600} color="text.primary">
                 Add Income
               </Typography>
@@ -612,7 +621,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('expense')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Receipt sx={{ fontSize: '2rem', color: '#ef4444', mb: 1 }} />
+              <Remove sx={{ fontSize: '2rem', color: '#ef4444', mb: 1 }} />
               <Typography variant="body2" fontWeight={600} color="text.primary">
                 Add Expense
               </Typography>
@@ -622,7 +631,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={handleImport}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <CloudUpload sx={{ fontSize: '2rem', color: '#6b7280', mb: 1 }} />
+              <DragHandle sx={{ fontSize: '2rem', color: '#6b7280', mb: 1 }} />
               <Typography variant="body2" fontWeight={600} color="text.primary">
                 Import Data
               </Typography>
