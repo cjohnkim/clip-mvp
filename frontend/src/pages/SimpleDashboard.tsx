@@ -45,13 +45,12 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const AmountCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
-  color: 'white',
+  background: 'white',
   borderRadius: 12,
   border: '2px solid #00d4aa',
   boxShadow: `
-    0 0 20px rgba(0, 212, 170, 0.3),
-    0 0 40px rgba(0, 212, 170, 0.1)
+    0 0 20px rgba(0, 212, 170, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1)
   `,
   marginBottom: theme.spacing(3),
 }));
@@ -59,10 +58,9 @@ const AmountCard = styled(Card)(({ theme }) => ({
 const Amount = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
   fontWeight: 700,
-  color: '#00d4aa',
+  color: '#00a085',
   fontFamily: '"JetBrains Mono", "Courier New", monospace',
   letterSpacing: '1px',
-  textShadow: '0 0 10px rgba(0, 212, 170, 0.5)',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
@@ -540,7 +538,7 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Motivational tagline */}
       <Typography variant="body1" textAlign="center" color="text.secondary" sx={{ mb: 3, fontStyle: 'italic' }}>
-        Save today, spend tomorrow
+        Available today
       </Typography>
 
       {/* AI Insights */}
@@ -553,32 +551,33 @@ const SimpleDashboard: React.FC = () => {
             <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
-            <Typography variant="body1" sx={{ opacity: 0.7, mt: 1 }}>
-              Available today
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+              Save today, spend tomorrow
             </Typography>
             
-            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #e5e7eb' }}>
               <Grid container spacing={0}>
                 <Grid item xs={6}>
                   <Box textAlign="center">
-                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '1px' }}>
                       Total Balance
                     </Typography>
                     <Button 
-                      variant="text" 
+                      variant="outlined"
                       onClick={handleBalanceEdit}
                       sx={{ 
                         display: 'block',
                         width: '100%',
                         color: '#00d4aa', 
+                        borderColor: '#00d4aa',
                         fontWeight: 600,
                         textTransform: 'none',
                         fontSize: '1.1rem',
-                        mt: 0.5,
+                        mt: 1,
                         fontFamily: '"JetBrains Mono", monospace',
                         '&:hover': { 
-                          backgroundColor: 'rgba(0, 212, 170, 0.1)',
-                          textShadow: '0 0 8px rgba(0, 212, 170, 0.6)'
+                          backgroundColor: 'rgba(0, 212, 170, 0.05)',
+                          borderColor: '#00a085'
                         }
                       }}
                     >
@@ -588,11 +587,14 @@ const SimpleDashboard: React.FC = () => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box textAlign="center">
-                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
-                      Accounts
+                    <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                      Days Left
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#00d4aa', mt: 0.5 }}>
-                      {dashboardData.accountsCount}
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#00a085', mt: 1 }}>
+                      {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate()}
+                    </Typography>
+                    <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+                      in month
                     </Typography>
                   </Box>
                 </Grid>

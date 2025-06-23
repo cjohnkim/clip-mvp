@@ -60,6 +60,9 @@ def get_daily_allowance():
         else:
             basic_daily_allowance = 0
         
+        # For now, just use basic calculation
+        daily_allowance = basic_daily_allowance
+        
         # Enhanced calculation considering fixed expenses
         # Get recurring fixed expenses for the month
         fixed_monthly_expenses = db.session.query(func.sum(Transaction.amount)).filter(
@@ -88,8 +91,13 @@ def get_daily_allowance():
         else:
             safe_daily_allowance = 0
         
-        # Choose the more conservative calculation
-        recommended_daily_allowance = min(basic_daily_allowance, safe_daily_allowance)
+        # Choose the more conservative calculation, but if no transactions exist, use basic
+        if month_expenses == 0 and fixed_monthly_expenses == 0:
+            # No transaction history, use basic calculation
+            recommended_daily_allowance = basic_daily_allowance
+        else:
+            # Use more conservative calculation when we have transaction data
+            recommended_daily_allowance = min(basic_daily_allowance, safe_daily_allowance)
         
         # Account information
         accounts = Account.query.filter_by(
