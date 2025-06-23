@@ -56,10 +56,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .then(response => {
           setUser(response.data.user);
         })
-        .catch(() => {
+        .catch((error) => {
           // Token is invalid, remove it
+          console.error('Profile validation failed:', error);
           localStorage.removeItem('money_clip_token');
           setToken(null);
+          authService.setAuthToken(null);
         })
         .finally(() => {
           setIsLoading(false);
@@ -71,8 +73,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const login = async (email: string, password: string) => {
     try {
+      // Clear any existing tokens first
+      localStorage.removeItem('money_clip_token');
+      authService.setAuthToken(null);
+      
       const response = await authService.login(email, password);
       const { user: userData, access_token } = response.data;
+      
+      console.log('Login response:', { userData, access_token: access_token.substring(0, 50) + '...' });
       
       setUser(userData);
       setToken(access_token);
