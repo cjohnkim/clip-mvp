@@ -78,7 +78,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       authService.setAuthToken(null);
       
       const response = await authService.login(email, password);
-      const { user: userData, access_token } = response.data;
+      
+      console.log('Full login response:', response);
+      
+      // Check if response was successful
+      if (response.status !== 200) {
+        throw new Error(response.data?.error || `Login failed with status ${response.status}`);
+      }
+      
+      const { user: userData, access_token } = response.data || {};
+      
+      if (!userData || !access_token) {
+        throw new Error('Invalid response from server - missing user data or token');
+      }
       
       console.log('Login response:', { userData, access_token: access_token ? access_token.substring(0, 50) + '...' : 'undefined' });
       

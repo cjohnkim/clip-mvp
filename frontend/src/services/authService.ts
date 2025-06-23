@@ -26,6 +26,7 @@ const apiClient = axios.create({
   },
   timeout: 10000, // 10 second timeout
   validateStatus: (status) => status < 500, // Don't throw on 4xx errors
+  withCredentials: false,
 });
 
 export const authService = {
