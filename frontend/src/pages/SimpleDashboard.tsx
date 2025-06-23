@@ -45,18 +45,56 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const HeroCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #00d4aa 0%, #00b894 100%)',
+  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
   color: 'white',
-  borderRadius: 16,
-  boxShadow: '0 8px 32px rgba(0, 212, 170, 0.2)',
+  borderRadius: 20,
+  border: '2px solid #00d4aa',
+  boxShadow: `
+    0 0 30px rgba(0, 212, 170, 0.4),
+    0 0 60px rgba(0, 212, 170, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1)
+  `,
   marginBottom: theme.spacing(3),
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    borderRadius: 'inherit',
+    background: 'linear-gradient(45deg, #00d4aa, #00b894, #00ffaa, #00d4aa)',
+    backgroundSize: '200% 200%',
+    animation: 'borderGlow 3s ease-in-out infinite alternate',
+    zIndex: -1,
+  },
+  '@keyframes borderGlow': {
+    '0%': {
+      backgroundPosition: '0% 50%',
+      filter: 'brightness(1)',
+    },
+    '100%': {
+      backgroundPosition: '100% 50%',
+      filter: 'brightness(1.2)',
+    },
+  },
 }));
 
 const DailyAmount = styled(Typography)(({ theme }) => ({
-  fontSize: '3rem',
-  fontWeight: 700,
+  fontSize: '4rem',
+  fontWeight: 900,
   marginBottom: theme.spacing(1),
   textAlign: 'center',
+  color: '#00ffaa',
+  textShadow: `
+    0 0 10px rgba(0, 255, 170, 0.8),
+    0 0 20px rgba(0, 255, 170, 0.6),
+    0 0 30px rgba(0, 255, 170, 0.4)
+  `,
+  fontFamily: '"JetBrains Mono", "Courier New", monospace',
+  letterSpacing: '2px',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
@@ -350,7 +388,7 @@ const SimpleDashboard: React.FC = () => {
       if (linkData.link_token) {
         if (linkData.demo_mode) {
           // Demo mode - show informative message about real setup
-          setSuccess('🔧 Demo Mode: This would connect to your real bank with Plaid credentials. Check setup-plaid.md for 5-minute setup instructions!');
+          setSuccess('🔧 Demo Mode: To connect real banks, set PLAID_CLIENT_ID, PLAID_SECRET, and PLAID_ENV in Railway. Takes 2 minutes!');
           setTimeout(() => setSuccess(''), 8000);
           console.log('Demo Link Token:', linkData.link_token);
           console.log('📋 To enable real bank connections, see: setup-plaid.md');
@@ -483,6 +521,9 @@ const SimpleDashboard: React.FC = () => {
         </Alert>
       )}
 
+      {/* AI Suggestions Panel - Top Priority */}
+      <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
+
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" fontWeight={700} color="#00d4aa">
@@ -534,16 +575,16 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Daily Allowance Hero */}
       <HeroCard>
-        <CardContent sx={{ p: 4 }}>
+        <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
           <Box textAlign="center">
-            <Typography variant="h6" sx={{ opacity: 0.9, mb: 1 }}>
-              Available Today
+            <Typography variant="h5" sx={{ opacity: 0.9, mb: 2, fontWeight: 600 }}>
+              💰 Safe to Spend Today
             </Typography>
             <DailyAmount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </DailyAmount>
-            <Typography variant="body1" sx={{ opacity: 0.8, mb: 3 }}>
-              Based on your current balance and upcoming expenses
+            <Typography variant="h6" sx={{ opacity: 0.8, mb: 3, fontWeight: 500 }}>
+              AI-powered • Updated instantly
             </Typography>
             
             <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">

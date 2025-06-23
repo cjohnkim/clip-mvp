@@ -280,17 +280,17 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({ onSuggestionApp
         <AICard sx={{ mb: 2 }}>
           <CardContent>
             <Typography variant="h6" fontWeight={600} mb={2} display="flex" alignItems="center" gap={1}>
-              <Lightbulb sx={{ color: '#f59e0b' }} />
-              Today's Smart Insights
+              <Speed sx={{ color: '#00d4aa' }} />
+              Instant Insights
             </Typography>
             
             <Stack spacing={2}>
-              <Alert severity="info" icon={<Speed />}>
+              <Alert severity="info" icon={<TrendingUp />}>
                 <Typography variant="body2" fontWeight={500}>
-                  Daily Spending Limit: ${dailyRecs.suggested_daily_limit.toFixed(2)}
+                  Smart Limit: ${dailyRecs.suggested_daily_limit.toFixed(2)}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  Focus on {dailyRecs.focus_category} spending today
+                  {dailyRecs.focus_category} is your focus today
                 </Typography>
               </Alert>
               
@@ -313,7 +313,7 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({ onSuggestionApp
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
             <Typography variant="h6" fontWeight={600} display="flex" alignItems="center" gap={1}>
               <SmartToy sx={{ color: '#00d4aa' }} />
-              AI Suggestions
+              Quick Actions
               {pendingSuggestions.length > 0 && (
                 <Chip 
                   label={pendingSuggestions.length} 
@@ -339,7 +339,7 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({ onSuggestionApp
               <Box textAlign="center" py={3}>
                 <CheckCircle sx={{ fontSize: 48, color: '#10b981', mb: 1 }} />
                 <Typography variant="body1" color="text.secondary">
-                  All caught up! No new suggestions.
+                  All set! You're on track.
                 </Typography>
               </Box>
             ) : (
