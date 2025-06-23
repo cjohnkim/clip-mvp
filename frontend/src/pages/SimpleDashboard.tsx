@@ -521,9 +521,6 @@ const SimpleDashboard: React.FC = () => {
         </Alert>
       )}
 
-      {/* AI Suggestions Panel - Top Priority */}
-      <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
-
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" fontWeight={700} color="#00d4aa">
@@ -573,18 +570,21 @@ const SimpleDashboard: React.FC = () => {
         </Stack>
       </Box>
 
+      {/* AI Insights */}
+      <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
+
       {/* Daily Allowance Hero */}
       <HeroCard>
         <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
           <Box textAlign="center">
             <Typography variant="h5" sx={{ opacity: 0.9, mb: 2, fontWeight: 600 }}>
-              💰 Safe to Spend Today
+              Your Clip
             </Typography>
             <DailyAmount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </DailyAmount>
-            <Typography variant="h6" sx={{ opacity: 0.8, mb: 3, fontWeight: 500 }}>
-              AI-powered • Updated instantly
+            <Typography variant="body2" sx={{ opacity: 0.8, mb: 3 }}>
+              Save today, spend tomorrow
             </Typography>
             
             <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
@@ -637,8 +637,6 @@ const SimpleDashboard: React.FC = () => {
         </Grid>
       </Grid>
 
-      {/* AI Suggestions Panel */}
-      <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
 
       {/* This Month Summary */}
       <Card sx={{ mb: 3, borderRadius: 2 }}>
