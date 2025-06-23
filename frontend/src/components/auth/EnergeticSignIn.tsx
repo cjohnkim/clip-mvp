@@ -117,6 +117,15 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
               }}>
                 Access your financial training dashboard
               </Typography>
+              
+              <Typography variant="body2" sx={{ 
+                mb: 3, 
+                color: '#00d4aa',
+                fontWeight: 500,
+                fontStyle: 'italic'
+              }}>
+                Demo: cjohnkim@gmail.com / SimpleClip123
+              </Typography>
             </Box>
 
             {error && (
