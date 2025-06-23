@@ -33,6 +33,8 @@ import { styled } from '@mui/material/styles';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import AddTransactionDialog from '../components/AddTransactionDialog';
+import { usePlaidLink } from 'react-plaid-link';
+import AISuggestionsPanel from '../components/AISuggestionsPanel';
 
 // Clean, Simple.com inspired styling
 const DashboardContainer = styled(Container)(({ theme }) => ({
@@ -114,6 +116,8 @@ const SimpleDashboard: React.FC = () => {
     open: false,
     amount: '',
   });
+  const [success, setSuccess] = useState('');
+  const [linkToken, setLinkToken] = useState<string | null>(null);
   
   console.log('SimpleDashboard state:', { user: !!user, isAdmin, loading, error, dashboardData: !!dashboardData });
 
@@ -228,32 +232,147 @@ const SimpleDashboard: React.FC = () => {
   const handleImport = async () => {
     try {
       const token = localStorage.getItem('money_clip_token');
+      
+      if (!token) {
+        setError('Authentication token not found. Please log in again.');
+        return;
+      }
+      
       const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
         ? 'https://clip-mvp-production.up.railway.app'
         : process.env.REACT_APP_API_URL || 'http://localhost:5001';
       
-      const response = await fetch(`${apiBaseUrl}/api/plaid/status`, {
+      // Check if Plaid is available
+      const statusResponse = await fetch(`${apiBaseUrl}/api/plaid/status`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
 
-      if (response.ok) {
-        const status = await response.json();
+      if (statusResponse.ok) {
+        const status = await statusResponse.json();
         if (status.available) {
-          // TODO: Implement Plaid Link integration
-          alert('Plaid integration is available! Bank connection feature coming soon.');
+          // Create link token and launch Plaid Link
+          await initiatePlaidConnection(apiBaseUrl, token);
         } else {
-          alert('Import feature is in development. Manual CSV import coming soon!');
+          // Show alternative import options
+          setError('Bank connection temporarily unavailable. Please try manual entry or contact support.');
         }
       } else {
-        alert('Import feature coming soon!');
+        setError('Import feature unavailable. Please try again later.');
       }
     } catch (error) {
-      alert('Import feature coming soon!');
+      console.error('Import error:', error);
+      setError('Failed to connect to bank. Please try again later.');
     }
   };
+
+  const handlePlaidSuccess = async (publicToken: string, metadata: any) => {
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
+      const response = await fetch(`${apiBaseUrl}/api/plaid/exchange-token`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          public_token: publicToken,
+          metadata: metadata,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setSuccess(`✅ Successfully connected ${result.accounts_synced || 0} accounts!`);
+        setTimeout(() => setSuccess(''), 5000);
+        // Refresh dashboard data to show new accounts
+        await loadDashboardData();
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || 'Failed to connect accounts');
+      }
+    } catch (error) {
+      console.error('Error exchanging token:', error);
+      setError('Failed to connect accounts. Please try again.');
+    }
+  };
+
+  const handlePlaidError = (error: any) => {
+    console.error('Plaid Link error:', error);
+    setError(`Bank connection error: ${error.error_message || 'Unknown error'}`);
+  };
+
+  const handlePlaidExit = (error: any, metadata: any) => {
+    if (error != null) {
+      console.error('Plaid Link exit with error:', error);
+    } else {
+      console.log('Plaid Link exited normally:', metadata);
+    }
+  };
+
+  // Configure Plaid Link
+  const config = {
+    token: linkToken,
+    onSuccess: handlePlaidSuccess,
+    onError: handlePlaidError,
+    onExit: handlePlaidExit,
+  };
+
+  const { open, ready } = usePlaidLink(config);
+
+  const initiatePlaidConnection = async (apiBaseUrl: string, token: string) => {
+    try {
+      // Get link token from backend
+      const linkResponse = await fetch(`${apiBaseUrl}/api/plaid/link-token`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user?.id,
+          user_name: user?.first_name || 'User',
+        }),
+      });
+
+      if (!linkResponse.ok) {
+        throw new Error('Failed to create link token');
+      }
+
+      const linkData = await linkResponse.json();
+      
+      if (linkData.link_token) {
+        if (linkData.demo_mode) {
+          // Demo mode - show success message
+          setSuccess('🎉 Demo mode: Bank connection would open Plaid Link in production.');
+          setTimeout(() => setSuccess(''), 5000);
+          console.log('Demo Link Token:', linkData.link_token);
+        } else {
+          // Production mode - set link token and open Plaid Link
+          setLinkToken(linkData.link_token);
+          // Link will open once token is set and ready
+        }
+      } else {
+        throw new Error('No link token received');
+      }
+    } catch (error) {
+      console.error('Plaid connection error:', error);
+      setError('Failed to initialize bank connection. Please try again.');
+    }
+  };
+
+  // Auto-open Plaid Link when token is ready
+  useEffect(() => {
+    if (linkToken && ready) {
+      open();
+    }
+  }, [linkToken, ready, open]);
 
   const handleAddTransaction = async (transactionData: any) => {
     try {
@@ -351,6 +470,18 @@ const SimpleDashboard: React.FC = () => {
 
   return (
     <DashboardContainer maxWidth="md">
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }} onClose={() => setError('')}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" sx={{ mb: 3 }} onClose={() => setSuccess('')}>
+          {success}
+        </Alert>
+      )}
+
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" fontWeight={700} color="#00d4aa">
@@ -367,6 +498,14 @@ const SimpleDashboard: React.FC = () => {
               Admin
             </Button>
           )}
+          <Button 
+            variant="text" 
+            size="small"
+            onClick={() => navigate('/help')}
+            sx={{ color: '#666' }}
+          >
+            Help
+          </Button>
           <IconButton 
             onClick={() => navigate('/profile')}
             sx={{ 
@@ -455,6 +594,9 @@ const SimpleDashboard: React.FC = () => {
           </QuickActionCard>
         </Grid>
       </Grid>
+
+      {/* AI Suggestions Panel */}
+      <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
 
       {/* This Month Summary */}
       <Card sx={{ mb: 3, borderRadius: 2 }}>

@@ -17,7 +17,12 @@ import {
   Card,
   CardContent,
   Alert,
+  Chip,
+  Box,
+  LinearProgress,
+  CircularProgress,
 } from '@mui/material';
+import { SmartToy } from '@mui/icons-material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -95,6 +100,12 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [aiCategorization, setAiCategorization] = useState<{
+    category: string;
+    confidence: number;
+    message: string;
+  } | null>(null);
+  const [processingAI, setProcessingAI] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -110,8 +121,55 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
         is_recurring: false
       });
       setError('');
+      setAiCategorization(null);
     }
   }, [open]);
+
+  // Use AI to categorize transaction
+  const handleAICategorize = async () => {
+    if (!formData.description || !formData.amount) {
+      setError('Please enter description and amount first');
+      return;
+    }
+
+    setProcessingAI(true);
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
+      const response = await fetch(`${apiBaseUrl}/api/ai/categorize`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: formData.description,
+          amount: type === 'income' ? parseFloat(formData.amount) : -parseFloat(formData.amount),
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        setAiCategorization({
+          category: result.category,
+          confidence: result.confidence,
+          message: result.note || `Categorized as ${result.category} with ${Math.round(result.confidence * 100)}% confidence`,
+        });
+        
+        // Auto-fill category if confidence is high
+        if (result.confidence > 0.8) {
+          setFormData({ ...formData, category: result.category });
+        }
+      }
+    } catch (err) {
+      console.error('AI categorization error:', err);
+    } finally {
+      setProcessingAI(false);
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -219,6 +277,39 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
             </Alert>
           )}
 
+          {/* AI Categorization Result */}
+          {aiCategorization && (
+            <Alert 
+              severity="info" 
+              sx={{ mb: 2 }}
+              icon={<SmartToy />}
+              action={
+                <Box display="flex" alignItems="center" gap={1}>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={aiCategorization.confidence * 100}
+                    sx={{ 
+                      width: 60, 
+                      height: 6, 
+                      borderRadius: 3,
+                      backgroundColor: '#e5e7eb',
+                      '& .MuiLinearProgress-bar': {
+                        backgroundColor: aiCategorization.confidence > 0.8 ? '#10b981' : '#f59e0b',
+                      }
+                    }}
+                  />
+                  <Typography variant="caption" color="text.secondary">
+                    {Math.round(aiCategorization.confidence * 100)}%
+                  </Typography>
+                </Box>
+              }
+            >
+              <Typography variant="body2">
+                {aiCategorization.message}
+              </Typography>
+            </Alert>
+          )}
+
           <Grid container spacing={3} sx={{ mt: 1 }}>
             <Grid item xs={12} md={6}>
               <TextField
@@ -260,6 +351,25 @@ const AddTransactionDialog: React.FC<AddTransactionDialogProps> = ({
                   ))}
                 </Select>
               </FormControl>
+              
+              {/* AI Categorization Helper */}
+              {type === 'expense' && formData.description && formData.amount && (
+                <Box mt={1}>
+                  <Button
+                    size="small"
+                    startIcon={processingAI ? <CircularProgress size={16} /> : <SmartToy />}
+                    onClick={handleAICategorize}
+                    disabled={processingAI}
+                    sx={{ 
+                      textTransform: 'none',
+                      color: '#00d4aa',
+                      '&:hover': { backgroundColor: 'rgba(0, 212, 170, 0.1)' }
+                    }}
+                  >
+                    {processingAI ? 'Analyzing...' : 'AI Suggest Category'}
+                  </Button>
+                </Box>
+              )}
             </Grid>
 
             <Grid item xs={12} md={6}>

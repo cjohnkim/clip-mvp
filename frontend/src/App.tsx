@@ -11,6 +11,7 @@ import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import SimpleDashboard from './pages/SimpleDashboard';
 import ProfilePage from './pages/ProfilePage';
+import HelpPage from './pages/HelpPage';
 import Setup from './components/setup/Setup';
 import Planning from './components/planning/Planning';
 import Timeline from './components/timeline/Timeline';
@@ -87,6 +88,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <ProfilePage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/help" 
+                element={
+                  <ProtectedRoute>
+                    <HelpPage />
                   </ProtectedRoute>
                 } 
               />

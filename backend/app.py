@@ -64,6 +64,7 @@ from routes.support import support_bp
 from routes.users import users_bp
 from routes.plaid import plaid_bp
 from routes.migrate import migrate_bp
+from routes.ai import ai_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
@@ -76,6 +77,7 @@ app.register_blueprint(support_bp, url_prefix='/api/support')
 app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(plaid_bp)
 app.register_blueprint(migrate_bp)
+app.register_blueprint(ai_bp)
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
