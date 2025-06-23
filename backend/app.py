@@ -59,6 +59,7 @@ from routes.waitlist import waitlist_bp
 from routes.admin import admin_bp
 from routes.transactions import transactions_bp
 from routes.daily_allowance import daily_allowance_bp
+from routes.accounts import accounts_bp
 from routes.plaid import plaid_bp
 from routes.migrate import migrate_bp
 
@@ -68,6 +69,7 @@ app.register_blueprint(waitlist_bp, url_prefix='/api/waitlist')
 app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(transactions_bp)
 app.register_blueprint(daily_allowance_bp)
+app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
 app.register_blueprint(plaid_bp)
 app.register_blueprint(migrate_bp)
 

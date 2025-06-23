@@ -12,6 +12,11 @@ import {
   CircularProgress,
   Alert,
   Fab,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@mui/material';
 import {
   Add,
@@ -100,6 +105,10 @@ const SimpleDashboard: React.FC = () => {
     open: boolean;
     type: 'income' | 'expense';
   }>({ open: false, type: 'expense' });
+  const [balanceEditDialog, setBalanceEditDialog] = useState({
+    open: false,
+    amount: '',
+  });
   
   console.log('SimpleDashboard state:', { user: !!user, isAdmin, loading, error, dashboardData: !!dashboardData });
 
@@ -198,8 +207,12 @@ const SimpleDashboard: React.FC = () => {
 
   const handleImport = async () => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch('/api/plaid/status', {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/plaid/status`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -224,8 +237,12 @@ const SimpleDashboard: React.FC = () => {
 
   const handleAddTransaction = async (transactionData: any) => {
     try {
-      const token = localStorage.getItem('access_token');
-      const response = await fetch('/api/transactions', {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/transactions`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -242,6 +259,45 @@ const SimpleDashboard: React.FC = () => {
       await loadDashboardData();
     } catch (error: any) {
       throw new Error(error.message || 'Failed to add transaction');
+    }
+  };
+
+  const handleBalanceEdit = () => {
+    if (dashboardData) {
+      setBalanceEditDialog({
+        open: true,
+        amount: dashboardData.totalBalance.toString(),
+      });
+    }
+  };
+
+  const handleBalanceUpdate = async () => {
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
+      const response = await fetch(`${apiBaseUrl}/api/accounts/balance`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          total_balance: parseFloat(balanceEditDialog.amount)
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update balance');
+      }
+
+      setBalanceEditDialog({ open: false, amount: '' });
+      await loadDashboardData(); // Refresh data
+    } catch (err: any) {
+      console.error('Failed to update balance:', err);
+      setError(err.message || 'Failed to update balance');
     }
   };
 
@@ -278,7 +334,7 @@ const SimpleDashboard: React.FC = () => {
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <Typography variant="h4" fontWeight={700} color="#00d4aa">
-          Money Clip
+          Clip
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
           {isAdmin && (
@@ -315,7 +371,7 @@ const SimpleDashboard: React.FC = () => {
             </Typography>
             
             <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-              <BalanceChip>
+              <BalanceChip onClick={handleBalanceEdit}>
                 <AccountBalance sx={{ fontSize: '1rem' }} />
                 <Typography variant="body2">
                   {formatCurrency(dashboardData.totalBalance)} total
@@ -458,6 +514,41 @@ const SimpleDashboard: React.FC = () => {
         onClose={() => setAddTransactionDialog({ open: false, type: 'expense' })}
         onSubmit={handleAddTransaction}
       />
+
+      {/* Balance Edit Dialog */}
+      <Dialog open={balanceEditDialog.open} onClose={() => setBalanceEditDialog({ open: false, amount: '' })}>
+        <DialogTitle>Edit Total Balance</DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+            Update your current total balance across all accounts.
+          </Typography>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Total Balance"
+            type="number"
+            fullWidth
+            variant="outlined"
+            value={balanceEditDialog.amount}
+            onChange={(e) => setBalanceEditDialog({ ...balanceEditDialog, amount: e.target.value })}
+            InputProps={{
+              startAdornment: <Typography sx={{ mr: 1 }}>$</Typography>
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setBalanceEditDialog({ open: false, amount: '' })}>
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleBalanceUpdate} 
+            variant="contained"
+            sx={{ backgroundColor: '#00d4aa', '&:hover': { backgroundColor: '#00b894' } }}
+          >
+            Update Balance
+          </Button>
+        </DialogActions>
+      </Dialog>
     </DashboardContainer>
   );
 };
