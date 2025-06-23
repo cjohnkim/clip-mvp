@@ -28,6 +28,7 @@ import {
   AccountBalance,
   TrendingUp,
   Receipt,
+  Remove,
   CloudUpload,
   Edit,
   Person,
@@ -50,33 +51,61 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const AmountCard = styled(Card)(({ theme }) => ({
-  background: 'white',
-  borderRadius: 12,
+  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
+  color: 'white',
+  borderRadius: 16,
   border: '2px solid #00d4aa',
   boxShadow: `
-    0 0 20px rgba(0, 212, 170, 0.2),
-    0 2px 8px rgba(0, 0, 0, 0.1)
+    0 0 30px rgba(0, 212, 170, 0.3),
+    0 8px 32px rgba(0, 0, 0, 0.2)
   `,
   marginBottom: theme.spacing(3),
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: -2,
+    left: -2,
+    right: -2,
+    bottom: -2,
+    borderRadius: 'inherit',
+    background: 'linear-gradient(45deg, #00d4aa, #00b894, #00d4aa)',
+    backgroundSize: '200% 200%',
+    animation: 'borderGlow 4s ease-in-out infinite alternate',
+    zIndex: -1,
+  },
+  '@keyframes borderGlow': {
+    '0%': {
+      backgroundPosition: '0% 50%',
+      filter: 'brightness(1)',
+    },
+    '100%': {
+      backgroundPosition: '100% 50%',
+      filter: 'brightness(1.3)',
+    },
+  },
 }));
 
 const Amount = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
   fontWeight: 700,
-  color: '#00a085',
+  color: '#00d4aa',
   fontFamily: '"JetBrains Mono", "Courier New", monospace',
   letterSpacing: '1px',
+  textShadow: '0 0 20px rgba(0, 212, 170, 0.6)',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
   borderRadius: 12,
-  border: '2px solid #00d4aa',
+  border: '1px solid #e5e7eb',
   cursor: 'pointer',
   transition: 'all 0.2s ease',
-  boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)',
+  backgroundColor: 'white',
   '&:hover': {
-    boxShadow: '0 0 20px rgba(0, 212, 170, 0.2)',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
     transform: 'translateY(-2px)',
+    borderColor: '#d1d5db',
   },
 }));
 
@@ -543,15 +572,15 @@ const SimpleDashboard: React.FC = () => {
             <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
-            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body1" sx={{ opacity: 0.7, mt: 1 }}>
               Saving for tomorrow
             </Typography>
             
-            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #e5e7eb' }}>
+            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
               <Grid container spacing={0}>
                 <Grid item xs={6}>
                   <Box textAlign="center">
-                    <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
                       Total Balance
                     </Typography>
                     <Button 
@@ -562,29 +591,29 @@ const SimpleDashboard: React.FC = () => {
                         alignItems: 'center',
                         gap: 1,
                         width: '100%',
-                        color: '#1a1a1a', 
+                        color: '#00d4aa', 
                         fontWeight: 600,
                         textTransform: 'none',
                         fontSize: '1.1rem',
                         mt: 1,
                         fontFamily: '"JetBrains Mono", monospace',
                         '&:hover': { 
-                          backgroundColor: 'rgba(0, 212, 170, 0.05)',
-                          color: '#00a085'
+                          backgroundColor: 'rgba(0, 212, 170, 0.1)',
+                          textShadow: '0 0 8px rgba(0, 212, 170, 0.6)'
                         }
                       }}
                     >
                       {formatCurrency(dashboardData.totalBalance)}
-                      <Edit sx={{ fontSize: '1rem', opacity: 0.6 }} />
+                      <Edit sx={{ fontSize: '1rem', opacity: 0.8 }} />
                     </Button>
                   </Box>
                 </Grid>
                 <Grid item xs={6}>
                   <Box textAlign="center">
-                    <Typography variant="caption" sx={{ color: 'text.secondary', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                    <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
                       Days Left in Month
                     </Typography>
-                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#00a085', mt: 1 }}>
+                    <Typography variant="h6" sx={{ fontWeight: 600, color: '#00d4aa', mt: 1 }}>
                       {new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate() - new Date().getDate()}
                     </Typography>
                   </Box>
@@ -600,8 +629,8 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('income')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <TrendingUp sx={{ fontSize: '2rem', color: '#00d4aa', mb: 1 }} />
-              <Typography variant="body2" fontWeight={600}>
+              <TrendingUp sx={{ fontSize: '2rem', color: '#22c55e', mb: 1 }} />
+              <Typography variant="body2" fontWeight={600} color="text.primary">
                 Add Income
               </Typography>
             </CardContent>
@@ -611,7 +640,7 @@ const SimpleDashboard: React.FC = () => {
           <QuickActionCard onClick={() => handleQuickAdd('expense')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
               <Receipt sx={{ fontSize: '2rem', color: '#ef4444', mb: 1 }} />
-              <Typography variant="body2" fontWeight={600}>
+              <Typography variant="body2" fontWeight={600} color="text.primary">
                 Add Expense
               </Typography>
             </CardContent>
@@ -620,8 +649,8 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={handleImport}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <CloudUpload sx={{ fontSize: '2rem', color: '#00d4aa', mb: 1 }} />
-              <Typography variant="body2" fontWeight={600}>
+              <CloudUpload sx={{ fontSize: '2rem', color: '#6b7280', mb: 1 }} />
+              <Typography variant="body2" fontWeight={600} color="text.primary">
                 Import Data
               </Typography>
             </CardContent>
@@ -633,9 +662,9 @@ const SimpleDashboard: React.FC = () => {
       {/* This Month Summary */}
       <Card sx={{ 
         mb: 3, 
-        borderRadius: 3,
-        border: '2px solid #00d4aa',
-        boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)'
+        borderRadius: 2,
+        border: '1px solid #e5e7eb',
+        backgroundColor: 'white'
       }}>
         <CardContent>
           <Typography variant="h6" fontWeight={600} mb={2}>
@@ -668,9 +697,9 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Recent Transactions */}
       <Card sx={{ 
-        borderRadius: 3,
-        border: '2px solid #00d4aa',
-        boxShadow: '0 0 10px rgba(0, 212, 170, 0.1)'
+        borderRadius: 2,
+        border: '1px solid #e5e7eb',
+        backgroundColor: 'white'
       }}>
         <CardContent>
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
@@ -711,30 +740,31 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Floating Action Buttons */}
       <Fab
-        color="primary"
+        size="medium"
         sx={{
           position: 'fixed',
           bottom: 96,
           right: 24,
           backgroundColor: '#ef4444',
+          color: 'white',
           '&:hover': {
             backgroundColor: '#dc2626',
           },
         }}
         onClick={() => handleQuickAdd('expense')}
       >
-        <Receipt />
+        <Remove sx={{ fontSize: '1.5rem' }} />
       </Fab>
       
       <Fab
-        color="primary"
         sx={{
           position: 'fixed',
           bottom: 24,
           right: 24,
-          backgroundColor: '#00d4aa',
+          backgroundColor: '#22c55e',
+          color: 'white',
           '&:hover': {
-            backgroundColor: '#00b894',
+            backgroundColor: '#16a34a',
           },
         }}
         onClick={() => handleQuickAdd('income')}
