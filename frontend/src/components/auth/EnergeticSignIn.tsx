@@ -134,22 +134,6 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                 Sign In to Clip
               </Typography>
               
-              <Typography variant="body1" sx={{ 
-                mb: 3, 
-                color: '#666',
-                fontWeight: 400
-              }}>
-                Access your financial training dashboard
-              </Typography>
-              
-              <Typography variant="body2" sx={{ 
-                mb: 3, 
-                color: '#00d4aa',
-                fontWeight: 500,
-                fontStyle: 'italic'
-              }}>
-                Demo: cjohnkim@gmail.com / SimpleClip123
-              </Typography>
             </Box>
 
             {error && (
@@ -217,47 +201,33 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                 disabled={loading || !email || !password}
                 sx={{ mb: 3 }}
               >
-                {loading ? 'Starting Your Training...' : 'Begin Financial Training 🚀'}
+                {loading ? 'Signing in...' : 'Sign In'}
               </ActionButton>
+              
+              <Box textAlign="center" sx={{ mb: 3 }}>
+                <Button variant="text" size="small" sx={{ color: '#00d4aa' }}>
+                  Forgot password?
+                </Button>
+              </Box>
             </form>
 
-            <Divider sx={{ my: 3 }}>
-              <Typography variant="body2" color="text.secondary">
-                Don't have an account?
-              </Typography>
-            </Divider>
+            <Divider sx={{ my: 3 }} />
 
-            {/* Waitlist Signup */}
             <Box textAlign="center">
-              <Typography variant="body1" sx={{ mb: 2, color: 'text.secondary' }}>
-                Join the waitlist to become a Financial Athlete
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                Need an account?
               </Typography>
               
               <Button
-                variant="outlined"
-                fullWidth
+                variant="text"
                 onClick={onWaitlistSignup}
                 sx={{
-                  borderRadius: '4px',
-                  padding: '12px 24px',
-                  borderColor: '#00d4aa',
                   color: '#00d4aa',
-                  fontWeight: 600,
                   textTransform: 'none',
-                  
-                  '&:hover': {
-                    borderColor: '#00b894',
-                    color: '#00b894',
-                    background: '#f0fffe',
-                  }
                 }}
               >
-                🏃‍♂️ Join the Waitlist
+                Sign up
               </Button>
-              
-              <Typography variant="caption" display="block" sx={{ mt: 2, color: 'text.secondary' }}>
-                Ready to transform your financial habits into athletic performance?
-              </Typography>
             </Box>
           </CardContent>
         </SignInCard>

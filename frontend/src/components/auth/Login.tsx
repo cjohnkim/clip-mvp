@@ -72,10 +72,7 @@ export default function Login() {
           }}
         >
           <Typography component="h1" variant="h4" gutterBottom sx={{ color: '#00d4aa', fontWeight: 700 }}>
-            Clip
-          </Typography>
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            Level up your financial game
+            Sign In to Clip
           </Typography>
 
           {error && (
@@ -116,15 +113,31 @@ export default function Login() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ 
+                mt: 3, 
+                mb: 2,
+                backgroundColor: '#00d4aa',
+                '&:hover': { backgroundColor: '#00b894' }
+              }}
               disabled={loading}
             >
               {loading ? <CircularProgress size={24} /> : 'Sign In'}
             </Button>
-            <Box textAlign="center">
-              <Link to="/signup">
-                Don't have an account? Sign Up
-              </Link>
+            
+            <Box textAlign="center" sx={{ mt: 2 }}>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                Forgot your password?
+              </Typography>
+              <Button variant="text" size="small" sx={{ color: '#00d4aa', mb: 2 }}>
+                Reset Password
+              </Button>
+              
+              <Typography variant="body2" color="text.secondary">
+                Need an account?{' '}
+                <Link to="/signup" style={{ color: '#00d4aa' }}>
+                  Sign up
+                </Link>
+              </Typography>
             </Box>
           </Box>
         </Paper>
