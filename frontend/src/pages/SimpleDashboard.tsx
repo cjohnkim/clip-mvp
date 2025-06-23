@@ -34,10 +34,10 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const HeroCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #635bff 0%, #7c3aed 100%)',
+  background: 'linear-gradient(135deg, #00d4aa 0%, #00b894 100%)',
   color: 'white',
   borderRadius: 16,
-  boxShadow: '0 8px 32px rgba(99, 91, 255, 0.2)',
+  boxShadow: '0 8px 32px rgba(0, 212, 170, 0.2)',
   marginBottom: theme.spacing(3),
 }));
 
@@ -277,7 +277,7 @@ const SimpleDashboard: React.FC = () => {
     <DashboardContainer maxWidth="md">
       {/* Header */}
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4" fontWeight={700} color="#0a2540">
+        <Typography variant="h4" fontWeight={700} color="#00d4aa">
           Money Clip
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
@@ -286,7 +286,7 @@ const SimpleDashboard: React.FC = () => {
               variant="outlined" 
               size="small"
               onClick={() => window.location.href = '/admin'}
-              sx={{ color: '#635bff', borderColor: '#635bff' }}
+              sx={{ color: '#00d4aa', borderColor: '#00d4aa' }}
             >
               Admin
             </Button>
@@ -294,7 +294,7 @@ const SimpleDashboard: React.FC = () => {
           <Typography variant="body2" color="text.secondary">
             Hi, {user?.first_name}
           </Typography>
-          <Button onClick={logout} size="small">
+          <Button onClick={logout} size="small" sx={{ color: '#666' }}>
             Logout
           </Button>
         </Stack>
@@ -335,7 +335,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('income')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <TrendingUp sx={{ fontSize: '2rem', color: '#10b981', mb: 1 }} />
+              <TrendingUp sx={{ fontSize: '2rem', color: '#00d4aa', mb: 1 }} />
               <Typography variant="body2" fontWeight={600}>
                 Add Income
               </Typography>
@@ -345,7 +345,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('expense')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Receipt sx={{ fontSize: '2rem', color: '#f59e0b', mb: 1 }} />
+              <Receipt sx={{ fontSize: '2rem', color: '#6b7280', mb: 1 }} />
               <Typography variant="body2" fontWeight={600}>
                 Add Expense
               </Typography>
@@ -355,7 +355,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={handleImport}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <CloudUpload sx={{ fontSize: '2rem', color: '#635bff', mb: 1 }} />
+              <CloudUpload sx={{ fontSize: '2rem', color: '#00d4aa', mb: 1 }} />
               <Typography variant="body2" fontWeight={600}>
                 Import Data
               </Typography>
@@ -373,7 +373,7 @@ const SimpleDashboard: React.FC = () => {
           <Grid container spacing={3}>
             <Grid item xs={6}>
               <Box textAlign="center">
-                <Typography variant="h5" fontWeight={700} color="#10b981">
+                <Typography variant="h5" fontWeight={700} color="#00d4aa">
                   {formatCurrency(dashboardData.thisMonthIncome)}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -441,9 +441,9 @@ const SimpleDashboard: React.FC = () => {
           position: 'fixed',
           bottom: 24,
           right: 24,
-          backgroundColor: '#635bff',
+          backgroundColor: '#00d4aa',
           '&:hover': {
-            backgroundColor: '#5b4ff0',
+            backgroundColor: '#00b894',
           },
         }}
         onClick={() => handleQuickAdd('expense')}
