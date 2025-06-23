@@ -90,6 +90,8 @@ interface DashboardData {
 }
 
 const SimpleDashboard: React.FC = () => {
+  console.log('SimpleDashboard component rendered');
+  
   const { user, isAdmin, logout } = useAuth();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -98,6 +100,8 @@ const SimpleDashboard: React.FC = () => {
     open: boolean;
     type: 'income' | 'expense';
   }>({ open: false, type: 'expense' });
+  
+  console.log('SimpleDashboard state:', { user: !!user, isAdmin, loading, error, dashboardData: !!dashboardData });
 
   useEffect(() => {
     loadDashboardData();
@@ -105,18 +109,35 @@ const SimpleDashboard: React.FC = () => {
 
   const loadDashboardData = async () => {
     try {
+      console.log('loadDashboardData called');
       setLoading(true);
-      const token = localStorage.getItem('access_token');
+      setError('');
+      
+      const token = localStorage.getItem('money_clip_token');
+      console.log('Token found:', !!token);
+      
+      if (!token) {
+        setError('No authentication token found');
+        setLoading(false);
+        return;
+      }
+      
+      // Get API base URL
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      console.log('Using API URL:', apiBaseUrl);
       
       // Fetch daily allowance and summary data
       const [allowanceResponse, summaryResponse] = await Promise.all([
-        fetch('/api/daily-allowance', {
+        fetch(`${apiBaseUrl}/api/daily-allowance`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
           },
         }),
-        fetch('/api/transactions/summary', {
+        fetch(`${apiBaseUrl}/api/transactions/summary`, {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -149,6 +170,7 @@ const SimpleDashboard: React.FC = () => {
       
       setError('');
     } catch (err: any) {
+      console.error('Dashboard data loading error:', err);
       setError(err.message || 'Failed to load dashboard data');
     } finally {
       setLoading(false);
