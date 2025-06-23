@@ -17,6 +17,8 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  Avatar,
+  IconButton,
 } from '@mui/material';
 import {
   Add,
@@ -25,9 +27,11 @@ import {
   Receipt,
   CloudUpload,
   Edit,
+  Person,
 } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import AddTransactionDialog from '../components/AddTransactionDialog';
 
 // Clean, Simple.com inspired styling
@@ -98,6 +102,7 @@ const SimpleDashboard: React.FC = () => {
   console.log('SimpleDashboard component rendered');
   
   const { user, isAdmin, logout } = useAuth();
+  const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -199,6 +204,21 @@ const SimpleDashboard: React.FC = () => {
       month: 'short', 
       day: 'numeric' 
     });
+  };
+
+  const getUserInitials = () => {
+    const firstName = user?.first_name || '';
+    const email = user?.email || '';
+    
+    if (firstName) {
+      return firstName[0].toUpperCase();
+    }
+    
+    if (email) {
+      return email[0].toUpperCase();
+    }
+    
+    return 'U';
   };
 
   const handleQuickAdd = (type: 'income' | 'expense') => {
@@ -347,9 +367,25 @@ const SimpleDashboard: React.FC = () => {
               Admin
             </Button>
           )}
-          <Typography variant="body2" color="text.secondary">
-            Hi, {user?.first_name}
-          </Typography>
+          <IconButton 
+            onClick={() => navigate('/profile')}
+            sx={{ 
+              p: 0.5,
+              '&:hover': { backgroundColor: 'rgba(0, 212, 170, 0.1)' } 
+            }}
+          >
+            <Avatar
+              sx={{ 
+                width: 36, 
+                height: 36, 
+                backgroundColor: '#00d4aa',
+                fontSize: '1rem',
+                fontWeight: 600,
+              }}
+            >
+              {getUserInitials()}
+            </Avatar>
+          </IconButton>
           <Button onClick={logout} size="small" sx={{ color: '#666' }}>
             Logout
           </Button>

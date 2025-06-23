@@ -378,7 +378,7 @@ const TokenSignup: React.FC = () => {
                 mb: 2,
                 color: athleticColors.primary,
               }}>
-                Welcome to Money Clip! 🎉
+                Welcome to Clip! 🎉
               </Typography>
               <Typography variant="h6" sx={{ mb: 3, color: 'text.secondary' }}>
                 Your account has been created successfully!

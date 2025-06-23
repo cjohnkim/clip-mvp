@@ -60,6 +60,8 @@ from routes.admin import admin_bp
 from routes.transactions import transactions_bp
 from routes.daily_allowance import daily_allowance_bp
 from routes.accounts import accounts_bp
+from routes.support import support_bp
+from routes.users import users_bp
 from routes.plaid import plaid_bp
 from routes.migrate import migrate_bp
 
@@ -70,6 +72,8 @@ app.register_blueprint(admin_bp, url_prefix='/api/admin')
 app.register_blueprint(transactions_bp)
 app.register_blueprint(daily_allowance_bp)
 app.register_blueprint(accounts_bp, url_prefix='/api/accounts')
+app.register_blueprint(support_bp, url_prefix='/api/support')
+app.register_blueprint(users_bp, url_prefix='/api/users')
 app.register_blueprint(plaid_bp)
 app.register_blueprint(migrate_bp)
 

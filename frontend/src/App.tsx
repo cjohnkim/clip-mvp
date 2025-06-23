@@ -10,6 +10,7 @@ import AdminPage from './pages/AdminPage';
 import AuthPage from './pages/AuthPage';
 import AthleticDashboard from './components/dashboard/AthleticDashboard';
 import SimpleDashboard from './pages/SimpleDashboard';
+import ProfilePage from './pages/ProfilePage';
 import Setup from './components/setup/Setup';
 import Planning from './components/planning/Planning';
 import Timeline from './components/timeline/Timeline';
@@ -78,6 +79,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <SimpleDashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
                   </ProtectedRoute>
                 } 
               />
