@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -86,10 +86,34 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    // Add global error handler to catch pattern validation errors
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.error);
+      if (event.message && event.message.includes('THE STRING DID NOT MATCH THE EXPECTED PATTERN')) {
+        console.error('Pattern validation error detected!', event);
+      }
+    };
+
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('EnergeticSignIn handleSubmit called', { email, password: password ? '***' : 'empty' });
+    
     if (email && password) {
-      await onLogin(email, password);
+      try {
+        console.log('Calling onLogin...');
+        await onLogin(email, password);
+        console.log('onLogin completed successfully');
+      } catch (error) {
+        console.error('EnergeticSignIn onLogin error:', error);
+        throw error;
+      }
+    } else {
+      console.error('Email or password is empty', { email: !!email, password: !!password });
     }
   };
 
@@ -135,14 +159,20 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
             )}
 
             {/* Sign In Form */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <Box sx={{ mb: 3 }}>
                 <StyledTextField
                   fullWidth
                   label="Email Address"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    console.log('Email field changed:', e.target.value);
+                    setEmail(e.target.value);
+                  }}
+                  onBlur={(e) => {
+                    console.log('Email field blurred:', e.target.value);
+                  }}
                   required
                   InputProps={{
                     startAdornment: (

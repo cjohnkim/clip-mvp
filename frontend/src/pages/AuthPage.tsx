@@ -38,17 +38,27 @@ const AuthPage: React.FC<AuthPageProps> = ({ onLogin }) => {
 
   const handleLogin = async (email: string, password: string) => {
     try {
+      console.log('AuthPage handleLogin called', { email, password: password ? '***' : 'empty' });
       setLoading(true);
       setError('');
       
       if (onLogin) {
+        console.log('Using provided onLogin function');
         await onLogin(email, password);
       } else {
+        console.log('Using AuthContext login');
         // Use AuthContext login
         await authLogin(email, password);
+        console.log('AuthContext login completed');
         // Redirect is handled in useEffect above
       }
     } catch (err: any) {
+      console.error('AuthPage login error:', err);
+      console.error('Error details:', {
+        message: err.message,
+        stack: err.stack,
+        name: err.name
+      });
       setError(err.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
