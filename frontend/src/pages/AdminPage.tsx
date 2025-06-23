@@ -130,7 +130,7 @@ const AdminPage: React.FC = () => {
 
   const loadWaitlistData = async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('money_clip_token');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/list`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -169,7 +169,7 @@ const AdminPage: React.FC = () => {
 
   const handleApprove = async (user: WaitlistUser) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('money_clip_token');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/approve/${user.email}`, {
         method: 'POST',
         headers: {
@@ -193,7 +193,7 @@ const AdminPage: React.FC = () => {
 
   const handleStatusChange = async (email: string, newStatus: string) => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem('money_clip_token');
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/status/${email}`, {
         method: 'PUT',
         headers: {
@@ -241,7 +241,14 @@ const AdminPage: React.FC = () => {
         <HeaderContent>
           <Logo onClick={() => navigate('/')}>Clip Admin</Logo>
           <Box>
-            <Button onClick={() => navigate('/dashboard')} sx={{ mr: 2 }}>
+            <Button onClick={() => {
+              console.log('My Dashboard clicked - navigating to /dashboard');
+              try {
+                navigate('/dashboard');
+              } catch (error) {
+                console.error('Navigation error:', error);
+              }
+            }} sx={{ mr: 2 }}>
               📊 My Dashboard
             </Button>
             <Button onClick={() => navigate('/')} sx={{ mr: 2 }}>
