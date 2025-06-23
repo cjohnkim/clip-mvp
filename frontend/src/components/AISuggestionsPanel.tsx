@@ -275,12 +275,12 @@ const AISuggestionsPanel: React.FC<AISuggestionsPanelProps> = ({ onSuggestionApp
 
   return (
     <>
-      {/* Daily Recommendations */}
-      {dailyRecs && (
+      {/* Only show if there's actionable insight */}
+      {false && dailyRecs && (
         <AICard sx={{ mb: 2 }}>
           <CardContent>
             <Typography variant="body1" fontWeight={500} color="text.secondary" textAlign="center">
-              Focus on {dailyRecs.focus_category?.toLowerCase()} today
+              {/* Will show actual actionable insights when we have them */}
             </Typography>
           </CardContent>
         </AICard>

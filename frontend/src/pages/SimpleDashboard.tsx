@@ -44,57 +44,24 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
   backgroundColor: '#f8fafc',
 }));
 
-const HeroCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
-  color: 'white',
-  borderRadius: 20,
-  border: '2px solid #00d4aa',
-  boxShadow: `
-    0 0 30px rgba(0, 212, 170, 0.4),
-    0 0 60px rgba(0, 212, 170, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1)
-  `,
+const AmountCard = styled(Card)(({ theme }) => ({
+  background: 'white',
+  borderRadius: 12,
+  border: '1px solid #e6ebf1',
+  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
   marginBottom: theme.spacing(3),
-  position: 'relative',
-  overflow: 'hidden',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: -2,
-    left: -2,
-    right: -2,
-    bottom: -2,
-    borderRadius: 'inherit',
-    background: 'linear-gradient(45deg, #00d4aa, #00b894, #00ffaa, #00d4aa)',
-    backgroundSize: '200% 200%',
-    animation: 'borderGlow 3s ease-in-out infinite alternate',
-    zIndex: -1,
-  },
-  '@keyframes borderGlow': {
-    '0%': {
-      backgroundPosition: '0% 50%',
-      filter: 'brightness(1)',
-    },
-    '100%': {
-      backgroundPosition: '100% 50%',
-      filter: 'brightness(1.2)',
-    },
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
   },
 }));
 
-const DailyAmount = styled(Typography)(({ theme }) => ({
-  fontSize: '4rem',
-  fontWeight: 900,
-  marginBottom: theme.spacing(1),
-  textAlign: 'center',
-  color: '#00ffaa',
-  textShadow: `
-    0 0 10px rgba(0, 255, 170, 0.8),
-    0 0 20px rgba(0, 255, 170, 0.6),
-    0 0 30px rgba(0, 255, 170, 0.4)
-  `,
-  fontFamily: '"JetBrains Mono", "Courier New", monospace',
-  letterSpacing: '2px',
+const Amount = styled(Typography)(({ theme }) => ({
+  fontSize: '3rem',
+  fontWeight: 600,
+  color: '#1a1a1a',
+  fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  letterSpacing: '-0.02em',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
@@ -573,35 +540,51 @@ const SimpleDashboard: React.FC = () => {
       {/* AI Insights */}
       <AISuggestionsPanel onSuggestionApproved={loadDashboardData} />
 
-      {/* Daily Allowance Hero */}
-      <HeroCard>
-        <CardContent sx={{ p: 4, position: 'relative', zIndex: 1 }}>
+      {/* Available Balance */}
+      <AmountCard>
+        <CardContent sx={{ p: 4 }}>
           <Box textAlign="center">
-            <Typography variant="h5" sx={{ opacity: 0.9, mb: 2, fontWeight: 600 }}>
-              Your Clip
-            </Typography>
-            <DailyAmount>
+            <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
-            </DailyAmount>
-            <Typography variant="body2" sx={{ opacity: 0.8, mb: 3 }}>
-              Save today, spend tomorrow
+            </Amount>
+            <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
+              Available today
             </Typography>
             
-            <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
-              <BalanceChip onClick={handleBalanceEdit}>
-                <AccountBalance sx={{ fontSize: '1rem' }} />
-                <Typography variant="body2">
-                  {formatCurrency(dashboardData.totalBalance)} total
-                </Typography>
-                <Edit sx={{ fontSize: '0.875rem', opacity: 0.8 }} />
-              </BalanceChip>
-              <Typography variant="body2" sx={{ opacity: 0.7 }}>
-                {dashboardData.accountsCount} accounts
-              </Typography>
-            </Stack>
+            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #f1f3f4' }}>
+              <Stack direction="row" spacing={3} justifyContent="center" alignItems="center">
+                <Box textAlign="center">
+                  <Typography variant="body2" color="text.secondary">
+                    Total Balance
+                  </Typography>
+                  <Button 
+                    variant="text" 
+                    onClick={handleBalanceEdit}
+                    sx={{ 
+                      color: '#1a1a1a', 
+                      fontWeight: 500,
+                      textTransform: 'none',
+                      fontSize: '0.875rem',
+                      minWidth: 'auto',
+                      '&:hover': { backgroundColor: 'rgba(0, 0, 0, 0.04)' }
+                    }}
+                  >
+                    {formatCurrency(dashboardData.totalBalance)}
+                  </Button>
+                </Box>
+                <Box textAlign="center">
+                  <Typography variant="body2" color="text.secondary">
+                    Accounts
+                  </Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 500, color: '#1a1a1a' }}>
+                    {dashboardData.accountsCount}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Box>
           </Box>
         </CardContent>
-      </HeroCard>
+      </AmountCard>
 
       {/* Quick Actions */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
