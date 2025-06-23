@@ -93,7 +93,7 @@ def login():
     
     user = users.get(email)
     if user and user['password'] == password:
-        access_token = create_access_token(identity=user['id'])
+        access_token = create_access_token(identity=str(user['id']))
         return jsonify({
             'access_token': access_token,
             'user': {
@@ -174,6 +174,32 @@ def get_daily_allowance():
         'accounts': accounts,
         'recommendations': ['You\'re on track for the month!']
     })
+
+@app.route('/api/accounts/balance', methods=['PUT'])
+@jwt_required()
+def update_balance():
+    """Update total balance - for simple app, just update the first account"""
+    try:
+        data = request.get_json()
+        
+        if not data or 'total_balance' not in data:
+            return jsonify({'error': 'total_balance is required'}), 400
+        
+        total_balance = float(data['total_balance'])
+        
+        # Update the first account's balance
+        if accounts:
+            accounts[0]['current_balance'] = total_balance
+        
+        return jsonify({
+            'message': 'Balance updated successfully',
+            'account': accounts[0] if accounts else None
+        }), 200
+        
+    except ValueError:
+        return jsonify({'error': 'Invalid balance amount'}), 400
+    except Exception as e:
+        return jsonify({'error': f'Failed to update balance: {str(e)}'}), 500
 
 @app.route('/api/plaid/status', methods=['GET'])
 def plaid_status():

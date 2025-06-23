@@ -51,49 +51,22 @@ const DashboardContainer = styled(Container)(({ theme }) => ({
 }));
 
 const AmountCard = styled(Card)(({ theme }) => ({
-  background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%)',
-  color: 'white',
+  background: 'white',
   borderRadius: 16,
   border: '2px solid #00d4aa',
   boxShadow: `
-    0 0 30px rgba(0, 212, 170, 0.3),
-    0 8px 32px rgba(0, 0, 0, 0.2)
+    0 0 20px rgba(0, 212, 170, 0.2),
+    0 4px 16px rgba(0, 0, 0, 0.1)
   `,
   marginBottom: theme.spacing(3),
-  position: 'relative',
-  overflow: 'hidden',
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: -2,
-    left: -2,
-    right: -2,
-    bottom: -2,
-    borderRadius: 'inherit',
-    background: 'linear-gradient(45deg, #00d4aa, #00b894, #00d4aa)',
-    backgroundSize: '200% 200%',
-    animation: 'borderGlow 4s ease-in-out infinite alternate',
-    zIndex: -1,
-  },
-  '@keyframes borderGlow': {
-    '0%': {
-      backgroundPosition: '0% 50%',
-      filter: 'brightness(1)',
-    },
-    '100%': {
-      backgroundPosition: '100% 50%',
-      filter: 'brightness(1.3)',
-    },
-  },
 }));
 
 const Amount = styled(Typography)(({ theme }) => ({
   fontSize: '3.5rem',
   fontWeight: 700,
-  color: '#00d4aa',
+  color: '#00a085',
   fontFamily: '"JetBrains Mono", "Courier New", monospace',
   letterSpacing: '1px',
-  textShadow: '0 0 20px rgba(0, 212, 170, 0.6)',
 }));
 
 const QuickActionCard = styled(Card)(({ theme }) => ({
@@ -524,7 +497,7 @@ const SimpleDashboard: React.FC = () => {
       )}
 
       {/* Header */}
-      <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <Typography variant="h2" fontWeight={700} color="#00d4aa">
           Clip
         </Typography>
@@ -569,14 +542,14 @@ const SimpleDashboard: React.FC = () => {
       <AmountCard>
         <CardContent sx={{ p: 4 }}>
           <Box textAlign="center">
+            <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', mb: 1, display: 'block' }}>
+              Saving for tomorrow
+            </Typography>
             <Amount>
               {formatCurrency(dashboardData.dailyAllowance)}
             </Amount>
-            <Typography variant="body1" sx={{ opacity: 0.7, mt: 1 }}>
-              Saving for tomorrow
-            </Typography>
             
-            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
+            <Box sx={{ mt: 3, pt: 3, borderTop: '1px solid #e5e7eb' }}>
               <Grid container spacing={0}>
                 <Grid item xs={6}>
                   <Box textAlign="center">
@@ -740,7 +713,7 @@ const SimpleDashboard: React.FC = () => {
 
       {/* Floating Action Buttons */}
       <Fab
-        size="medium"
+        size="large"
         sx={{
           position: 'fixed',
           bottom: 96,
@@ -753,10 +726,11 @@ const SimpleDashboard: React.FC = () => {
         }}
         onClick={() => handleQuickAdd('expense')}
       >
-        <Remove sx={{ fontSize: '1.5rem' }} />
+        <Remove />
       </Fab>
       
       <Fab
+        size="large"
         sx={{
           position: 'fixed',
           bottom: 24,
