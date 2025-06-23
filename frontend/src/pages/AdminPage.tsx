@@ -22,8 +22,11 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions
+  DialogActions,
+  TextField,
+  IconButton
 } from '@mui/material';
+import { Add, PersonAdd, Delete, Edit } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
@@ -107,6 +110,16 @@ interface AdminStats {
   recentSignups: number;
 }
 
+interface SignupToken {
+  email: string;
+  token: string;
+  status: string;
+  expires_at: string;
+  used_at?: string;
+  created_at: string;
+  signup_url?: string;
+}
+
 const AdminPage: React.FC = () => {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -118,20 +131,33 @@ const AdminPage: React.FC = () => {
     recentSignups: 0
   });
   const [currentFilter, setCurrentFilter] = useState('all');
+  const [currentTab, setCurrentTab] = useState(0);
+  const [signupTokens, setSignupTokens] = useState<SignupToken[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [approveDialog, setApproveDialog] = useState<{open: boolean, user?: WaitlistUser}>({open: false});
+  const [addUserDialog, setAddUserDialog] = useState(false);
+  const [newUser, setNewUser] = useState({email: '', name: ''});
+  const [deleteDialog, setDeleteDialog] = useState<{open: boolean, user?: WaitlistUser}>({open: false});
 
   useEffect(() => {
     loadWaitlistData();
-    const interval = setInterval(loadWaitlistData, 30000); // Auto-refresh every 30 seconds
+    loadSignupTokens();
+    const interval = setInterval(() => {
+      loadWaitlistData();
+      loadSignupTokens();
+    }, 30000); // Auto-refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
   const loadWaitlistData = async () => {
     try {
       const token = localStorage.getItem('money_clip_token');
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/list`, {
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/waitlist/list`, {
         headers: {
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
@@ -167,10 +193,41 @@ const AdminPage: React.FC = () => {
     }
   };
 
+  const loadSignupTokens = async () => {
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/tokens/list`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to load signup tokens');
+      }
+
+      setSignupTokens(data.tokens || []);
+    } catch (err: any) {
+      console.error('Error loading signup tokens:', err);
+      // Don't show error for tokens - it's not critical
+    }
+  };
+
   const handleApprove = async (user: WaitlistUser) => {
     try {
       const token = localStorage.getItem('money_clip_token');
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/approve/${user.email}`, {
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/waitlist/approve/${user.email}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -194,7 +251,11 @@ const AdminPage: React.FC = () => {
   const handleStatusChange = async (email: string, newStatus: string) => {
     try {
       const token = localStorage.getItem('money_clip_token');
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/admin/waitlist/status/${email}`, {
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/waitlist/status/${email}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -209,6 +270,64 @@ const AdminPage: React.FC = () => {
         throw new Error(result.error || 'Failed to update status');
       }
 
+      loadWaitlistData(); // Refresh data
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const handleAddUser = async () => {
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/waitlist/create`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to add user');
+      }
+
+      setAddUserDialog(false);
+      setNewUser({email: '', name: ''});
+      loadWaitlistData(); // Refresh data
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const handleDeleteUser = async (user: WaitlistUser) => {
+    try {
+      const token = localStorage.getItem('money_clip_token');
+      const apiBaseUrl = window.location.hostname === 'app.moneyclip.money' 
+        ? 'https://clip-mvp-production.up.railway.app'
+        : process.env.REACT_APP_API_URL || 'http://localhost:5001';
+      
+      const response = await fetch(`${apiBaseUrl}/api/admin/waitlist/delete/${user.email}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to delete user');
+      }
+
+      setDeleteDialog({open: false});
       loadWaitlistData(); // Refresh data
     } catch (err: any) {
       setError(err.message);
@@ -304,29 +423,53 @@ const AdminPage: React.FC = () => {
           </Alert>
         )}
 
-        {/* Waitlist Table */}
+        {/* Admin Tabs */}
         <TableCard>
-          <Box sx={{ p: 2, borderBottom: '1px solid #e6ebf1' }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h5" component="h2">
-                Waitlist Management
-              </Typography>
-              <Button onClick={loadWaitlistData} variant="outlined" size="small">
-                Refresh
-              </Button>
-            </Box>
-            
+          <Box sx={{ borderBottom: '1px solid #e6ebf1' }}>
             <Tabs 
-              value={currentFilter} 
-              onChange={(_, newValue) => setCurrentFilter(newValue)}
-              sx={{ mt: 2 }}
+              value={currentTab} 
+              onChange={(_, newValue) => setCurrentTab(newValue)}
+              sx={{ px: 2, pt: 2 }}
             >
-              <Tab label="All" value="all" />
-              <Tab label="Pending" value="pending" />
-              <Tab label="Approved" value="approved" />
-              <Tab label="Signed Up" value="signed_up" />
+              <Tab label="Waitlist Management" />
+              <Tab label="Signup Tokens" />
             </Tabs>
           </Box>
+
+          {currentTab === 0 && (
+            <>
+              <Box sx={{ p: 2, borderBottom: '1px solid #e6ebf1' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="h6" component="h3">
+                    Manage Waitlist Users
+                  </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button 
+                  onClick={() => setAddUserDialog(true)} 
+                  variant="contained" 
+                  size="small"
+                  startIcon={<PersonAdd />}
+                  sx={{ backgroundColor: '#00d4aa', '&:hover': { backgroundColor: '#00b894' } }}
+                >
+                  Add User
+                </Button>
+                <Button onClick={loadWaitlistData} variant="outlined" size="small">
+                  Refresh
+                </Button>
+              </Box>
+                </Box>
+                
+                <Tabs 
+                  value={currentFilter} 
+                  onChange={(_, newValue) => setCurrentFilter(newValue)}
+                  sx={{ mt: 2 }}
+                >
+                  <Tab label="All" value="all" />
+                  <Tab label="Pending" value="pending" />
+                  <Tab label="Approved" value="approved" />
+                  <Tab label="Signed Up" value="signed_up" />
+                </Tabs>
+              </Box>
 
           {loading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
@@ -400,6 +543,14 @@ const AdminPage: React.FC = () => {
                               Reset
                             </ActionButton>
                           )}
+                          <IconButton
+                            size="small"
+                            color="error"
+                            onClick={() => setDeleteDialog({open: true, user})}
+                            title="Delete user"
+                          >
+                            <Delete fontSize="small" />
+                          </IconButton>
                         </Box>
                       </TableCell>
                     </TableRow>
@@ -407,6 +558,77 @@ const AdminPage: React.FC = () => {
                 </TableBody>
               </Table>
             </TableContainer>
+          )}
+            </>
+          )}
+
+          {currentTab === 1 && (
+            <>
+              <Box sx={{ p: 2, borderBottom: '1px solid #e6ebf1' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="h6" component="h3">
+                    Signup Tokens
+                  </Typography>
+                  <Button onClick={loadSignupTokens} variant="outlined" size="small">
+                    Refresh
+                  </Button>
+                </Box>
+              </Box>
+
+              {signupTokens.length === 0 ? (
+                <Box sx={{ textAlign: 'center', p: 4 }}>
+                  <Typography variant="h6" color="text.secondary">
+                    No signup tokens found
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    Tokens are created when users are approved.
+                  </Typography>
+                </Box>
+              ) : (
+                <TableContainer component={Paper} elevation={0}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Created</TableCell>
+                        <TableCell>Expires</TableCell>
+                        <TableCell>Used</TableCell>
+                        <TableCell>Signup URL</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {signupTokens.map((token) => (
+                        <TableRow key={token.token}>
+                          <TableCell>{token.email}</TableCell>
+                          <TableCell>
+                            <Chip 
+                              label={token.status} 
+                              color={token.status === 'active' ? 'success' : token.status === 'used' ? 'info' : 'error'}
+                              size="small"
+                            />
+                          </TableCell>
+                          <TableCell>{formatDate(token.created_at)}</TableCell>
+                          <TableCell>{formatDate(token.expires_at)}</TableCell>
+                          <TableCell>{token.used_at ? formatDate(token.used_at) : '-'}</TableCell>
+                          <TableCell>
+                            {token.signup_url ? (
+                              <Button 
+                                size="small" 
+                                onClick={() => navigator.clipboard.writeText(token.signup_url!)}
+                                variant="outlined"
+                              >
+                                Copy Link
+                              </Button>
+                            ) : '-'}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+            </>
           )}
         </TableCard>
       </Container>
@@ -430,6 +652,66 @@ const AdminPage: React.FC = () => {
             color="success"
           >
             Approve & Send Email
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Add User Dialog */}
+      <Dialog open={addUserDialog} onClose={() => setAddUserDialog(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Add New Waitlist User</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="outlined"
+            value={newUser.email}
+            onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            margin="dense"
+            label="Full Name"
+            fullWidth
+            variant="outlined"
+            value={newUser.name}
+            onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setAddUserDialog(false)}>Cancel</Button>
+          <Button 
+            onClick={handleAddUser}
+            variant="contained"
+            disabled={!newUser.email || !newUser.name}
+            sx={{ backgroundColor: '#00d4aa', '&:hover': { backgroundColor: '#00b894' } }}
+          >
+            Add to Waitlist
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Delete User Dialog */}
+      <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({open: false})}>
+        <DialogTitle>Delete User</DialogTitle>
+        <DialogContent>
+          <Typography>
+            Are you sure you want to delete {deleteDialog.user?.name} ({deleteDialog.user?.email})?
+          </Typography>
+          <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+            This action cannot be undone. All associated data will be permanently removed.
+          </Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialog({open: false})}>Cancel</Button>
+          <Button 
+            onClick={() => deleteDialog.user && handleDeleteUser(deleteDialog.user)}
+            variant="contained" 
+            color="error"
+          >
+            Delete User
           </Button>
         </DialogActions>
       </Dialog>
