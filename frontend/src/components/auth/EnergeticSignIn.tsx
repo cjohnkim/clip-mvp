@@ -42,7 +42,7 @@ const StyledTextField = styled(TextField)(() => ({
     
     '&.Mui-focused': {
       '& fieldset': {
-        borderColor: '#000',
+        borderColor: '#00d4aa',
         borderWidth: '2px',
       }
     }
@@ -55,12 +55,17 @@ const ActionButton = styled(Button)(() => ({
   fontSize: '1rem',
   fontWeight: 600,
   textTransform: 'none',
-  background: '#000',
+  background: '#00d4aa',
   color: 'white',
   border: 'none',
   
   '&:hover': {
-    background: '#333',
+    background: '#00b894',
+  },
+  
+  '&:disabled': {
+    background: '#cccccc',
+    color: 'white',
   },
 }));
 
@@ -99,7 +104,7 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
             <Box textAlign="center" sx={{ mb: 4 }}>
               <Typography variant="h3" fontWeight={700} sx={{ 
                 mb: 2,
-                color: '#000',
+                color: '#00d4aa',
                 fontSize: '2rem'
               }}>
                 Sign In to Clip
@@ -133,7 +138,7 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Email sx={{ color: '#000' }} />
+                        <Email sx={{ color: '#00d4aa' }} />
                       </InputAdornment>
                     ),
                   }}
@@ -150,7 +155,7 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Lock sx={{ color: '#000' }} />
+                        <Lock sx={{ color: '#00d4aa' }} />
                       </InputAdornment>
                     ),
                     endAdornment: (
@@ -196,15 +201,15 @@ const EnergeticSignIn: React.FC<EnergeticSignInProps> = ({
                 sx={{
                   borderRadius: '4px',
                   padding: '12px 24px',
-                  borderColor: '#000',
-                  color: '#000',
+                  borderColor: '#00d4aa',
+                  color: '#00d4aa',
                   fontWeight: 600,
                   textTransform: 'none',
                   
                   '&:hover': {
-                    borderColor: '#333',
-                    color: '#333',
-                    background: '#f5f5f5',
+                    borderColor: '#00b894',
+                    color: '#00b894',
+                    background: '#f0fffe',
                   }
                 }}
               >

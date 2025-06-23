@@ -80,7 +80,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const response = await authService.login(email, password);
       const { user: userData, access_token } = response.data;
       
-      console.log('Login response:', { userData, access_token: access_token.substring(0, 50) + '...' });
+      console.log('Login response:', { userData, access_token: access_token ? access_token.substring(0, 50) + '...' : 'undefined' });
       
       setUser(userData);
       setToken(access_token);
