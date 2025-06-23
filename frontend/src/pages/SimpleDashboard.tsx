@@ -649,7 +649,7 @@ const SimpleDashboard: React.FC = () => {
         backgroundColor: 'white'
       }}>
         <CardContent>
-          <Typography variant="h6" fontWeight={600} mb={2}>
+          <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px', mb: 0.5, display: 'block' }}>
             Upcoming
           </Typography>
           <Grid container spacing={0}>
