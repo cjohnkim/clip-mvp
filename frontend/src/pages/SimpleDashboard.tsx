@@ -253,11 +253,11 @@ const SimpleDashboard: React.FC = () => {
       if (statusResponse.ok) {
         const status = await statusResponse.json();
         if (status.available) {
-          // Create link token and launch Plaid Link
+          // Create link token and launch Plaid Link (or demo mode)
           await initiatePlaidConnection(apiBaseUrl, token);
         } else {
-          // Show alternative import options
-          setError('Bank connection temporarily unavailable. Please try manual entry or contact support.');
+          // This shouldn't happen anymore, but just in case
+          setError('Import feature unavailable. Please try again later.');
         }
       } else {
         setError('Import feature unavailable. Please try again later.');
@@ -349,10 +349,11 @@ const SimpleDashboard: React.FC = () => {
       
       if (linkData.link_token) {
         if (linkData.demo_mode) {
-          // Demo mode - show success message
-          setSuccess('🎉 Demo mode: Bank connection would open Plaid Link in production.');
-          setTimeout(() => setSuccess(''), 5000);
+          // Demo mode - show informative message about real setup
+          setSuccess('🔧 Demo Mode: This would connect to your real bank with Plaid credentials. Check setup-plaid.md for 5-minute setup instructions!');
+          setTimeout(() => setSuccess(''), 8000);
           console.log('Demo Link Token:', linkData.link_token);
+          console.log('📋 To enable real bank connections, see: setup-plaid.md');
         } else {
           // Production mode - set link token and open Plaid Link
           setLinkToken(linkData.link_token);

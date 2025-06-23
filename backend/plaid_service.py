@@ -329,6 +329,7 @@ class PlaidService:
     def get_status(self):
         """Get service status"""
         return {
-            'available': self.is_available(),
-            'environment': self.config.get_environment_info()
+            'available': True,  # Always available (demo mode if no real credentials)
+            'demo_mode': not self.is_available(),
+            'environment': self.config.get_environment_info() if hasattr(self, 'config') else 'demo'
         }

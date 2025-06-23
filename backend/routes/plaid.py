@@ -19,6 +19,7 @@ def get_plaid_status():
     """Get Plaid service status"""
     try:
         status = plaid_service.get_status()
+        logger.info(f"Plaid status check: {status}")
         return jsonify(status)
     except Exception as e:
         logger.error(f"Error getting Plaid status: {e}")
