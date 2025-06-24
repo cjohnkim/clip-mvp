@@ -621,7 +621,7 @@ const SimpleDashboard: React.FC = () => {
         <Grid item xs={4}>
           <QuickActionCard onClick={() => handleQuickAdd('expense')}>
             <CardContent sx={{ textAlign: 'center', py: 2 }}>
-              <Remove sx={{ fontSize: '2rem', color: '#ef4444', mb: 1 }} />
+              <Remove sx={{ fontSize: '2rem', color: '#dc2626', mb: 1 }} />
               <Typography variant="body2" fontWeight={600} color="text.primary">
                 Add Expense
               </Typography>
@@ -668,7 +668,7 @@ const SimpleDashboard: React.FC = () => {
                 <Typography variant="caption" sx={{ opacity: 0.6, textTransform: 'uppercase', letterSpacing: '1px' }}>
                   Expenses
                 </Typography>
-                <Typography variant="h5" fontWeight={700} color="#ef4444" sx={{ mt: 1 }}>
+                <Typography variant="h5" fontWeight={700} color="#dc2626" sx={{ mt: 1 }}>
                   {formatCurrency(dashboardData.thisMonthSpent)}
                 </Typography>
               </Box>
@@ -708,7 +708,7 @@ const SimpleDashboard: React.FC = () => {
                   <Typography 
                     variant="body1" 
                     fontWeight={600}
-                    color={transaction.isIncome ? '#10b981' : '#ef4444'}
+                    color={transaction.isIncome ? '#10b981' : '#dc2626'}
                   >
                     {transaction.isIncome ? '+' : ''}{formatCurrency(Math.abs(transaction.amount))}
                   </Typography>
@@ -727,10 +727,10 @@ const SimpleDashboard: React.FC = () => {
           position: 'fixed',
           bottom: 96,
           right: 24,
-          backgroundColor: '#ef4444',
+          backgroundColor: '#dc2626',
           color: 'white',
           '&:hover': {
-            backgroundColor: '#dc2626',
+            backgroundColor: '#b91c1c',
           },
         }}
         onClick={() => handleQuickAdd('expense')}
