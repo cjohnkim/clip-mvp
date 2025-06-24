@@ -512,6 +512,39 @@ def api_info():
         }
     })
 
+@app.route('/api/debug/plaid-test', methods=['GET'])
+def debug_plaid_test():
+    """Test Plaid link token creation without authentication"""
+    try:
+        from plaid_service import PlaidService
+        
+        service = PlaidService()
+        
+        if not service.is_available():
+            return jsonify({
+                'error': 'Plaid service not available',
+                'available': False
+            })
+        
+        # Test with a simple user ID
+        test_user_id = "test_user_123"
+        result = service.create_link_token(test_user_id)
+        
+        return jsonify({
+            'success': True,
+            'link_token_preview': result['link_token'][:20] + '...',
+            'expiration': result.get('expiration'),
+            'test_user_id': test_user_id
+        })
+        
+    except Exception as e:
+        import traceback
+        return jsonify({
+            'error': str(e),
+            'exception_type': type(e).__name__,
+            'traceback': traceback.format_exc()
+        }), 500
+
 @app.route('/api/debug/plaid-config', methods=['GET'])
 def debug_plaid_config():
     """Debug endpoint to check Plaid configuration status"""
