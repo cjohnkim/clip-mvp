@@ -70,13 +70,18 @@ def exchange_public_token():
     try:
         user_id = get_jwt_identity()
         data = request.get_json()
+        logger.info(f"Token exchange request for user_id: {user_id}")
         
         public_token = data.get('public_token')
         if not public_token:
+            logger.error("No public_token provided in request")
             return jsonify({'error': 'public_token is required'}), 400
+        
+        logger.info(f"Public token received: {public_token[:20]}...")
         
         if not plaid_service.is_available():
             # Demo mode - return mock response
+            logger.warning("Plaid service not available, using demo mode")
             return jsonify({
                 'success': True,
                 'message': 'Demo mode - accounts would be connected',
@@ -85,12 +90,19 @@ def exchange_public_token():
             })
         
         # Exchange token
+        logger.info("Exchanging public token for access token")
         result = plaid_service.exchange_public_token(public_token, user_id)
         access_token = result['access_token']
+        logger.info(f"Access token received: {access_token[:20]}...")
         
         # Sync accounts and recent transactions
+        logger.info("Syncing accounts")
         synced_accounts = plaid_service.sync_accounts(user_id, access_token)
+        logger.info(f"Synced {len(synced_accounts)} accounts")
+        
+        logger.info("Syncing transactions")
         synced_transactions = plaid_service.sync_transactions(user_id, access_token, days_back=30)
+        logger.info(f"Synced {len(synced_transactions)} transactions")
         
         return jsonify({
             'success': True,
@@ -101,7 +113,14 @@ def exchange_public_token():
         
     except Exception as e:
         logger.error(f"Error exchanging public token: {e}")
-        return jsonify({'error': 'Failed to connect accounts'}), 500
+        logger.error(f"Exception type: {type(e).__name__}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({
+            'error': 'Failed to connect accounts',
+            'details': str(e),
+            'exception_type': type(e).__name__
+        }), 500
 
 @plaid_bp.route('/accounts', methods=['GET'])
 @jwt_required()
