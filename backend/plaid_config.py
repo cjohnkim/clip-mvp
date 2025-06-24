@@ -86,7 +86,7 @@ class PlaidConfig:
             }
     
     # Products and country codes
-    PRODUCTS = ['transactions']  # Start with just transactions
+    PRODUCTS = ['transactions', 'auth']  # transactions for history, auth for account info
     COUNTRY_CODES = ['US']
     
     # Webhook configuration
@@ -100,7 +100,7 @@ class PlaidConfig:
             
             product_map = {
                 'transactions': Products('transactions'),
-                'accounts': Products('accounts'),
+                'auth': Products('auth'),
             }
             
             return [product_map[p] for p in cls.PRODUCTS if p in product_map]
