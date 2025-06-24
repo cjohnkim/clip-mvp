@@ -25,6 +25,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=30)
 # Import models first - use simplified models
 from models_simple import db, User, Account, Transaction, RecurringItem, Budget
 from models_simple import Waitlist, SignupToken
+from plaid_config import PlaidConfig
 
 # Initialize extensions
 db.init_app(app)
@@ -510,6 +511,84 @@ def api_info():
             'admin': '/api/admin (waitlist management - JWT protected)'
         }
     })
+
+@app.route('/api/debug/plaid-config', methods=['GET'])
+def debug_plaid_config():
+    """Debug endpoint to check Plaid configuration status"""
+    try:
+        # Get environment variables
+        env_vars = {
+            'PLAID_ENV': os.environ.get('PLAID_ENV'),
+            'PLAID_CLIENT_ID': os.environ.get('PLAID_CLIENT_ID', '')[0:8] + '...' if os.environ.get('PLAID_CLIENT_ID') else None,
+            'PLAID_SECRET': os.environ.get('PLAID_SECRET', '')[0:8] + '...' if os.environ.get('PLAID_SECRET') else None,
+            'PLAID_DEV_CLIENT_ID': os.environ.get('PLAID_DEV_CLIENT_ID', '')[0:8] + '...' if os.environ.get('PLAID_DEV_CLIENT_ID') else None,
+            'PLAID_DEV_SECRET': os.environ.get('PLAID_DEV_SECRET', '')[0:8] + '...' if os.environ.get('PLAID_DEV_SECRET') else None,
+            'PLAID_SANDBOX_CLIENT_ID': os.environ.get('PLAID_SANDBOX_CLIENT_ID', '')[0:15] + '...' if os.environ.get('PLAID_SANDBOX_CLIENT_ID') else None,
+            'PLAID_SANDBOX_SECRET': os.environ.get('PLAID_SANDBOX_SECRET', '')[0:15] + '...' if os.environ.get('PLAID_SANDBOX_SECRET') else None,
+            'PLAID_WEBHOOK_URL': os.environ.get('PLAID_WEBHOOK_URL')
+        }
+        
+        # Get current environment mode
+        environment_mode = PlaidConfig.ENVIRONMENT
+        
+        # Get validation result
+        is_valid, validation_message = PlaidConfig.validate_config()
+        
+        # Get credentials being used (safely)
+        try:
+            current_client_id = PlaidConfig.get_client_id()
+            current_secret = PlaidConfig.get_secret()
+            credentials_info = {
+                'client_id_preview': current_client_id[:10] + '...' if current_client_id else None,
+                'secret_preview': current_secret[:10] + '...' if current_secret else None,
+                'environment_url': PlaidConfig.get_environment()
+            }
+        except Exception as e:
+            credentials_info = {
+                'error': str(e),
+                'client_id_preview': None,
+                'secret_preview': None,
+                'environment_url': None
+            }
+        
+        # Get environment info
+        environment_info = PlaidConfig.get_environment_info()
+        
+        # Check if Plaid service is available
+        try:
+            from plaid_service import PlaidService
+            plaid_service = PlaidService()
+            service_available = plaid_service.is_available()
+            service_status = plaid_service.get_status()
+        except Exception as e:
+            service_available = False
+            service_status = {'error': str(e)}
+        
+        return jsonify({
+            'environment_variables': env_vars,
+            'detected_environment': environment_mode,
+            'validation': {
+                'is_valid': is_valid,
+                'message': validation_message
+            },
+            'credentials_in_use': credentials_info,
+            'environment_info': environment_info,
+            'service_status': {
+                'available': service_available,
+                'details': service_status
+            },
+            'environment_checks': {
+                'is_production': PlaidConfig.is_production(),
+                'is_development': PlaidConfig.is_development(),
+                'is_sandbox': PlaidConfig.is_sandbox()
+            }
+        })
+        
+    except Exception as e:
+        return jsonify({
+            'error': f'Debug endpoint error: {str(e)}',
+            'type': type(e).__name__
+        }), 500
 
 # Create database tables (handled in run.py or deployment)
 
