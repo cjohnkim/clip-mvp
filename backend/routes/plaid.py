@@ -31,15 +31,19 @@ def create_link_token():
     """Create a link token for Plaid Link"""
     try:
         user_id = get_jwt_identity()
+        logger.info(f"Creating link token for user_id: {user_id}")
         
         if not plaid_service.is_available():
+            logger.warning("Plaid service not available")
             return jsonify({
                 'error': 'Plaid service not available',
                 'link_token': 'demo_link_token',
                 'demo_mode': True
             }), 200
         
+        logger.info("Plaid service is available, calling create_link_token")
         result = plaid_service.create_link_token(user_id)
+        logger.info(f"Link token created successfully: {result.get('link_token', '')[:20]}...")
         
         return jsonify({
             'link_token': result['link_token'],
@@ -49,7 +53,15 @@ def create_link_token():
         
     except Exception as e:
         logger.error(f"Error creating link token: {e}")
-        return jsonify({'error': 'Failed to create link token'}), 500
+        logger.error(f"Exception type: {type(e).__name__}")
+        logger.error(f"User ID: {user_id}")
+        import traceback
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return jsonify({
+            'error': 'Failed to create link token',
+            'details': str(e),
+            'user_id': user_id
+        }), 500
 
 @plaid_bp.route('/exchange-token', methods=['POST'])
 @jwt_required()
