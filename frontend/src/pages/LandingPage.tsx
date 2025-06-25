@@ -47,14 +47,17 @@ const LoginLink = styled(Button)(() => ({
 }));
 
 const CTAButton = styled(Button)(() => ({
-  background: 'linear-gradient(135deg, #00d4aa 0%, #00b894 100%)',
+  background: '#0a2540',
   color: 'white',
   padding: '12px 24px',
   borderRadius: '8px',
   fontWeight: 600,
   textTransform: 'none',
+  transition: 'all 0.2s ease',
   '&:hover': {
-    background: 'linear-gradient(135deg, #00b894 0%, #009688 100%)',
+    background: '#1e293b',
+    transform: 'translateY(-2px)',
+    boxShadow: '0 4px 12px rgba(10, 37, 64, 0.2)',
   },
 }));
 
@@ -68,10 +71,7 @@ const HeroTitle = styled(Typography)(() => ({
   fontSize: '3.5rem',
   fontWeight: 800,
   marginBottom: '1rem',
-  background: 'linear-gradient(135deg, #0a2540 0%, #00d4aa 100%)',
-  backgroundClip: 'text',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
+  color: '#0a2540',
   
   '@media (max-width: 768px)': {
     fontSize: '2.5rem',
@@ -79,8 +79,9 @@ const HeroTitle = styled(Typography)(() => ({
 }));
 
 const HeroSubtitle = styled(Typography)(() => ({
-  fontSize: '1.5rem',
-  color: '#64748b',
+  fontSize: '1.25rem',
+  color: '#475569',
+  fontWeight: 500,
   marginBottom: '2rem',
   maxWidth: '600px',
   marginLeft: 'auto',
@@ -266,7 +267,7 @@ const LandingPage: React.FC = () => {
             onClick={handleJoinWaitlistClick}
             sx={{ fontSize: '1.2rem', padding: '16px 32px' }}
           >
-            Start Training 🏃‍♂️
+            Start Training
           </CTAButton>
         </Container>
       </HeroSection>
